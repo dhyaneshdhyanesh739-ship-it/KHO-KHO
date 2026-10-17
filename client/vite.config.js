@@ -3,6 +3,19 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
+  optimizeDeps: {
+    include: [
+      'react',
+      'react-dom',
+      'three',
+      '@react-three/fiber',
+      '@react-three/drei',
+      'lucide-react',
+      'framer-motion',
+      'recharts',
+      'canvas-confetti',
+    ],
+  },
   server: {
     host: '0.0.0.0',
     port: 5173,
