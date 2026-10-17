@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, LogIn, Users, Zap, Shield, Trophy } from 'lucide-react';
+import { ArrowRight, LogIn, Zap } from 'lucide-react';
 import KhoKhoCourt3D from '../3d/KhoKhoCourt3D';
 
 export default function HeroSection({ onOpenLogin, onExploreTeams }) {
@@ -104,19 +104,6 @@ export default function HeroSection({ onOpenLogin, onExploreTeams }) {
           >
             <div className="relative">
               <KhoKhoCourt3D />
-
-              {/* Floating Tactical Overlay Card */}
-              <div className="absolute -bottom-6 -left-4 sm:left-4 bg-white/95 backdrop-blur-md p-4 rounded-2xl border border-slate-200 shadow-xl max-w-xs hidden sm:block">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-sportsGreen-light text-sportsGreen-dark flex items-center justify-center font-bold">
-                    <Shield className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-navy-900">Regulation Kho-Kho Court</p>
-                    <p className="text-[11px] text-slate-500">27m × 16m • 8 Cross Lanes • Dual Wooden Turn Poles</p>
-                  </div>
-                </div>
-              </div>
             </div>
           </motion.div>
         </div>
