@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    color-scheme: light;
+  }
+  
+  body {
+    background-color: #fdfbf7;
+    color: #0f172a;
+    overflow-x: hidden;
+  }
+
+  /* Custom Light Theme Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f1f5f9;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-white bg-gradient-to-r from-saffron-600 to-saffron-500 hover:from-saffron-700 hover:to-saffron-600 shadow-md shadow-saffron-500/20 hover:shadow-lg hover:shadow-saffron-500/30 transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-navy-800 bg-white hover:bg-slate-50 border border-slate-200 shadow-sm hover:shadow transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .btn-outline-orange {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-saffron-600 bg-transparent hover:bg-saffron-50 border border-saffron-300 transition-all duration-200 active:scale-95;
+  }
+
+  .card-premium {
+    @apply bg-white rounded-2xl border border-slate-100 shadow-card transition-all duration-200 hover:shadow-md;
+  }
+
+  .glass-card {
+    @apply bg-white/85 backdrop-blur-md border border-white/60 shadow-card;
+  }
+
+  .badge-tag {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold tracking-wide uppercase;
+  }
+}
+
+/* Three.js Canvas Container */
+.court-canvas-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}

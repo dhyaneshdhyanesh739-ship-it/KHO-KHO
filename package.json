@@ -1,0 +1,30 @@
+{
+  "name": "kho-kho-arena",
+  "version": "1.0.0",
+  "description": "KHO-KHO ARENA — Professional Sports Team Management System for Boys & Girls Kho-Kho Teams",
+  "private": true,
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "build": "npm --prefix client run build",
+    "test": "npm --prefix server run test",
+    "seed": "npm --prefix server run seed"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "keywords": [
+    "kho-kho",
+    "sports-management",
+    "attendance",
+    "mern",
+    "threejs"
+  ],
+  "author": "Kho-Kho Arena Team",
+  "license": "ISC"
+}
