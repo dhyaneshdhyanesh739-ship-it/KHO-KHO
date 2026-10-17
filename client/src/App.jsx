@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
+import { AnimatePresence } from 'framer-motion';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import HomePage from './pages/public/HomePage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import PlayerDashboard from './pages/player/PlayerDashboard';
+import ViniVidiViciIntro from './components/ui/ViniVidiViciIntro';
 import { api } from './services/api';
-import { Sparkles, Shield, User, Users, RefreshCw } from 'lucide-react';
+import { Sparkles, Shield, User, Users, RefreshCw, Play } from 'lucide-react';
 
 function AppShell() {
   const { user, isAuthenticated, isLoading, login, logout } = useAuth();
   const [viewingPublic, setViewingPublic] = useState(false);
   const [seedNotice, setSeedNotice] = useState('');
+  const [showIntro, setShowIntro] = useState(true);
 
   if (isLoading) {
     return (
@@ -47,6 +50,13 @@ function AppShell() {
 
   return (
     <div className="relative min-h-screen">
+      {/* VINI VIDI VICI Cinematic Intro Screen */}
+      <AnimatePresence>
+        {showIntro && (
+          <ViniVidiViciIntro onComplete={() => setShowIntro(false)} />
+        )}
+      </AnimatePresence>
+
       {/* If Authenticated and not explicitly previewing public home */}
       {isAuthenticated && !viewingPublic ? (
         user.role === 'PLAYER' ? (
@@ -137,6 +147,16 @@ function AppShell() {
             title="Login as Player Arjun Shinde (#1)"
           >
             Player (B01)
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setShowIntro(true)}
+            className="px-2 py-1 rounded-lg bg-black hover:bg-slate-800 text-white font-bold transition-colors flex items-center gap-1 shadow-sm"
+            title="Replay VINI VIDI VICI Intro"
+          >
+            <Play className="w-3 h-3 text-red-500 fill-red-500" />
+            <span className="text-[11px]">Intro</span>
           </button>
 
           <button
