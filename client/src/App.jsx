@@ -5,14 +5,16 @@ import HomePage from './pages/public/HomePage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import PlayerDashboard from './pages/player/PlayerDashboard';
 import ViniVidiViciIntro from './components/ui/ViniVidiViciIntro';
+import FierySwordScreen from './components/ui/FierySwordScreen';
 import { api } from './services/api';
-import { Sparkles, Shield, User, Users, RefreshCw, Play } from 'lucide-react';
+import { Sparkles, Shield, User, Users, RefreshCw, Play, Flame } from 'lucide-react';
 
 function AppShell() {
   const { user, isAuthenticated, isLoading, login, logout } = useAuth();
   const [viewingPublic, setViewingPublic] = useState(false);
   const [seedNotice, setSeedNotice] = useState('');
-  const [showIntro, setShowIntro] = useState(true);
+  // Intro Phases: 'CREED' -> 'SWORD' -> 'DONE'
+  const [introStep, setIntroStep] = useState('CREED');
 
   if (isLoading) {
     return (
@@ -50,10 +52,20 @@ function AppShell() {
 
   return (
     <div className="relative min-h-screen">
-      {/* VINI VIDI VICI Cinematic Intro Screen */}
-      <AnimatePresence>
-        {showIntro && (
-          <ViniVidiViciIntro onComplete={() => setShowIntro(false)} />
+      {/* 2-Step Cinematic Intro: VINI VIDI VICI -> Flaming Sword Tattoo -> Home */}
+      <AnimatePresence mode="wait">
+        {introStep === 'CREED' && (
+          <ViniVidiViciIntro
+            key="intro-creed"
+            onComplete={() => setIntroStep('SWORD')}
+          />
+        )}
+        {introStep === 'SWORD' && (
+          <FierySwordScreen
+            key="intro-sword"
+            onEnterHome={() => setIntroStep('DONE')}
+            onBackToCreed={() => setIntroStep('CREED')}
+          />
         )}
       </AnimatePresence>
 
@@ -151,12 +163,22 @@ function AppShell() {
 
           <button
             type="button"
-            onClick={() => setShowIntro(true)}
+            onClick={() => setIntroStep('CREED')}
             className="px-2 py-1 rounded-lg bg-black hover:bg-slate-800 text-white font-bold transition-colors flex items-center gap-1 shadow-sm"
             title="Replay VINI VIDI VICI Intro"
           >
-            <Play className="w-3 h-3 text-red-500 fill-red-500" />
-            <span className="text-[11px]">Intro</span>
+            <Play className="w-3 h-3 text-blue-400 fill-blue-400" />
+            <span className="text-[11px]">Creed</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setIntroStep('SWORD')}
+            className="px-2 py-1 rounded-lg bg-red-950 hover:bg-red-900 text-red-200 border border-red-800 font-bold transition-colors flex items-center gap-1 shadow-sm"
+            title="View Flaming Kho-Kho Sword Tattoo"
+          >
+            <Flame className="w-3 h-3 text-red-500 fill-red-500" />
+            <span className="text-[11px]">Sword</span>
           </button>
 
           <button

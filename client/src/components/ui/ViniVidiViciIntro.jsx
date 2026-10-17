@@ -89,7 +89,7 @@ export default function ViniVidiViciIntro({ onComplete }) {
           onClick={onComplete}
           className="group flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-slate-400 hover:text-white transition-all tracking-wider uppercase"
         >
-          <span>Skip Intro</span>
+          <span>Next: The Blade</span>
           <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
         </button>
       </div>
@@ -242,7 +242,7 @@ export default function ViniVidiViciIntro({ onComplete }) {
             onClick={onComplete}
             className="mt-4 px-6 py-2.5 rounded-full bg-white text-black font-bold text-xs uppercase tracking-widest hover:bg-slate-200 transition-all shadow-lg shadow-white/10 flex items-center gap-2 cursor-pointer"
           >
-            <span>Enter Arena Now</span>
+            <span>Proceed to The Blade</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </motion.div>
