@@ -46,8 +46,8 @@ export const seedDatabase = async () => {
   const boysAdmin = await User.create({
     username: 'boysadmin',
     passwordHash: boysAdminPassword,
-    name: 'Coach Vikramaditya Patil',
-    email: 'coach.patil@khokhoarena.org',
+    name: 'Coach Dhyanesh.S.E & MuthuvelRaja.S',
+    email: 'coach.dhyanesh@khokhoarena.org',
     role: 'BOYS_ADMIN',
     team: 'BOYS',
     isActive: true,
@@ -57,8 +57,8 @@ export const seedDatabase = async () => {
   const girlsAdmin = await User.create({
     username: 'girlsadmin',
     passwordHash: girlsAdminPassword,
-    name: 'Coach Ananya Deshmukh',
-    email: 'coach.ananya@khokhoarena.org',
+    name: 'Coach Keerthana',
+    email: 'coach.keerthana@khokhoarena.org',
     role: 'GIRLS_ADMIN',
     team: 'GIRLS',
     isActive: true,
@@ -340,7 +340,7 @@ export const seedDatabase = async () => {
       isUrgent: false,
       published: true,
       author: boysAdmin._id,
-      authorName: 'Coach Vikramaditya Patil',
+      authorName: 'Coach Dhyanesh.S.E & MuthuvelRaja.S',
     },
     {
       team: 'GIRLS',
@@ -350,7 +350,7 @@ export const seedDatabase = async () => {
       isUrgent: false,
       published: true,
       author: girlsAdmin._id,
-      authorName: 'Coach Ananya Deshmukh',
+      authorName: 'Coach Keerthana',
     },
   ]);
 

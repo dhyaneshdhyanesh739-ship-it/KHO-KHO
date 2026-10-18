@@ -234,8 +234,8 @@ Visit the application in your browser at: **`http://localhost:5173`**
 
 | Account Role | Username | Password | Notes |
 | :--- | :--- | :--- | :--- |
-| **Boys Team Admin** | `boysadmin` | `BoysAdmin@KhoKho2026!` | Coach Vikramaditya Patil (Manages 23 Boys athletes) |
-| **Girls Team Admin** | `girlsadmin` | `GirlsAdmin@KhoKho2026!` | Coach Ananya Deshmukh (Manages 18 Girls athletes) |
+| **Boys Team Admin** | `boysadmin` | `BoysAdmin@KhoKho2026!` | Coach Dhyanesh.S.E & MuthuvelRaja.S (Manages 23 Boys athletes) |
+| **Girls Team Admin** | `girlsadmin` | `GirlsAdmin@KhoKho2026!` | Coach Keerthana (Manages 18 Girls athletes) |
 | **Super Administrator** | `superadmin` | `SuperAdmin@KhoKho2026!` | Athletics Directorate (Global settings & audit logs) |
 | **Player (Boys #1)** | `b01` | `b01@KhoKho2026` | Arjun Shinde (Pole Diver, Boys Roster) |
 | **Player (Boys #2)** | `b02` | `b02@KhoKho2026` | Rohan Kadam (Running Chaser, Boys Roster) |
