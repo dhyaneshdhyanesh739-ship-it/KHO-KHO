@@ -402,13 +402,13 @@ export const seedDatabase = async () => {
       category: 'BOYS',
     },
     {
-      title: 'Champions — All India Women’s Invitational Cup',
+      title: 'Champions — All India Inter-Collegiate Invitational Cup',
       year: 2025,
-      event: 'South Zone Inter-Collegiate Women’s Sports Festival',
+      event: 'South Zone Inter-Collegiate Sports Festival',
       result: 'Winners & Fair Play Trophy',
-      description: 'Historic triumph by the Girls team with immaculate 3-batch defensive survival and tactical communication.',
+      description: 'Historic triumph by the Boys squad with immaculate 3-batch defensive survival and tactical teamwork.',
       image: '/achievements/cit_champions_trophy.jpg',
-      category: 'GIRLS',
+      category: 'BOYS',
     },
   ]);
 
