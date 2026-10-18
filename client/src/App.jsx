@@ -64,7 +64,6 @@ function AppShell() {
           <FierySwordScreen
             key="intro-sword"
             onEnterHome={() => setIntroStep('DONE')}
-            onBackToCreed={() => setIntroStep('CREED')}
           />
         )}
       </AnimatePresence>
