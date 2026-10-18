@@ -70,9 +70,9 @@ export default function ContactSection() {
                   <MapPin className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Arena & Sports Complex</h4>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Arena Location</h4>
                   <p className="text-sm font-bold text-navy-900">National Kho-Kho Court & Athletics Pavilion</p>
-                  <p className="text-xs text-slate-500">Sports Directorate, University Enclave</p>
+                  <p className="text-xs font-bold text-saffron-600 uppercase tracking-wider">INDIA</p>
                 </div>
               </div>
 
@@ -82,8 +82,10 @@ export default function ContactSection() {
                 </div>
                 <div>
                   <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Electronic Mail</h4>
-                  <p className="text-sm font-bold text-navy-900">athletics@khokhoarena.org</p>
-                  <p className="text-xs text-slate-500">Official Directorate Inquiries</p>
+                  <a href="mailto:dhyaneshdhyanesh739@gmail.com" className="text-sm font-bold text-navy-900 hover:text-saffron-600 transition-colors break-all">
+                    dhyaneshdhyanesh739@gmail.com
+                  </a>
+                  <p className="text-xs text-slate-500">Official Inquiries & Direct Dispatch</p>
                 </div>
               </div>
 
@@ -92,9 +94,11 @@ export default function ContactSection() {
                   <Phone className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Sports Directorate Desk</h4>
-                  <p className="text-sm font-bold text-navy-900">+91 (022) 2890-KHO-KHO</p>
-                  <p className="text-xs text-slate-500">Monday to Saturday • 07:00 AM – 06:30 PM</p>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Direct Contact Line</h4>
+                  <a href="tel:+917550317811" className="text-sm font-bold text-navy-900 hover:text-saffron-600 transition-colors">
+                    +91-7550317811
+                  </a>
+                  <p className="text-xs text-slate-500">All Days • Immediate Assistance</p>
                 </div>
               </div>
             </div>
