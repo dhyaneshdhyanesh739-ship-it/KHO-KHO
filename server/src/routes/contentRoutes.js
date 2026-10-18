@@ -38,7 +38,7 @@ router.post('/demo/seed', async (req, res, next) => {
     await seedDatabase();
     return res.status(200).json({
       success: true,
-      message: 'Demo dataset populated successfully with 23 Boys, 18 Girls, realistic attendance sessions, matches, and announcements.',
+      message: 'Demo dataset populated successfully with 23 Boys, 13 Girls, realistic attendance sessions, matches, and announcements.',
     });
   } catch (error) {
     next(error);

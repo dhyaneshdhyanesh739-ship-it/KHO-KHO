@@ -207,7 +207,7 @@ VITE_APP_NAME="KHO-KHO ARENA"
 ```
 
 ### 3. Seed Database with Realistic Demo Data
-Populates 23 Boys players, 18 Girls players, 13 historical training sessions with attendance records, upcoming matches, announcements, achievements, and gallery photos:
+Populates 23 Boys players, 13 Girls players, 13 historical training sessions with attendance records, upcoming matches, announcements, achievements, and gallery photos:
 ```bash
 # Run from server directory
 npm run seed
@@ -235,7 +235,7 @@ Visit the application in your browser at: **`http://localhost:5173`**
 | Account Role | Username | Password | Notes |
 | :--- | :--- | :--- | :--- |
 | **Boys Team Admin** | `boysadmin` | `BoysAdmin@KhoKho2026!` | Coach Dhyanesh.S.E & MuthuvelRaja.S (Manages 23 Boys athletes) |
-| **Girls Team Admin** | `girlsadmin` | `GirlsAdmin@KhoKho2026!` | Coach Keerthana (Manages 18 Girls athletes) |
+| **Girls Team Admin** | `girlsadmin` | `GirlsAdmin@KhoKho2026!` | Coach Keerthana (Manages 13 Girls athletes) |
 | **Super Administrator** | `superadmin` | `SuperAdmin@KhoKho2026!` | Athletics Directorate (Global settings & audit logs) |
 | **Player (Boys #1)** | `b01` | `b01@KhoKho2026` | Arjun Shinde (Pole Diver, Boys Roster) |
 | **Player (Boys #2)** | `b02` | `b02@KhoKho2026` | Rohan Kadam (Running Chaser, Boys Roster) |

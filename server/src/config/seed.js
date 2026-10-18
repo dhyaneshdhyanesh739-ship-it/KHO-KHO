@@ -130,7 +130,7 @@ export const seedDatabase = async () => {
   }
   console.log(`[Seed] Created ${createdBoysPlayers.length} Boys Players with active user accounts.`);
 
-  // 4. Create Girls Roster (18 Players)
+  // 4. Create Girls Roster (Exactly 13 Players as required)
   const girlsRosterData = [
     { id: 'G-01', name: 'Pooja Narvekar', jersey: 1, pos: 'Pole Diver', blood: 'O+' },
     { id: 'G-02', name: 'Shreya Shinde', jersey: 2, pos: 'Running Chaser', blood: 'A+' },
@@ -145,11 +145,6 @@ export const seedDatabase = async () => {
     { id: 'G-11', name: 'Megha Jadhav', jersey: 11, pos: 'Chaser', blood: 'O+' },
     { id: 'G-12', name: 'Priyanka Ghuge', jersey: 12, pos: 'Defender', blood: 'AB-' },
     { id: 'G-13', name: 'Neha Tawde', jersey: 13, pos: 'Pole Diver', blood: 'B+' },
-    { id: 'G-14', name: 'Madhuri Kadam', jersey: 14, pos: 'Running Chaser', blood: 'O+' },
-    { id: 'G-15', name: 'Bhakti Nikam', jersey: 15, pos: 'All-Rounder', blood: 'A+' },
-    { id: 'G-16', name: 'Divya Tambe', jersey: 16, pos: 'Defender', blood: 'B-' },
-    { id: 'G-17', name: 'Radhika Pawar', jersey: 17, pos: 'Chaser', blood: 'O+' },
-    { id: 'G-18', name: 'Gauri Salunkhe', jersey: 18, pos: 'Defender', blood: 'A+' },
   ];
 
   const createdGirlsPlayers = [];

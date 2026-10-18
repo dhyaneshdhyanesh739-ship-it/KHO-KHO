@@ -6,7 +6,7 @@ import KhoKhoCourt3D from '../3d/KhoKhoCourt3D';
 export default function HeroSection({ onOpenLogin, onExploreTeams }) {
   const quickStats = [
     { label: 'Boys Squad', value: '23', sub: 'Active Roster' },
-    { label: 'Girls Squad', value: '18', sub: 'Active Roster' },
+    { label: 'Girls Squad', value: '13', sub: 'Active Roster' },
     { label: 'Regulation Match Squad', value: '15', sub: 'Max Selection Limit' },
     { label: 'Court Playing Nine', value: '9', sub: 'Chasers & Defenders' },
   ];
