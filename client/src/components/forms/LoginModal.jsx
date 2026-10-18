@@ -125,7 +125,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
                       <h4 className="font-bold text-navy-900 group-hover:text-saffron-600 transition-colors">
                         Boys Kho-Kho Team
                       </h4>
-                      <p className="text-xs text-slate-500">23 Active Roster Members • Coaching Admin & Players</p>
+                      <p className="text-xs text-slate-500">22 Active Roster Members • Coaching Admin & Players</p>
                     </div>
                   </div>
                   <div className="w-7 h-7 rounded-full bg-slate-100 group-hover:bg-saffron-500 group-hover:text-white flex items-center justify-center text-slate-400 transition-colors">
@@ -208,7 +208,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
                       required
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
-                      placeholder="e.g. boysadmin or b01"
+                      placeholder="e.g. Dhyanesh or mohan"
                       className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:border-saffron-500 focus:ring-2 focus:ring-saffron-500/20 text-sm text-navy-900 transition-all outline-none"
                     />
                   </div>
@@ -273,26 +273,29 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
 
                 {/* Demo Credentials Helper Pill */}
                 <div className="pt-2 border-t border-slate-100">
-                  <p className="text-[11px] font-semibold text-slate-500 mb-1">Demo Credentials:</p>
-                  <div className="grid grid-cols-2 gap-1.5 text-[11px] text-slate-600 bg-slate-50 p-2 rounded-xl">
-                    <div>
-                      <span className="font-bold text-navy-800">Boys Admin:</span> boysadmin
+                  <p className="text-[11px] font-semibold text-slate-500 mb-1">Official Login Credentials:</p>
+                  <div className="space-y-1.5 text-[11px] text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                    <div className="flex items-center justify-between border-b border-slate-200/60 pb-1">
+                      <span className="font-bold text-navy-900">Admin (Both Teams):</span>
+                      <span className="font-mono bg-white px-2 py-0.5 rounded border border-slate-200 text-saffron-700 font-semibold">
+                        Dhyanesh <span className="text-slate-400">/</span> kiddo@khokho
+                      </span>
                     </div>
-                    <div>
-                      <span className="font-bold text-navy-800">Pass:</span> BoysAdmin@KhoKho2026!
-                    </div>
-                    <div>
-                      <span className="font-bold text-navy-800">Girls Admin:</span> girlsadmin
-                    </div>
-                    <div>
-                      <span className="font-bold text-navy-800">Pass:</span> GirlsAdmin@KhoKho2026!
-                    </div>
-                    <div>
-                      <span className="font-bold text-navy-800">Player (B01):</span> b01
-                    </div>
-                    <div>
-                      <span className="font-bold text-navy-800">Pass:</span> b01@KhoKho2026
-                    </div>
+                    {selectedTeam === 'BOYS' ? (
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-navy-900">Boys Player Login:</span>
+                        <span className="font-mono bg-white px-2 py-0.5 rounded border border-slate-200 text-slate-700">
+                          mohan <span className="text-slate-400">/</span> mohan@khokho
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-navy-900">Girls Admin:</span>
+                        <span className="font-mono bg-white px-2 py-0.5 rounded border border-slate-200 text-rose-700 font-semibold">
+                          Dhyanesh <span className="text-slate-400">/</span> kiddo@khokho
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </motion.form>

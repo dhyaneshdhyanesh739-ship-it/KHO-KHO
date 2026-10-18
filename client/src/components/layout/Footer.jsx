@@ -73,7 +73,7 @@ export default function Footer({ onNavigateSection, onOpenLogin }) {
                   onClick={onOpenLogin}
                   className="text-left text-saffron-400 hover:text-saffron-300 font-semibold transition-colors"
                 >
-                  Boys Team Portal (23 Roster)
+                  Boys Team Portal (22 Roster)
                 </button>
               </li>
               <li>

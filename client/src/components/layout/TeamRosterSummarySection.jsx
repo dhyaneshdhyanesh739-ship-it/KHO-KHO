@@ -7,7 +7,7 @@ export default function TeamRosterSummarySection({ onOpenLogin }) {
       id: 'BOYS',
       name: 'Boys Kho-Kho Squad',
       title: 'The Chhatrapati Chasers',
-      rosterCount: 23,
+      rosterCount: 22,
       squadLimit: 15,
       headCoach: 'Coach Dhyanesh.S.E & MuthuvelRaja.S',
       badgeColor: 'bg-saffron-100 text-saffron-800 border-saffron-200',
@@ -15,7 +15,7 @@ export default function TeamRosterSummarySection({ onOpenLogin }) {
       accentColor: 'text-saffron-600',
       tagline: 'Precision Pole Turns & Blistering Zigzag Footwork',
       stats: [
-        { label: 'Active Roster', val: '23 Athletes' },
+        { label: 'Active Roster', val: '22 Athletes' },
         { label: 'Match Squad', val: '15 Max' },
         { label: 'Defensive Units', val: '7 Batches' },
       ],

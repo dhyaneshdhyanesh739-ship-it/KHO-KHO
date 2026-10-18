@@ -31,29 +31,29 @@ export const seedDatabase = async () => {
   console.log('[Seed] Cleared existing records.');
 
   // 2. Create Administrative Accounts
-  const superAdminPassword = await User.hashPassword(process.env.INITIAL_SUPER_ADMIN_PASSWORD || 'SuperAdmin@KhoKho2026!');
-  const superAdmin = await User.create({
-    username: 'superadmin',
-    passwordHash: superAdminPassword,
-    name: 'Chief Athletics Director',
-    email: 'director@khokhoarena.org',
+  const dhyaneshPassword = await User.hashPassword('kiddo@khokho');
+  const dhyaneshAdmin = await User.create({
+    username: 'dhyanesh',
+    passwordHash: dhyaneshPassword,
+    name: 'Dhyanesh.S.E',
+    email: 'dhyaneshdhyanesh739@gmail.com',
     role: 'SUPER_ADMIN',
     team: 'ALL',
     isActive: true,
   });
 
-  const boysAdminPassword = await User.hashPassword(process.env.INITIAL_BOYS_ADMIN_PASSWORD || 'BoysAdmin@KhoKho2026!');
+  const boysAdminPassword = await User.hashPassword('kiddo@khokho');
   const boysAdmin = await User.create({
     username: 'boysadmin',
     passwordHash: boysAdminPassword,
     name: 'Coach Dhyanesh.S.E & MuthuvelRaja.S',
-    email: 'coach.dhyanesh@khokhoarena.org',
+    email: 'dhyaneshdhyanesh739@gmail.com',
     role: 'BOYS_ADMIN',
     team: 'BOYS',
     isActive: true,
   });
 
-  const girlsAdminPassword = await User.hashPassword(process.env.INITIAL_GIRLS_ADMIN_PASSWORD || 'GirlsAdmin@KhoKho2026!');
+  const girlsAdminPassword = await User.hashPassword('kiddo@khokho');
   const girlsAdmin = await User.create({
     username: 'girlsadmin',
     passwordHash: girlsAdminPassword,
@@ -64,44 +64,43 @@ export const seedDatabase = async () => {
     isActive: true,
   });
 
-  console.log('[Seed] Created Super Admin, Boys Admin, and Girls Admin.');
+  console.log('[Seed] Created Super Admin Dhyanesh, Boys Admin, and Girls Admin with password kiddo@khokho.');
 
-  // 3. Create Boys Roster (Exactly 23 Players as required)
+  // 3. Create Boys Roster (22 Real Players from Sheet)
   const boysRosterData = [
-    { id: 'B-01', name: 'Arjun Shinde', jersey: 1, pos: 'Pole Diver', blood: 'O+' },
-    { id: 'B-02', name: 'Rohan Kadam', jersey: 2, pos: 'Running Chaser', blood: 'B+' },
-    { id: 'B-03', name: 'Pranav Sawant', jersey: 3, pos: 'Defender', blood: 'A+' },
-    { id: 'B-04', name: 'Siddharth Jadhav', jersey: 4, pos: 'All-Rounder', blood: 'AB+' },
-    { id: 'B-05', name: 'Aditya More', jersey: 5, pos: 'Chaser', blood: 'O+' },
-    { id: 'B-06', name: 'Omkar Bhosale', jersey: 6, pos: 'Defender', blood: 'B+' },
-    { id: 'B-07', name: 'Tanmay Salunkhe', jersey: 7, pos: 'Pole Diver', blood: 'A-' },
-    { id: 'B-08', name: 'Yashwardhan Ghorpade', jersey: 8, pos: 'Running Chaser', blood: 'O-' },
-    { id: 'B-09', name: 'Varun Gaikwad', jersey: 9, pos: 'Defender', blood: 'B+' },
-    { id: 'B-10', name: 'Kunal Mane', jersey: 10, pos: 'All-Rounder', blood: 'A+' },
-    { id: 'B-11', name: 'Harsh Vardhan', jersey: 11, pos: 'Chaser', blood: 'O+' },
-    { id: 'B-12', name: 'Sahil Thorat', jersey: 12, pos: 'Defender', blood: 'AB-' },
-    { id: 'B-13', name: 'Digvijay Rane', jersey: 13, pos: 'Pole Diver', blood: 'B+' },
-    { id: 'B-14', name: 'Manish Shirole', jersey: 14, pos: 'Running Chaser', blood: 'O+' },
-    { id: 'B-15', name: 'Tejas Nalawade', jersey: 15, pos: 'All-Rounder', blood: 'A+' },
-    { id: 'B-16', name: 'Gaurav Chavan', jersey: 16, pos: 'Defender', blood: 'B-' },
-    { id: 'B-17', name: 'Akshay Tawde', jersey: 17, pos: 'Chaser', blood: 'O+' },
-    { id: 'B-18', name: 'Suraj Nikam', jersey: 18, pos: 'Defender', blood: 'A+' },
-    { id: 'B-19', name: 'Rupesh Shirke', jersey: 19, pos: 'Running Chaser', blood: 'AB+' },
-    { id: 'B-20', name: 'Mohit Bagwe', jersey: 20, pos: 'Pole Diver', blood: 'B+' },
-    { id: 'B-21', name: 'Chetan Tambe', jersey: 21, pos: 'All-Rounder', blood: 'O+' },
-    { id: 'B-22', name: 'Nikhil Pawar', jersey: 22, pos: 'Chaser', blood: 'A-' },
-    { id: 'B-23', name: 'Virendra Shelar', jersey: 23, pos: 'Defender', blood: 'B+' },
+    { id: 'B-01', username: 'mohan', name: 'MOHAN', jersey: 1, pos: 'Pole Diver', blood: 'O+' },
+    { id: 'B-02', username: 'jelphin', name: 'JELPHIN', jersey: 2, pos: 'Running Chaser', blood: 'B+' },
+    { id: 'B-03', username: 'vicky.v', name: 'VICKY.V', jersey: 3, pos: 'Defender', blood: 'A+' },
+    { id: 'B-04', username: 'kishore', name: 'KISHORE', jersey: 4, pos: 'All-Rounder', blood: 'AB+' },
+    { id: 'B-05', username: 'harshad', name: 'HARSHAD', jersey: 5, pos: 'Chaser', blood: 'O+' },
+    { id: 'B-06', username: 'elan', name: 'ELAN', jersey: 6, pos: 'Defender', blood: 'B+' },
+    { id: 'B-07', username: 'vimal.s', name: 'VIMAL.S', jersey: 7, pos: 'Pole Diver', blood: 'A-' },
+    { id: 'B-08', username: 'karan', name: 'KARAN', jersey: 8, pos: 'Running Chaser', blood: 'O-' },
+    { id: 'B-09', username: 's.e.d', name: 'S.E.D', jersey: 9, pos: 'All-Rounder', blood: 'B+' },
+    { id: 'B-10', username: 'harish', name: 'HARISH', jersey: 10, pos: 'Defender', blood: 'A+' },
+    { id: 'B-11', username: 'akash', name: 'AKASH', jersey: 11, pos: 'Chaser', blood: 'O+' },
+    { id: 'B-12', username: 'suriya', name: 'SURIYA', jersey: 12, pos: 'Pole Diver', blood: 'AB-' },
+    { id: 'B-13', username: 'mega', name: 'MEGA', jersey: 13, pos: 'Running Chaser', blood: 'B+' },
+    { id: 'B-14', username: 'abhinav', name: 'ABHINAV', jersey: 14, pos: 'Defender', blood: 'O+' },
+    { id: 'B-15', username: 'sanjay', name: 'SANJAY', jersey: 15, pos: 'All-Rounder', blood: 'A+' },
+    { id: 'B-16', username: 'lingesh', name: 'LINGESH', jersey: 16, pos: 'Chaser', blood: 'B-' },
+    { id: 'B-17', username: 'paul', name: 'PAUL', jersey: 17, pos: 'Defender', blood: 'O+' },
+    { id: 'B-18', username: 'katta', name: 'KATTA', jersey: 18, pos: 'Pole Diver', blood: 'A+' },
+    { id: 'B-19', username: 'sivaguru', name: 'SIVAGURU', jersey: 19, pos: 'Running Chaser', blood: 'AB+' },
+    { id: 'B-20', username: 'kd', name: 'KD', jersey: 20, pos: 'All-Rounder', blood: 'B+' },
+    { id: 'B-21', username: 'm.t.durai', name: 'M.T.DURAI', jersey: 21, pos: 'Defender', blood: 'A-' },
+    { id: 'B-22', username: 'jeeva', name: 'JEEVA', jersey: 22, pos: 'Chaser', blood: 'B+' },
   ];
 
   const createdBoysPlayers = [];
   for (const p of boysRosterData) {
-    const username = p.id.toLowerCase().replace('-', '');
-    const pass = await User.hashPassword(`${username}@KhoKho2026`);
+    const username = p.username;
+    const pass = await User.hashPassword(`${username}@khokho`);
     const playerUser = await User.create({
       username,
       passwordHash: pass,
       name: p.name,
-      email: `${username}@arena.org`,
+      email: `${username.replace(/\./g, '')}@khokhoarena.org`,
       role: 'PLAYER',
       team: 'BOYS',
       isActive: true,
@@ -118,7 +117,7 @@ export const seedDatabase = async () => {
       userRef: playerUser._id,
       contactInfo: {
         phone: `+91 98200 ${String(1000 + p.jersey).padStart(5, '0')}`,
-        email: `${username}@arena.org`,
+        email: `${username.replace(/\./g, '')}@khokhoarena.org`,
         emergencyContactName: `Guardian of ${p.name}`,
         emergencyPhone: '+91 98200 99999',
       },
@@ -128,7 +127,7 @@ export const seedDatabase = async () => {
     await playerUser.save();
     createdBoysPlayers.push(playerDoc);
   }
-  console.log(`[Seed] Created ${createdBoysPlayers.length} Boys Players with active user accounts.`);
+  console.log(`[Seed] Created ${createdBoysPlayers.length} Boys Players with username@khokho credentials.`);
 
   // 4. Create Girls Roster (Exactly 13 Players as required)
   const girlsRosterData = [
