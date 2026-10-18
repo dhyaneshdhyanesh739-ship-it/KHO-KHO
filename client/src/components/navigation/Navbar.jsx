@@ -14,6 +14,7 @@ export default function Navbar({ onOpenLogin, onNavigateSection }) {
     { label: 'Teams', href: '#teams' },
     { label: 'Gallery', href: '#gallery' },
     { label: 'Contact', href: '#contact' },
+    { label: 'Created By', href: '#created-by' },
   ];
 
   const handleNavClick = (href) => {

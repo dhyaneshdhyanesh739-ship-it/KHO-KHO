@@ -53,6 +53,11 @@ export default function Footer({ onNavigateSection, onOpenLogin }) {
               <li>
                 <a href="#gallery" className="hover:text-saffron-400 transition-colors">Action Gallery</a>
               </li>
+              <li>
+                <a href="#created-by" className="hover:text-saffron-300 text-saffron-400/90 font-medium transition-colors">
+                  Created By (Dhyanesh.S.E)
+                </a>
+              </li>
             </ul>
           </div>
 

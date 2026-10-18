@@ -7,6 +7,7 @@ import AchievementsSection from '../../components/layout/AchievementsSection';
 import TeamRosterSummarySection from '../../components/layout/TeamRosterSummarySection';
 import GallerySection from '../../components/layout/GallerySection';
 import ContactSection from '../../components/layout/ContactSection';
+import CreatedBySection from '../../components/layout/CreatedBySection';
 import Footer from '../../components/layout/Footer';
 import LoginModal from '../../components/forms/LoginModal';
 
@@ -48,6 +49,8 @@ export default function HomePage({ onLoginSuccess }) {
         <GallerySection />
 
         <ContactSection />
+
+        <CreatedBySection />
       </main>
 
       {/* Footer */}
