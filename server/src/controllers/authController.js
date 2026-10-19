@@ -5,7 +5,7 @@ import { logAuditEvent } from '../utils/auditLogger.js';
 
 export const login = async (req, res, next) => {
   try {
-    const { username, password, selectedTeam } = req.body;
+    const { username, password, selectedTeam, portalMode } = req.body;
 
     if (!username || !password) {
       return res.status(400).json({
@@ -116,6 +116,21 @@ export const login = async (req, res, next) => {
       return res.status(401).json({
         success: false,
         message: 'Invalid credentials. Please verify your username and password.',
+      });
+    }
+
+    // Verify portal role segregation if portalMode is specified
+    if (portalMode === 'ADMIN' && user.role === 'PLAYER') {
+      return res.status(403).json({
+        success: false,
+        message: 'Access Denied: The Admin Login portal is strictly for Coaching & Super Administrators. Athletes must sign in through the Team Portal Login.',
+      });
+    }
+
+    if (portalMode === 'TEAM' && user.role !== 'PLAYER') {
+      return res.status(403).json({
+        success: false,
+        message: 'Notice: The Team Portal is strictly for Boys & Girls Kho-Kho team athletes. Coaching & Super Administrators must sign in through the Admin Login portal.',
       });
     }
 

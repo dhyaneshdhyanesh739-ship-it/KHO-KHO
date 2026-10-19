@@ -28,10 +28,10 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
   }, []);
 
-  const login = async (username, password, selectedTeam) => {
+  const login = async (username, password, selectedTeam, portalMode) => {
     setAuthError(null);
     try {
-      const res = await api.auth.login({ username, password, selectedTeam });
+      const res = await api.auth.login({ username, password, selectedTeam, portalMode });
       if (res && res.user) {
         setUser(res.user);
         if (res.token) {

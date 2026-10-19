@@ -12,7 +12,10 @@ import Footer from '../../components/layout/Footer';
 import LoginModal from '../../components/forms/LoginModal';
 
 export default function HomePage({ onLoginSuccess }) {
-  const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [loginModalState, setLoginModalState] = useState({ isOpen: false, mode: 'TEAM' });
+
+  const handleOpenTeamLogin = () => setLoginModalState({ isOpen: true, mode: 'TEAM' });
+  const handleOpenAdminLogin = () => setLoginModalState({ isOpen: true, mode: 'ADMIN' });
 
   const handleScrollToSection = (sectionId) => {
     const el = document.getElementById(sectionId);
@@ -25,7 +28,9 @@ export default function HomePage({ onLoginSuccess }) {
     <div className="min-h-screen bg-court-sand text-navy-900 selection:bg-saffron-500 selection:text-white">
       {/* Top Navbar */}
       <Navbar
-        onOpenLogin={() => setLoginModalOpen(true)}
+        onOpenLogin={handleOpenTeamLogin}
+        onOpenTeamLogin={handleOpenTeamLogin}
+        onOpenAdminLogin={handleOpenAdminLogin}
         onNavigateSection={handleScrollToSection}
       />
 
@@ -61,8 +66,9 @@ export default function HomePage({ onLoginSuccess }) {
 
       {/* Login Flow Modal */}
       <LoginModal
-        isOpen={loginModalOpen}
-        onClose={() => setLoginModalOpen(false)}
+        isOpen={loginModalState.isOpen}
+        initialMode={loginModalState.mode}
+        onClose={() => setLoginModalState(prev => ({ ...prev, isOpen: false }))}
         onLoginSuccess={onLoginSuccess}
       />
     </div>
