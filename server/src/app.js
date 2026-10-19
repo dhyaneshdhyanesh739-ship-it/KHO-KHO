@@ -11,6 +11,7 @@ import reportRoutes from './routes/reportRoutes.js';
 import matchRoutes from './routes/matchRoutes.js';
 import announcementRoutes from './routes/announcementRoutes.js';
 import contentRoutes from './routes/contentRoutes.js';
+import groundActivityRoutes from './routes/groundActivityRoutes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { generalLimiter } from './middleware/rateLimiter.js';
 
@@ -75,6 +76,7 @@ app.use('/api/attendance', attendanceRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/matches', matchRoutes);
 app.use('/api/announcements', announcementRoutes);
+app.use('/api/ground-activities', groundActivityRoutes);
 app.use('/api', contentRoutes);
 
 // 404 Route Handler

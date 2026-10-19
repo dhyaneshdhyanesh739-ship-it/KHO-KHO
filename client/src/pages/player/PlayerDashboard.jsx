@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   User, Calendar, Clock, Trophy, Shield, CheckCircle2, XCircle, AlertCircle,
-  Megaphone, LogOut, Award, Sparkles, Check
+  Megaphone, LogOut, Award, Sparkles, Check, Dumbbell, Flame, Tag, Layers
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../services/api';
@@ -12,6 +12,7 @@ export default function PlayerDashboard() {
   const [attendanceData, setAttendanceData] = useState(null);
   const [announcements, setAnnouncements] = useState([]);
   const [upcomingMatches, setUpcomingMatches] = useState([]);
+  const [groundActivities, setGroundActivities] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -37,6 +38,12 @@ export default function PlayerDashboard() {
         const matchRes = await api.matches.getAll({ team: user.team, timeframe: 'upcoming' });
         if (matchRes && matchRes.data) {
           setUpcomingMatches(matchRes.data);
+        }
+
+        // 4. Fetch daily ground training logs (unlocked for attended sessions)
+        const groundRes = await api.groundActivities.getPlayer();
+        if (groundRes && groundRes.data) {
+          setGroundActivities(groundRes.data);
         }
       } catch (err) {
         console.error('Error fetching player dashboard data:', err);
@@ -185,6 +192,109 @@ export default function PlayerDashboard() {
             </p>
             <p className="text-[11px] text-slate-400">75% Threshold</p>
           </div>
+        </div>
+
+        {/* Daily Ground Training & Workouts Section (Attendance-Unlocked) */}
+        <div className="space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h3 className="font-editorial text-xl font-black text-navy-900 flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-saffron-600 to-amber-500 text-white flex items-center justify-center shadow-xs">
+                  <Dumbbell className="w-4 h-4" />
+                </div>
+                <span>Daily Ground Activity &amp; Training Log</span>
+              </h3>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Workouts and drills performed on the ground, unlocked for sessions where you were marked <strong>PRESENT</strong> or <strong>LATE</strong>.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-bold">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+              <span>{groundActivities.length} Ground Activity Logs Unlocked</span>
+            </div>
+          </div>
+
+          {groundActivities.length === 0 ? (
+            <div className="card-premium p-6 sm:p-8 text-center border-dashed border-2 border-slate-200 text-slate-400 space-y-2">
+              <Dumbbell className="w-8 h-8 text-slate-300 mx-auto" />
+              <p className="text-sm font-bold text-navy-900">No Ground Training Logs Available</p>
+              <p className="text-xs text-slate-500 max-w-md mx-auto">
+                Daily ground activities appear automatically for training sessions where your attendance was verified as <strong>PRESENT</strong> or <strong>LATE</strong> on the court.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {groundActivities.map((act) => (
+                <div
+                  key={act._id}
+                  className="card-premium p-5 bg-white border border-slate-200 shadow-card flex flex-col justify-between space-y-4 hover:border-saffron-300 transition-all"
+                >
+                  <div>
+                    {/* Date and Player's Attendance Badge */}
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <span className="text-xs font-mono font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-md">
+                        {act.date}
+                      </span>
+                      <span
+                        className={`badge-tag text-[10px] ${
+                          act.playerAttendanceStatus === 'PRESENT'
+                            ? 'bg-emerald-100 text-emerald-800'
+                            : 'bg-amber-100 text-amber-800'
+                        }`}
+                      >
+                        {act.playerAttendanceStatus === 'PRESENT' ? '✓ You Were Present' : '⏱ You Arrived Late'}
+                      </span>
+                    </div>
+
+                    <h4 className="font-editorial text-base font-bold text-navy-900 mb-1 leading-snug">
+                      {act.title}
+                    </h4>
+
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="text-[11px] text-saffron-700 font-semibold flex items-center gap-1">
+                        <Tag className="w-3 h-3" />
+                        <span>{act.focusArea}</span>
+                      </span>
+                      <span className="text-slate-300">•</span>
+                      <span className="text-[10px] font-bold text-slate-500 uppercase">
+                        {act.sessionTime}
+                      </span>
+                    </div>
+
+                    {/* Drills List */}
+                    <div className="bg-slate-50/80 p-3 rounded-xl border border-slate-100 text-xs space-y-1.5">
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                        Tasks Done On Ground ({act.activities?.length || 0}):
+                      </span>
+                      <ul className="space-y-1.5">
+                        {act.activities?.map((drill, idx) => (
+                          <li key={idx} className="flex items-start gap-2 text-slate-700">
+                            <span className="w-4 h-4 rounded-full bg-saffron-100 text-saffron-700 font-bold text-[9px] flex items-center justify-center shrink-0 mt-0.5">
+                              {idx + 1}
+                            </span>
+                            <span className="leading-snug">{drill}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Coach remarks */}
+                    {act.coachNotes && (
+                      <p className="mt-3 text-xs text-slate-600 bg-amber-50/60 border border-amber-100 p-2.5 rounded-xl italic">
+                        "{act.coachNotes}"
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="pt-2 border-t border-slate-100 text-[11px] text-slate-400 flex items-center justify-between">
+                    <span>Intensity: <strong className="text-slate-600">{act.intensity}</strong></span>
+                    <span>Verified Log</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Dual Panels: Published Match Squads & Announcements */}

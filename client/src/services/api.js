@@ -144,6 +144,18 @@ export const api = {
     delete: (id) => apiRequest(`/announcements/${id}`, { method: 'DELETE' }),
   },
 
+  // Daily Ground Activities
+  groundActivities: {
+    getAdmin: (params = {}) => {
+      const qs = new URLSearchParams(params).toString();
+      return apiRequest(`/ground-activities/admin${qs ? `?${qs}` : ''}`);
+    },
+    getPlayer: () => apiRequest('/ground-activities/player'),
+    create: (data) => apiRequest('/ground-activities', { method: 'POST', body: JSON.stringify(data) }),
+    update: (id, data) => apiRequest(`/ground-activities/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    delete: (id) => apiRequest(`/ground-activities/${id}`, { method: 'DELETE' }),
+  },
+
   // Content & Utilities
   content: {
     getAchievements: (category) => apiRequest(`/achievements${category ? `?category=${category}` : ''}`),

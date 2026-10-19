@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   LayoutDashboard, Users, CheckSquare, History, BarChart3, Trophy,
   Megaphone, UserCheck, LogOut, ChevronRight, Menu, X, Calendar, ArrowRight,
-  TrendingUp, Clock, CheckCircle2, Shield, Crown
+  TrendingUp, Clock, CheckCircle2, Shield, Crown, Dumbbell
 } from 'lucide-react';
 import {
   BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid
@@ -18,6 +18,7 @@ import MatchSquadSelector from '../../features/squad/MatchSquadSelector';
 import AnnouncementsManager from '../../features/announcements/AnnouncementsManager';
 import AdminProfileView from '../../features/admin/AdminProfileView';
 import SuperAdminDirectory from '../../features/admin/SuperAdminDirectory';
+import DailyGroundLogManager from '../../features/ground/DailyGroundLogManager';
 
 export default function AdminDashboard({ onLogout }) {
   const { user, logout } = useAuth();
@@ -56,6 +57,7 @@ export default function AdminDashboard({ onLogout }) {
     { id: 'overview', label: 'Overview', icon: LayoutDashboard },
     ...(isSuperAdmin ? [{ id: 'directory', label: 'Access Anyone (Users)', icon: Crown }] : []),
     { id: 'roster', label: 'Players / Roster', icon: Users },
+    { id: 'ground-log', label: 'Daily Ground Log', icon: Dumbbell },
     { id: 'mark-attendance', label: 'Mark Attendance', icon: CheckSquare },
     { id: 'history', label: 'Attendance History', icon: History },
     { id: 'reports', label: 'Reports & Analytics', icon: BarChart3 },
@@ -416,6 +418,9 @@ export default function AdminDashboard({ onLogout }) {
 
           {/* ==================== 2. PLAYERS / ROSTER TAB ==================== */}
           {activeTab === 'roster' && <RosterManager team={team} />}
+
+          {/* ==================== 2.5 DAILY GROUND LOG TAB ==================== */}
+          {activeTab === 'ground-log' && <DailyGroundLogManager team={team} />}
 
           {/* ==================== 3. MARK ATTENDANCE TAB ==================== */}
           {activeTab === 'mark-attendance' && <AttendanceMarker team={team} />}
