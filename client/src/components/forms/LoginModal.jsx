@@ -241,8 +241,8 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
                         selectedTeam === 'ALL'
                           ? 'dhyaneshdhyanesh739@gmail.com'
                           : selectedTeam === 'GIRLS'
-                          ? 'e.g. Dhyanesh or madhu'
-                          : 'e.g. Dhyanesh or mohan'
+                          ? 'e.g. Dhyanesh_23 or madhu'
+                          : 'e.g. Dhyanesh_23 or mohan'
                       }
                       className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-sm text-navy-900 transition-all outline-none"
                     />
@@ -325,7 +325,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
                     <div className="flex items-center justify-between border-b border-slate-200/60 pb-1">
                       <span className="font-bold text-navy-900">Coaching Admin:</span>
                       <span className="font-mono bg-white px-2 py-0.5 rounded border border-slate-200 text-saffron-700 font-semibold text-[10px]">
-                        Dhyanesh <span className="text-slate-400">/</span> kiddo@khokho
+                        Dhyanesh_23 <span className="text-slate-400">/</span> kiddo@khokho
                       </span>
                     </div>
                     {selectedTeam === 'GIRLS' ? (

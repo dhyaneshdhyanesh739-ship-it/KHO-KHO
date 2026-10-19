@@ -16,12 +16,7 @@ async function run() {
   const superAdminPasswordHash = await bcrypt.hash('Dhyanesh@23012007', 10);
   const coachPasswordHash = await bcrypt.hash('kiddo@khokho', 10);
   
-  let dhyaneshUser = await User.findOne({ 
-    $or: [
-      { username: 'dhyanesh' },
-      { email: 'dhyaneshdhyanesh739@gmail.com' }
-    ]
-  });
+  let dhyaneshUser = await User.findOne({ username: 'dhyanesh' });
   if (!dhyaneshUser) {
     dhyaneshUser = await User.create({
       username: 'dhyanesh',
@@ -51,10 +46,16 @@ async function run() {
     { $set: { passwordHash: superAdminPasswordHash, email: 'dhyaneshdhyanesh739@gmail.com', name: 'Dhyanesh.S.E' } }
   );
 
-  // Update boysadmin & girlsadmin passwords
-  await User.updateOne({ username: 'boysadmin' }, { $set: { passwordHash: coachPasswordHash } });
-  await User.updateOne({ username: 'girlsadmin' }, { $set: { passwordHash: coachPasswordHash } });
-  console.log('[Update] Updated boysadmin & girlsadmin passwords to kiddo@khokho');
+  // Update boysadmin & girlsadmin passwords and name
+  await User.updateOne(
+    { username: 'boysadmin' },
+    { $set: { passwordHash: coachPasswordHash, name: 'Coach Dhyanesh.S.E', isActive: true } }
+  );
+  await User.updateOne(
+    { username: 'girlsadmin' },
+    { $set: { passwordHash: coachPasswordHash, name: 'Coach Dhyanesh.S.E', isActive: true } }
+  );
+  console.log('[Update] Updated boysadmin & girlsadmin credentials (kiddo@khokho, Coach Dhyanesh.S.E)');
 
   // 2. Setup Boys Roster from user sheet (22 players)
   const boysRoster = [

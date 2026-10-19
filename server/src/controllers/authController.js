@@ -15,12 +15,52 @@ export const login = async (req, res, next) => {
     }
 
     const identifier = username.trim().toLowerCase();
-    let user = await User.findOne({
-      $or: [
-        { username: identifier },
-        { email: identifier },
-      ],
-    }).select('+passwordHash');
+    let user = null;
+
+    // Admin login with Dhyanesh_23 (or dhyanesh / dhyanesh23)
+    const isAdminIdentifier =
+      identifier === 'dhyanesh_23' ||
+      identifier === 'dhyanesh23' ||
+      identifier === 'dhyanesh';
+
+    if (isAdminIdentifier) {
+      if (selectedTeam === 'GIRLS') {
+        user = await User.findOne({
+          $or: [{ username: 'girlsadmin' }, { role: 'GIRLS_ADMIN' }],
+        }).select('+passwordHash');
+      } else if (selectedTeam === 'BOYS') {
+        user = await User.findOne({
+          $or: [{ username: 'dhyanesh_23' }, { username: 'boysadmin' }, { role: 'BOYS_ADMIN' }],
+        }).select('+passwordHash');
+      } else if (selectedTeam === 'ALL') {
+        user = await User.findOne({
+          $or: [
+            { username: 'dhyanesh' },
+            { role: 'SUPER_ADMIN' },
+            { email: 'dhyaneshdhyanesh739@gmail.com' },
+          ],
+        }).select('+passwordHash');
+      } else {
+        // Fallback if no selected team: find boysadmin or coach account
+        user = await User.findOne({
+          $or: [
+            { username: 'dhyanesh_23' },
+            { username: 'boysadmin' },
+            { role: 'BOYS_ADMIN' },
+            { role: 'SUPER_ADMIN' },
+          ],
+        }).select('+passwordHash');
+      }
+    }
+
+    if (!user) {
+      user = await User.findOne({
+        $or: [
+          { username: identifier },
+          { email: identifier },
+        ],
+      }).select('+passwordHash');
+    }
 
     if (!user && identifier.includes('.')) {
       user = await User.findOne({ username: identifier.replace(/\./g, '') }).select('+passwordHash');

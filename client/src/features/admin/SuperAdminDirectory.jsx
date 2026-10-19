@@ -313,6 +313,9 @@ export default function SuperAdminDirectory() {
                       {/* Login Identifier */}
                       <td className="py-3.5 px-4 font-mono text-[11px] text-slate-700">
                         <div>@{u.username}</div>
+                        {!isSuper && !isPlayer && (
+                          <div className="text-[10px] text-saffron-700 font-sans font-bold">Login: Dhyanesh_23</div>
+                        )}
                         {u.email && <div className="text-[10px] text-slate-400 font-sans">{u.email}</div>}
                       </td>
 
