@@ -1,11 +1,7 @@
 import React from 'react';
-import { ArrowUp, Shield, Mail, Phone, MapPin } from 'lucide-react';
+import { Shield, Mail, Phone, MapPin } from 'lucide-react';
 
 export default function Footer({ onNavigateSection, onOpenLogin }) {
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
   return (
     <footer className="bg-[#0b1322] border-t border-slate-800 pt-16 pb-12 text-slate-400">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -152,15 +148,6 @@ export default function Footer({ onNavigateSection, onOpenLogin }) {
               Dhyanesh S E
             </span>
           </div>
-
-          <button
-            type="button"
-            onClick={scrollToTop}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold transition-colors"
-          >
-            <span>Back to Top</span>
-            <ArrowUp className="w-3.5 h-3.5" />
-          </button>
         </div>
       </div>
     </footer>
