@@ -47,6 +47,50 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const [isImpersonated, setIsImpersonated] = useState(
+    () => typeof window !== 'undefined' && !!sessionStorage.getItem('kho_kho_superadmin_backup_token')
+  );
+
+  const impersonateUser = async (targetUserId) => {
+    try {
+      const currentToken = localStorage.getItem('kho_kho_token');
+      if (!sessionStorage.getItem('kho_kho_superadmin_backup_token')) {
+        sessionStorage.setItem('kho_kho_superadmin_backup_token', currentToken || '');
+      }
+
+      const res = await api.auth.impersonate(targetUserId);
+      if (res && res.user) {
+        if (res.token) {
+          localStorage.setItem('kho_kho_token', res.token);
+        }
+        setUser(res.user);
+        setIsImpersonated(true);
+        return { success: true, user: res.user };
+      }
+      throw new Error(res.message || 'Failed to access user account');
+    } catch (err) {
+      return { success: false, message: err.message || 'Failed to switch user view' };
+    }
+  };
+
+  const exitImpersonation = async () => {
+    try {
+      const backupToken = sessionStorage.getItem('kho_kho_superadmin_backup_token');
+      if (backupToken) {
+        localStorage.setItem('kho_kho_token', backupToken);
+      }
+      sessionStorage.removeItem('kho_kho_superadmin_backup_token');
+      setIsImpersonated(false);
+
+      const res = await api.auth.getMe();
+      if (res && res.user) {
+        setUser(res.user);
+      }
+    } catch (err) {
+      console.error('Failed to exit impersonation:', err);
+    }
+  };
+
   const logout = async () => {
     try {
       await api.auth.logout();
@@ -55,6 +99,8 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setUser(null);
       localStorage.removeItem('kho_kho_token');
+      sessionStorage.removeItem('kho_kho_superadmin_backup_token');
+      setIsImpersonated(false);
     }
   };
 
@@ -86,9 +132,12 @@ export const AuthProvider = ({ children }) => {
         isSuperAdmin,
         isPlayer,
         isAdmin,
+        isImpersonated,
         currentTeam,
         login,
         logout,
+        impersonateUser,
+        exitImpersonation,
         refreshUser,
       }}
     >

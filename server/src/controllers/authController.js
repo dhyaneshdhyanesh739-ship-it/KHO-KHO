@@ -14,19 +14,24 @@ export const login = async (req, res, next) => {
       });
     }
 
-    const cleanUsername = username.trim().toLowerCase();
-    let user = await User.findOne({ username: cleanUsername }).select('+passwordHash');
+    const identifier = username.trim().toLowerCase();
+    let user = await User.findOne({
+      $or: [
+        { username: identifier },
+        { email: identifier },
+      ],
+    }).select('+passwordHash');
 
-    if (!user && cleanUsername.includes('.')) {
-      user = await User.findOne({ username: cleanUsername.replace(/\./g, '') }).select('+passwordHash');
+    if (!user && identifier.includes('.')) {
+      user = await User.findOne({ username: identifier.replace(/\./g, '') }).select('+passwordHash');
     }
 
     if (!user) {
-      // Check if username matches by Player ID or exact name
+      // Check if identifier matches by Player ID or exact name
       const matchingPlayer = await Player.findOne({
         $or: [
-          { playerId: cleanUsername.toUpperCase() },
-          { name: new RegExp(`^${cleanUsername}$`, 'i') },
+          { playerId: identifier.toUpperCase() },
+          { name: new RegExp(`^${identifier}$`, 'i') },
         ],
       });
       if (matchingPlayer && matchingPlayer.userRef) {
@@ -37,7 +42,7 @@ export const login = async (req, res, next) => {
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid credentials. Please verify your username and password.',
+        message: 'Invalid credentials. Please verify your username/email and password.',
       });
     }
 
@@ -56,12 +61,12 @@ export const login = async (req, res, next) => {
         user.role === 'PLAYER' &&
         (cleanEnteredPass === `${user.username}@khokho` ||
           cleanEnteredPass === `${user.username.replace(/\./g, '')}@khokho` ||
-          cleanEnteredPass === `${cleanUsername}@khokho`)
+          cleanEnteredPass === `${identifier}@khokho`)
       ) {
         isMatch = true;
       } else if (
         (user.role === 'SUPER_ADMIN' || user.role === 'BOYS_ADMIN' || user.role === 'GIRLS_ADMIN') &&
-        cleanEnteredPass === 'kiddo@khokho'
+        (cleanEnteredPass === 'Dhyanesh@23012007' || cleanEnteredPass === 'kiddo@khokho')
       ) {
         isMatch = true;
       }
@@ -124,6 +129,7 @@ export const login = async (req, res, next) => {
       user: {
         id: user._id,
         username: user.username,
+        email: user.email,
         name: user.name,
         role: user.role,
         team: effectiveTeam,
@@ -175,6 +181,7 @@ export const getMe = async (req, res, next) => {
       user: {
         id: user._id,
         username: user.username,
+        email: user.email,
         name: user.name,
         role: user.role,
         team: user.team,
@@ -219,6 +226,162 @@ export const changePassword = async (req, res, next) => {
     });
 
     return res.status(200).json({ success: true, message: 'Password updated successfully' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Super Admin Process: Retrieve all users in the system (Admins, Boys & Girls players)
+ */
+export const getAllUsers = async (req, res, next) => {
+  try {
+    const users = await User.find({})
+      .select('-passwordHash')
+      .populate('playerRef')
+      .sort({ role: 1, team: 1, name: 1 });
+
+    return res.status(200).json({
+      success: true,
+      count: users.length,
+      users,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Super Admin Process: Impersonate / Access ANY user in the project
+ */
+export const impersonateUser = async (req, res, next) => {
+  try {
+    const { targetUserId } = req.body;
+    if (!targetUserId) {
+      return res.status(400).json({ success: false, message: 'Target user ID is required.' });
+    }
+
+    const targetUser = await User.findById(targetUserId);
+    if (!targetUser) {
+      return res.status(404).json({ success: false, message: 'Target user not found.' });
+    }
+
+    let playerDetails = null;
+    if (targetUser.role === 'PLAYER' && targetUser.playerRef) {
+      playerDetails = await Player.findById(targetUser.playerRef);
+    }
+
+    const token = generateToken(targetUser);
+    setAuthCookie(res, token);
+
+    await logAuditEvent({
+      actor: req.user,
+      team: targetUser.team,
+      action: 'SUPER_ADMIN_IMPERSONATE',
+      entity: 'AUTH',
+      entityId: targetUser._id.toString(),
+      details: {
+        adminUsername: req.user.username,
+        targetUsername: targetUser.username,
+        targetRole: targetUser.role,
+        targetTeam: targetUser.team,
+      },
+      ipAddress: req.ip,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: `Now accessing portal as ${targetUser.name}`,
+      token,
+      user: {
+        id: targetUser._id,
+        username: targetUser.username,
+        email: targetUser.email,
+        name: targetUser.name,
+        role: targetUser.role,
+        team: targetUser.team,
+        playerRef: targetUser.playerRef,
+        player: playerDetails,
+        lastLogin: targetUser.lastLogin,
+        isImpersonated: true,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Super Admin Process: Toggle active/inactive status of any user
+ */
+export const toggleUserStatus = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    if (user.role === 'SUPER_ADMIN') {
+      return res.status(400).json({ success: false, message: 'Cannot deactivate Super Administrator accounts' });
+    }
+
+    user.isActive = !user.isActive;
+    await user.save();
+
+    await logAuditEvent({
+      actor: req.user,
+      team: user.team,
+      action: user.isActive ? 'USER_ACTIVATED' : 'USER_DEACTIVATED',
+      entity: 'AUTH',
+      entityId: user._id.toString(),
+      details: { username: user.username, role: user.role, isActive: user.isActive },
+      ipAddress: req.ip,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: `User ${user.username} is now ${user.isActive ? 'Active' : 'Deactivated'}`,
+      user: { id: user._id, username: user.username, isActive: user.isActive },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Super Admin Process: Reset any user's password directly
+ */
+export const resetUserPassword = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { newPassword } = req.body;
+    if (!newPassword || newPassword.length < 6) {
+      return res.status(400).json({ success: false, message: 'New password must be at least 6 characters' });
+    }
+
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    user.passwordHash = await User.hashPassword(newPassword);
+    await user.save();
+
+    await logAuditEvent({
+      actor: req.user,
+      team: user.team,
+      action: 'ADMIN_RESET_PASSWORD',
+      entity: 'AUTH',
+      entityId: user._id.toString(),
+      details: { username: user.username, role: user.role },
+      ipAddress: req.ip,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: `Password reset successfully for ${user.username}`,
+    });
   } catch (error) {
     next(error);
   }

@@ -62,6 +62,10 @@ export const api = {
     logout: () => apiRequest('/auth/logout', { method: 'POST' }),
     getMe: () => apiRequest('/auth/me'),
     changePassword: (data) => apiRequest('/auth/change-password', { method: 'PUT', body: JSON.stringify(data) }),
+    getAllUsers: () => apiRequest('/auth/users'),
+    impersonate: (targetUserId) => apiRequest('/auth/impersonate', { method: 'POST', body: JSON.stringify({ targetUserId }) }),
+    toggleUserStatus: (id) => apiRequest(`/auth/users/${id}/status`, { method: 'PATCH' }),
+    resetUserPassword: (id, newPassword) => apiRequest(`/auth/users/${id}/reset-password`, { method: 'PATCH', body: JSON.stringify({ newPassword }) }),
   },
 
   // Players

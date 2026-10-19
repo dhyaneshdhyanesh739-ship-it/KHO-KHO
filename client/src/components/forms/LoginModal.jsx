@@ -81,7 +81,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
             )}
             <div>
               <h3 className="font-editorial text-xl font-bold text-navy-900 tracking-tight">
-                {selectedTeam ? `${selectedTeam === 'BOYS' ? 'Boys' : 'Girls'} Team Login` : 'Select Team Division'}
+                {selectedTeam ? (selectedTeam === 'ALL' ? 'Super Administrator Portal' : `${selectedTeam === 'BOYS' ? 'Boys' : 'Girls'} Team Login`) : 'Select Team Division'}
               </h3>
               <p className="text-xs text-slate-500 font-medium">Kho-Kho Arena Team Management Portal</p>
             </div>
@@ -147,7 +147,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
                       <h4 className="font-bold text-navy-900 group-hover:text-rose-600 transition-colors">
                         Girls Kho-Kho Team
                       </h4>
-                      <p className="text-xs text-slate-500">18 Active Roster Members • Coaching Admin & Players</p>
+                      <p className="text-xs text-slate-500">13 Active Roster Members • Coaching Admin & Players</p>
                     </div>
                   </div>
                   <div className="w-7 h-7 rounded-full bg-slate-100 group-hover:bg-rose-500 group-hover:text-white flex items-center justify-center text-slate-400 transition-colors">
@@ -155,8 +155,33 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
                   </div>
                 </button>
 
+                {/* Option 3: Super Administrator Portal */}
+                <button
+                  type="button"
+                  onClick={() => handleSelectTeam('ALL')}
+                  className="w-full group p-4 rounded-2xl border-2 border-slate-200 hover:border-indigo-500 bg-gradient-to-r from-white via-indigo-50/30 to-purple-50/40 hover:to-indigo-50/70 text-left transition-all duration-200 flex items-center justify-between shadow-sm hover:shadow-md"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-lg group-hover:scale-105 transition-transform">
+                      <ShieldCheck className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-navy-900 group-hover:text-indigo-600 transition-colors flex items-center gap-2">
+                        <span>Super Administrator Portal</span>
+                        <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-black uppercase">
+                          Full Access
+                        </span>
+                      </h4>
+                      <p className="text-xs text-slate-500">System Authority • Access Anyone in Project & Both Squads</p>
+                    </div>
+                  </div>
+                  <div className="w-7 h-7 rounded-full bg-slate-100 group-hover:bg-indigo-600 group-hover:text-white flex items-center justify-center text-slate-400 transition-colors">
+                    →
+                  </div>
+                </button>
+
                 <div className="mt-4 p-3 rounded-xl bg-slate-50 border border-slate-200 text-[12px] text-slate-500 text-center">
-                  Super Administrator accounts can authenticate through either division.
+                  Super Administrator accounts can oversee both teams and access any account in the project.
                 </div>
               </motion.div>
             ) : (
@@ -173,17 +198,21 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
                 <div className="flex items-center justify-between">
                   <span
                     className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase ${
-                      selectedTeam === 'BOYS' ? 'bg-saffron-100 text-saffron-700' : 'bg-rose-100 text-rose-700'
+                      selectedTeam === 'ALL'
+                        ? 'bg-indigo-100 text-indigo-700'
+                        : selectedTeam === 'BOYS'
+                        ? 'bg-saffron-100 text-saffron-700'
+                        : 'bg-rose-100 text-rose-700'
                     }`}
                   >
-                    Division: {selectedTeam} Team
+                    {selectedTeam === 'ALL' ? '👑 Super Admin Console' : `Division: ${selectedTeam} Team`}
                   </span>
                   <button
                     type="button"
                     onClick={() => setSelectedTeam(null)}
                     className="text-xs text-slate-500 hover:text-navy-900 underline"
                   >
-                    Switch Division
+                    Switch Portal
                   </button>
                 </div>
 
@@ -194,10 +223,10 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
                   </div>
                 )}
 
-                {/* Username Input */}
+                {/* Username or Email Input */}
                 <div>
                   <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                    Username
+                    {selectedTeam === 'ALL' ? 'Email or Username' : 'Username'}
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
@@ -208,12 +237,20 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
                       required
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
-                      placeholder={selectedTeam === 'GIRLS' ? 'e.g. Dhyanesh or madhu' : 'e.g. Dhyanesh or mohan'}
-                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:border-saffron-500 focus:ring-2 focus:ring-saffron-500/20 text-sm text-navy-900 transition-all outline-none"
+                      placeholder={
+                        selectedTeam === 'ALL'
+                          ? 'dhyaneshdhyanesh739@gmail.com'
+                          : selectedTeam === 'GIRLS'
+                          ? 'e.g. Dhyanesh or madhu'
+                          : 'e.g. Dhyanesh or mohan'
+                      }
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-sm text-navy-900 transition-all outline-none"
                     />
                   </div>
                   <p className="mt-1 text-[11px] text-slate-400">
-                    Use your assigned coaching admin or player username
+                    {selectedTeam === 'ALL'
+                      ? 'Use your authorized Super Admin email or username'
+                      : 'Use your assigned coaching admin or athlete username'}
                   </p>
                 </div>
 
@@ -232,7 +269,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••••••"
-                      className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 focus:border-saffron-500 focus:ring-2 focus:ring-saffron-500/20 text-sm text-navy-900 transition-all outline-none"
+                      className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-sm text-navy-900 transition-all outline-none"
                     />
                     <button
                       type="button"
@@ -250,7 +287,9 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
                   type="submit"
                   disabled={isSubmitting}
                   className={`w-full py-3 rounded-xl font-bold text-white shadow-md transition-all duration-200 flex items-center justify-center gap-2 ${
-                    selectedTeam === 'BOYS'
+                    selectedTeam === 'ALL'
+                      ? 'bg-gradient-to-r from-indigo-700 to-indigo-600 hover:from-indigo-800 hover:to-indigo-700 shadow-indigo-500/25'
+                      : selectedTeam === 'BOYS'
                       ? 'bg-gradient-to-r from-saffron-600 to-saffron-500 hover:from-saffron-700 hover:to-saffron-600 shadow-saffron-500/25'
                       : 'bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-700 hover:to-rose-600 shadow-rose-500/25'
                   }`}
@@ -266,33 +305,41 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
                   ) : (
                     <>
                       <ShieldCheck className="w-4 h-4" />
-                      Sign In to {selectedTeam === 'BOYS' ? 'Boys' : 'Girls'} Portal
+                      Sign In to {selectedTeam === 'ALL' ? 'Super Admin' : selectedTeam === 'BOYS' ? 'Boys' : 'Girls'} Portal
                     </>
                   )}
                 </button>
 
-                {/* Demo Credentials Helper Pill */}
+                {/* Demo / Official Credentials Helper Pill */}
                 <div className="pt-2 border-t border-slate-100">
-                  <p className="text-[11px] font-semibold text-slate-500 mb-1">Official Login Credentials:</p>
+                  <p className="text-[11px] font-semibold text-slate-500 mb-1">Official Credentials Reference:</p>
                   <div className="space-y-1.5 text-[11px] text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200/60 pb-1 gap-1">
+                      <span className="font-bold text-navy-900 flex items-center gap-1">
+                        <span>👑 Super Admin:</span>
+                      </span>
+                      <span className="font-mono bg-white px-2 py-0.5 rounded border border-slate-200 text-indigo-700 font-bold text-[10px] break-all">
+                        dhyaneshdhyanesh739@gmail.com <span className="text-slate-400">/</span> Dhyanesh@23012007
+                      </span>
+                    </div>
                     <div className="flex items-center justify-between border-b border-slate-200/60 pb-1">
-                      <span className="font-bold text-navy-900">Admin (Both Teams):</span>
-                      <span className="font-mono bg-white px-2 py-0.5 rounded border border-slate-200 text-saffron-700 font-semibold">
+                      <span className="font-bold text-navy-900">Coaching Admin:</span>
+                      <span className="font-mono bg-white px-2 py-0.5 rounded border border-slate-200 text-saffron-700 font-semibold text-[10px]">
                         Dhyanesh <span className="text-slate-400">/</span> kiddo@khokho
                       </span>
                     </div>
-                    {selectedTeam === 'BOYS' ? (
+                    {selectedTeam === 'GIRLS' ? (
                       <div className="flex items-center justify-between">
-                        <span className="font-bold text-navy-900">Boys Player Login:</span>
-                        <span className="font-mono bg-white px-2 py-0.5 rounded border border-slate-200 text-slate-700">
-                          mohan <span className="text-slate-400">/</span> mohan@khokho
+                        <span className="font-bold text-navy-900">Girls Player:</span>
+                        <span className="font-mono bg-white px-2 py-0.5 rounded border border-slate-200 text-rose-700 font-semibold text-[10px]">
+                          madhu <span className="text-slate-400">/</span> madhu@khokho
                         </span>
                       </div>
                     ) : (
                       <div className="flex items-center justify-between">
-                        <span className="font-bold text-navy-900">Girls Player Login:</span>
-                        <span className="font-mono bg-white px-2 py-0.5 rounded border border-slate-200 text-rose-700 font-semibold">
-                          madhu <span className="text-slate-400">/</span> madhu@khokho
+                        <span className="font-bold text-navy-900">Boys Player:</span>
+                        <span className="font-mono bg-white px-2 py-0.5 rounded border border-slate-200 text-slate-700 text-[10px]">
+                          mohan <span className="text-slate-400">/</span> mohan@khokho
                         </span>
                       </div>
                     )}

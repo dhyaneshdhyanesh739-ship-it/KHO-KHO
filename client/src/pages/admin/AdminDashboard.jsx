@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   LayoutDashboard, Users, CheckSquare, History, BarChart3, Trophy,
   Megaphone, UserCheck, LogOut, ChevronRight, Menu, X, Calendar, ArrowRight,
-  TrendingUp, Clock, CheckCircle2, Shield
+  TrendingUp, Clock, CheckCircle2, Shield, Crown
 } from 'lucide-react';
 import {
   BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid
@@ -17,11 +17,15 @@ import ReportsView from '../../features/reports/ReportsView';
 import MatchSquadSelector from '../../features/squad/MatchSquadSelector';
 import AnnouncementsManager from '../../features/announcements/AnnouncementsManager';
 import AdminProfileView from '../../features/admin/AdminProfileView';
+import SuperAdminDirectory from '../../features/admin/SuperAdminDirectory';
 
 export default function AdminDashboard({ onLogout }) {
   const { user, logout } = useAuth();
-  const team = user?.team || 'BOYS';
-  const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'roster' | 'mark-attendance' | 'history' | 'reports' | 'squad' | 'announcements' | 'profile'
+  const isSuperAdmin = user?.role === 'SUPER_ADMIN';
+  const [activeDivision, setActiveDivision] = useState(user?.team === 'GIRLS' ? 'GIRLS' : 'BOYS');
+  const team = isSuperAdmin ? activeDivision : (user?.team || 'BOYS');
+
+  const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'directory' | 'roster' | 'mark-attendance' | 'history' | 'reports' | 'squad' | 'announcements' | 'profile'
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Overview stats state
@@ -50,6 +54,7 @@ export default function AdminDashboard({ onLogout }) {
 
   const navItems = [
     { id: 'overview', label: 'Overview', icon: LayoutDashboard },
+    ...(isSuperAdmin ? [{ id: 'directory', label: 'Access Anyone (Users)', icon: Crown }] : []),
     { id: 'roster', label: 'Players / Roster', icon: Users },
     { id: 'mark-attendance', label: 'Mark Attendance', icon: CheckSquare },
     { id: 'history', label: 'Attendance History', icon: History },
@@ -81,17 +86,21 @@ export default function AdminDashboard({ onLogout }) {
             <div className="flex items-center gap-3">
               <div
                 className={`w-10 h-10 rounded-2xl flex items-center justify-center text-white font-editorial font-black shadow-md ${
-                  team === 'BOYS' ? 'bg-saffron-600 shadow-saffron-500/25' : 'bg-rose-600 shadow-rose-500/25'
+                  isSuperAdmin
+                    ? 'bg-purple-600 shadow-purple-500/25'
+                    : team === 'BOYS'
+                    ? 'bg-saffron-600 shadow-saffron-500/25'
+                    : 'bg-rose-600 shadow-rose-500/25'
                 }`}
               >
-                KK
+                {isSuperAdmin ? <Crown className="w-5 h-5 text-amber-300" /> : 'KK'}
               </div>
               <div>
                 <h1 className="font-editorial font-black text-lg text-navy-900 tracking-tight leading-none">
-                  {team === 'BOYS' ? 'BOYS' : 'GIRLS'} ADMIN
+                  {isSuperAdmin ? 'SUPER ADMIN' : `${team} ADMIN`}
                 </h1>
                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                  Kho-Kho Arena Portal
+                  {isSuperAdmin ? 'Full Access Portal' : 'Kho-Kho Arena Portal'}
                 </p>
               </div>
             </div>
@@ -104,6 +113,34 @@ export default function AdminDashboard({ onLogout }) {
               <X className="w-5 h-5" />
             </button>
           </div>
+
+          {/* Super Admin Squad Switcher */}
+          {isSuperAdmin && (
+            <div className="p-1 rounded-2xl bg-slate-100 flex gap-1 border border-slate-200/80">
+              <button
+                type="button"
+                onClick={() => setActiveDivision('BOYS')}
+                className={`flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+                  activeDivision === 'BOYS'
+                    ? 'bg-white text-saffron-700 shadow-sm border border-saffron-200'
+                    : 'text-slate-500 hover:text-navy-900'
+                }`}
+              >
+                <span>👦 Boys Squad</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveDivision('GIRLS')}
+                className={`flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+                  activeDivision === 'GIRLS'
+                    ? 'bg-white text-rose-700 shadow-sm border border-rose-200'
+                    : 'text-slate-500 hover:text-navy-900'
+                }`}
+              >
+                <span>👧 Girls Squad</span>
+              </button>
+            </div>
+          )}
 
           {/* Navigation Links */}
           <nav className="space-y-1">
@@ -179,10 +216,16 @@ export default function AdminDashboard({ onLogout }) {
             </button>
             <span
               className={`badge-tag ${
-                team === 'BOYS' ? 'bg-saffron-100 text-saffron-800' : 'bg-rose-100 text-rose-800'
+                isSuperAdmin
+                  ? 'bg-purple-100 text-purple-900 border border-purple-200 shadow-sm'
+                  : team === 'BOYS'
+                  ? 'bg-saffron-100 text-saffron-800'
+                  : 'bg-rose-100 text-rose-800'
               }`}
             >
-              {team} Team Administrative Workspace
+              {isSuperAdmin
+                ? `⚡ Super Admin Portal • Managing ${activeDivision === 'BOYS' ? 'Boys Squad' : 'Girls Squad'}`
+                : `${team} Team Administrative Workspace`}
             </span>
           </div>
 
@@ -367,6 +410,9 @@ export default function AdminDashboard({ onLogout }) {
               </div>
             </div>
           )}
+
+          {/* ==================== 1.5 SUPER ADMIN: DIRECTORY TAB ==================== */}
+          {activeTab === 'directory' && isSuperAdmin && <SuperAdminDirectory />}
 
           {/* ==================== 2. PLAYERS / ROSTER TAB ==================== */}
           {activeTab === 'roster' && <RosterManager team={team} />}

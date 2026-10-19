@@ -7,7 +7,7 @@ import PlayerDashboard from './pages/player/PlayerDashboard';
 import ViniVidiViciIntro from './components/ui/ViniVidiViciIntro';
 import FierySwordScreen from './components/ui/FierySwordScreen';
 function AppShell() {
-  const { user, isAuthenticated, isLoading, logout } = useAuth();
+  const { user, isAuthenticated, isLoading, logout, isImpersonated, exitImpersonation } = useAuth();
   const [viewingPublic, setViewingPublic] = useState(false);
   // Intro Phases: 'CREED' -> 'SWORD' -> 'DONE'
   const [introStep, setIntroStep] = useState('CREED');
@@ -28,6 +28,28 @@ function AppShell() {
 
   return (
     <div className="relative min-h-screen">
+      {/* Super Admin Impersonation Persistent Banner */}
+      {isAuthenticated && isImpersonated && (
+        <div className="bg-gradient-to-r from-purple-950 via-indigo-950 to-slate-950 text-white text-xs py-2.5 px-4 flex flex-wrap items-center justify-between sticky top-0 z-[100] shadow-xl border-b border-purple-500/40 gap-2">
+          <div className="flex items-center gap-2.5">
+            <span className="flex h-2.5 w-2.5 relative">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-400"></span>
+            </span>
+            <span className="font-semibold text-purple-200">
+              ⚡ Super Admin View Mode: Currently viewing as <strong className="text-white">@{user?.username}</strong> ({user?.name} &bull; {user?.role})
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={exitImpersonation}
+            className="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-3.5 py-1 rounded-lg transition-all text-xs flex items-center gap-1.5 shadow-md active:scale-95 cursor-pointer"
+          >
+            <span>✕ Exit View &amp; Return to Super Admin</span>
+          </button>
+        </div>
+      )}
+
       {/* 2-Step Cinematic Intro: VINI VIDI VICI -> Flaming Sword Tattoo -> Home */}
       <AnimatePresence mode="wait">
         {introStep === 'CREED' && (
