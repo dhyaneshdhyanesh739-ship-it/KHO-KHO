@@ -1,6 +1,5 @@
 import React, { useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Flame, ArrowRight, Sparkles } from 'lucide-react';
 
 // Advanced Procedural Fire Simulation with Realistic Teardrop Flame Tongues & Embers (Horizontal Layout)
 function RealFireCanvas() {
@@ -215,18 +214,35 @@ function RealFireCanvas() {
 }
 
 export default function FierySwordScreen({ onEnterHome }) {
+  useEffect(() => {
+    // Smooth auto-transition into arena after 3.5 seconds
+    const timer = setTimeout(() => {
+      if (onEnterHome) onEnterHome();
+    }, 3500);
+
+    const handleKeyDown = () => {
+      if (onEnterHome) onEnterHome();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onEnterHome]);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, scale: 1.04 }}
       transition={{ duration: 0.9, ease: 'easeInOut' }}
-      className="fixed inset-0 z-[100] bg-black text-white flex flex-col items-center justify-between overflow-hidden select-none p-4 sm:p-6"
+      onClick={onEnterHome}
+      className="fixed inset-0 z-[100] bg-black text-white flex flex-col items-center justify-center overflow-hidden select-none cursor-pointer p-4 sm:p-6"
     >
       {/* Background Click Zone to Enter Arena */}
       <div
-        onClick={onEnterHome}
-        className="absolute inset-0 z-0 cursor-pointer"
+        className="absolute inset-0 z-0"
         title="Click anywhere to enter Kho-Kho Arena"
       />
 
@@ -243,40 +259,14 @@ export default function FierySwordScreen({ onEnterHome }) {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[360px] h-[220px] bg-amber-300/25 blur-[75px] rounded-full" />
       </div>
 
-      {/* Top Header: Tagline */}
-      <div className="relative z-30 w-full max-w-5xl flex items-center justify-between pt-2">
-        <div className="flex items-center gap-2">
-          <Flame className="w-4 h-4 text-orange-500 fill-orange-500 animate-pulse" />
-          <span className="text-[11px] font-mono uppercase tracking-[0.3em] text-orange-300/90 font-bold">
-            INDIAN INDIGENOUS SPEED SPORT
-          </span>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-orange-400/80 font-semibold px-3 py-1 rounded-full bg-neutral-900/80 border border-neutral-800">
-            SPEED • STRATEGY • SPIRIT
-          </span>
-        </div>
-      </div>
-
       {/* Center Stage: Monumental Horizontal Fiery Text */}
-      <div
-        onClick={onEnterHome}
-        className="relative z-20 flex-1 flex flex-col items-center justify-center w-full my-auto cursor-pointer"
-      >
+      <div className="relative z-20 flex flex-col items-center justify-center w-full my-auto">
         <motion.div
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="relative flex flex-col items-center justify-center text-center px-4"
         >
-          {/* Top Pill Badge */}
-          <div className="mb-4 sm:mb-6">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-950/60 border border-orange-500/40 text-orange-200 text-xs sm:text-sm uppercase tracking-[0.35em] font-bold shadow-[0_0_20px_rgba(249,115,22,0.4)]">
-              ★ SPEED • STRATEGY • SPIRIT ★
-            </span>
-          </div>
-
           {/* Monumental Horizontal Text */}
           <div className="relative group select-none py-2">
             {/* Backlit Fire Silhouette Glow */}
@@ -305,21 +295,6 @@ export default function FierySwordScreen({ onEnterHome }) {
           </p>
         </motion.div>
       </div>
-
-      {/* Bottom Prompt: Tap to Enter Arena */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: [0.6, 1, 0.6] }}
-        transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-        onClick={onEnterHome}
-        className="z-30 relative mb-3 cursor-pointer"
-      >
-        <span className="inline-flex items-center gap-2.5 px-6 py-2.5 rounded-full bg-red-950/80 border border-orange-500/60 text-orange-200 text-xs sm:text-sm tracking-[0.25em] uppercase font-mono shadow-[0_0_30px_rgba(239,68,68,0.6)] hover:bg-red-900/80 transition-colors">
-          <Flame className="w-4 h-4 text-red-500 fill-red-500 animate-pulse" />
-          <span>Tap or click to enter Arena</span>
-          <ArrowRight className="w-4 h-4 text-orange-400" />
-        </span>
-      </motion.div>
     </motion.div>
   );
 }
