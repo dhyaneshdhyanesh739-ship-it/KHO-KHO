@@ -1,7 +1,5 @@
-import React, { useState, useEffect, Suspense, Component, lazy } from 'react';
-
-// Lazy-load the heavy 3D scene so the homepage and application load instantly
-const KhoKhoCanvas3D = lazy(() => import('./KhoKhoCanvas3D'));
+import React, { useState, useEffect, Component } from 'react';
+import KhoKhoCanvas3D from './KhoKhoCanvas3D';
 
 // Safe Error Boundary for 3D Canvas
 class ThreeErrorBoundary extends Component {
@@ -16,6 +14,12 @@ class ThreeErrorBoundary extends Component {
 
   componentDidCatch(error) {
     console.warn('[3D Canvas Fallback Engaged]', error?.message || error);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.resetKey !== this.props.resetKey && this.state.hasError) {
+      this.setState({ hasError: false });
+    }
   }
 
   render() {
@@ -93,7 +97,7 @@ export function StaticFallback({ isGirls = false }) {
 
 export default function KhoKhoCourt3D({ isGirls = false, className = '' }) {
   const [viewMode, setViewMode] = useState('3d'); // '3d' | '2d'
-  const [webGLSupported, setWebGLSupported] = useState(false);
+  const [webGLSupported, setWebGLSupported] = useState(true);
 
   useEffect(() => {
     try {
@@ -112,31 +116,51 @@ export default function KhoKhoCourt3D({ isGirls = false, className = '' }) {
     }
   }, []);
 
+  const activeThemeColor = isGirls ? 'bg-rose-600 hover:bg-rose-700' : 'bg-saffron-600 hover:bg-saffron-700';
+
   return (
-    <div className={`relative w-full h-[360px] md:h-[460px] rounded-3xl overflow-hidden bg-gradient-to-b from-white via-saffron-50/40 to-slate-50 border border-slate-200/80 shadow-card ${className}`}>
+    <div className={`relative w-full h-[380px] md:h-[480px] rounded-3xl overflow-hidden bg-gradient-to-b from-white via-saffron-50/40 to-slate-50 border border-slate-200/80 shadow-card ${className}`}>
       {viewMode === '3d' && webGLSupported ? (
-        <ThreeErrorBoundary fallback={<StaticFallback isGirls={isGirls} />}>
-          <Suspense fallback={<StaticFallback isGirls={isGirls} />}>
-            <KhoKhoCanvas3D isGirls={isGirls} />
-          </Suspense>
+        <ThreeErrorBoundary resetKey={viewMode} fallback={<StaticFallback isGirls={isGirls} />}>
+          <KhoKhoCanvas3D key="interactive-khokho-3d" isGirls={isGirls} />
         </ThreeErrorBoundary>
       ) : (
         <StaticFallback isGirls={isGirls} />
       )}
 
-      {/* View Switcher Button (3D / 2D) */}
+      {/* Segmented View Mode Switcher (3D vs 2D) */}
       <div className="absolute top-4 right-4 z-10">
-        <button
-          type="button"
-          onClick={() => setViewMode(viewMode === '3d' ? '2d' : '3d')}
-          className="px-3 py-1.5 rounded-xl bg-white/95 backdrop-blur-md border border-slate-200 text-xs font-bold text-navy-800 shadow-sm hover:bg-slate-50 transition-colors"
-        >
-          {viewMode === '3d' ? '📐 2D Diagram' : '🎮 Interactive 3D'}
-        </button>
+        <div className="inline-flex p-1 rounded-2xl bg-white/95 backdrop-blur-md border border-slate-200 shadow-md">
+          <button
+            type="button"
+            onClick={() => setViewMode('3d')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+              viewMode === '3d'
+                ? `${activeThemeColor} text-white shadow-sm`
+                : 'text-slate-600 hover:text-navy-900 hover:bg-slate-100'
+            }`}
+          >
+            <span>🎮</span>
+            <span>3D Court</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setViewMode('2d')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+              viewMode === '2d'
+                ? `${activeThemeColor} text-white shadow-sm`
+                : 'text-slate-600 hover:text-navy-900 hover:bg-slate-100'
+            }`}
+          >
+            <span>📐</span>
+            <span>2D Layout</span>
+          </button>
+        </div>
       </div>
 
+      {/* Active Mode Badge */}
       <div className="absolute top-4 left-4 z-10 pointer-events-none">
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/90 backdrop-blur-md border border-saffron-200 text-xs font-bold text-saffron-700 shadow-sm">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-saffron-200 text-xs font-bold text-saffron-800 shadow-sm">
           <span className="w-2 h-2 rounded-full bg-saffron-500 animate-pulse" />
           {viewMode === '3d' ? 'Interactive 3D Kho-Kho Court' : 'Regulation Court Layout'}
         </span>
