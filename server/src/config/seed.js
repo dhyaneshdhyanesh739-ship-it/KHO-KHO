@@ -129,32 +129,32 @@ export const seedDatabase = async () => {
   }
   console.log(`[Seed] Created ${createdBoysPlayers.length} Boys Players with username@khokho credentials.`);
 
-  // 4. Create Girls Roster (Exactly 13 Players as required)
+  // 4. Create Girls Roster (13 Real Players from Sheet)
   const girlsRosterData = [
-    { id: 'G-01', name: 'Pooja Narvekar', jersey: 1, pos: 'Pole Diver', blood: 'O+' },
-    { id: 'G-02', name: 'Shreya Shinde', jersey: 2, pos: 'Running Chaser', blood: 'A+' },
-    { id: 'G-03', name: 'Deepika Rathore', jersey: 3, pos: 'Defender', blood: 'B+' },
-    { id: 'G-04', name: 'Sakshi Gole', jersey: 4, pos: 'All-Rounder', blood: 'AB+' },
-    { id: 'G-05', name: 'Kavita Salvi', jersey: 5, pos: 'Chaser', blood: 'O+' },
-    { id: 'G-06', name: 'Ritu Phogat', jersey: 6, pos: 'Defender', blood: 'A-' },
-    { id: 'G-07', name: 'Snehal Jagtap', jersey: 7, pos: 'Pole Diver', blood: 'B+' },
-    { id: 'G-08', name: 'Ankita Sawant', jersey: 8, pos: 'Running Chaser', blood: 'O-' },
-    { id: 'G-09', name: 'Aishwarya Patil', jersey: 9, pos: 'Defender', blood: 'B+' },
-    { id: 'G-10', name: 'Kalyani More', jersey: 10, pos: 'All-Rounder', blood: 'A+' },
-    { id: 'G-11', name: 'Megha Jadhav', jersey: 11, pos: 'Chaser', blood: 'O+' },
-    { id: 'G-12', name: 'Priyanka Ghuge', jersey: 12, pos: 'Defender', blood: 'AB-' },
-    { id: 'G-13', name: 'Neha Tawde', jersey: 13, pos: 'Pole Diver', blood: 'B+' },
+    { id: 'G-01', username: 'keerthana', name: 'KEERTHANA', jersey: 1, pos: 'Pole Diver', blood: 'O+' },
+    { id: 'G-02', username: 'sabiksha', name: 'SABIKSHA', jersey: 2, pos: 'Running Chaser', blood: 'A+' },
+    { id: 'G-03', username: 'atshaya', name: 'ATSHAYA', jersey: 3, pos: 'Defender', blood: 'B+' },
+    { id: 'G-04', username: 'nisha', name: 'NISHA', jersey: 4, pos: 'All-Rounder', blood: 'AB+' },
+    { id: 'G-05', username: 'juna', name: 'JUNA', jersey: 5, pos: 'Chaser', blood: 'O+' },
+    { id: 'G-06', username: 'sharmitha', name: 'SHARMITHA', jersey: 6, pos: 'Defender', blood: 'A-' },
+    { id: 'G-07', username: 'lohii', name: 'LOHII', jersey: 7, pos: 'Pole Diver', blood: 'B+' },
+    { id: 'G-08', username: 'subitha', name: 'SUBITHA', jersey: 8, pos: 'Running Chaser', blood: 'O-' },
+    { id: 'G-09', username: 'shana', name: 'SHANA', jersey: 9, pos: 'Defender', blood: 'B+' },
+    { id: 'G-10', username: 'madhu', name: 'MADHU', jersey: 10, pos: 'All-Rounder', blood: 'A+' },
+    { id: 'G-11', username: 'pooja', name: 'POOJA', jersey: 11, pos: 'Chaser', blood: 'O+' },
+    { id: 'G-12', username: 'vidhya', name: 'VIDHYA', jersey: 12, pos: 'Defender', blood: 'AB-' },
+    { id: 'G-13', username: 'reeta', name: 'REETA', jersey: 13, pos: 'Pole Diver', blood: 'B+' },
   ];
 
   const createdGirlsPlayers = [];
   for (const p of girlsRosterData) {
-    const username = p.id.toLowerCase().replace('-', '');
-    const pass = await User.hashPassword(`${username}@KhoKho2026`);
+    const username = p.username;
+    const pass = await User.hashPassword(`${username}@khokho`);
     const playerUser = await User.create({
       username,
       passwordHash: pass,
       name: p.name,
-      email: `${username}@arena.org`,
+      email: `${username}@khokhoarena.org`,
       role: 'PLAYER',
       team: 'GIRLS',
       isActive: true,
@@ -171,7 +171,7 @@ export const seedDatabase = async () => {
       userRef: playerUser._id,
       contactInfo: {
         phone: `+91 97100 ${String(1000 + p.jersey).padStart(5, '0')}`,
-        email: `${username}@arena.org`,
+        email: `${username}@khokhoarena.org`,
         emergencyContactName: `Guardian of ${p.name}`,
         emergencyPhone: '+91 97100 88888',
       },
@@ -181,7 +181,7 @@ export const seedDatabase = async () => {
     await playerUser.save();
     createdGirlsPlayers.push(playerDoc);
   }
-  console.log(`[Seed] Created ${createdGirlsPlayers.length} Girls Players with active user accounts.`);
+  console.log(`[Seed] Created ${createdGirlsPlayers.length} Girls Players with username@khokho credentials.`);
 
   // 5. Create Attendance Sessions over the past 2 weeks
   const sessionLabels = [

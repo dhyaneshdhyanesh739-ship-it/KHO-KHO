@@ -43,7 +43,7 @@ async function run() {
   await User.updateOne({ username: 'girlsadmin' }, { $set: { passwordHash: adminPasswordHash } });
   console.log('[Update] Updated boysadmin & girlsadmin passwords to kiddo@khokho');
 
-  // 2. Setup Boys Roster from user sheet
+  // 2. Setup Boys Roster from user sheet (22 players)
   const boysRoster = [
     { id: 'B-01', username: 'mohan', name: 'MOHAN', jersey: 1, pos: 'Pole Diver' },
     { id: 'B-02', username: 'jelphin', name: 'JELPHIN', jersey: 2, pos: 'Running Chaser' },
@@ -78,8 +78,6 @@ async function run() {
       await Player.deleteOne({ userRef: u._id });
     }
   }
-
-  // Also remove old player records with jersey > 22 for BOYS
   await Player.deleteMany({ team: 'BOYS', jerseyNumber: { $gt: 22 } });
 
   console.log('[Update] Upserting 22 Boys Players & Accounts...');
@@ -101,6 +99,8 @@ async function run() {
     } else {
       playerUser.passwordHash = passwordHash;
       playerUser.name = b.name;
+      playerUser.team = 'BOYS';
+      playerUser.role = 'PLAYER';
       playerUser.isActive = true;
       await playerUser.save();
     }
@@ -133,9 +133,95 @@ async function run() {
     await playerUser.save();
   }
 
+  // 3. Setup Girls Roster from user sheet (13 players)
+  const girlsRoster = [
+    { id: 'G-01', username: 'keerthana', name: 'KEERTHANA', jersey: 1, pos: 'Pole Diver' },
+    { id: 'G-02', username: 'sabiksha', name: 'SABIKSHA', jersey: 2, pos: 'Running Chaser' },
+    { id: 'G-03', username: 'atshaya', name: 'ATSHAYA', jersey: 3, pos: 'Defender' },
+    { id: 'G-04', username: 'nisha', name: 'NISHA', jersey: 4, pos: 'All-Rounder' },
+    { id: 'G-05', username: 'juna', name: 'JUNA', jersey: 5, pos: 'Chaser' },
+    { id: 'G-06', username: 'sharmitha', name: 'SHARMITHA', jersey: 6, pos: 'Defender' },
+    { id: 'G-07', username: 'lohii', name: 'LOHII', jersey: 7, pos: 'Pole Diver' },
+    { id: 'G-08', username: 'subitha', name: 'SUBITHA', jersey: 8, pos: 'Running Chaser' },
+    { id: 'G-09', username: 'shana', name: 'SHANA', jersey: 9, pos: 'Defender' },
+    { id: 'G-10', username: 'madhu', name: 'MADHU', jersey: 10, pos: 'All-Rounder' },
+    { id: 'G-11', username: 'pooja', name: 'POOJA', jersey: 11, pos: 'Chaser' },
+    { id: 'G-12', username: 'vidhya', name: 'VIDHYA', jersey: 12, pos: 'Defender' },
+    { id: 'G-13', username: 'reeta', name: 'REETA', jersey: 13, pos: 'Pole Diver' },
+  ];
+
+  // Remove old girls users and player records that do not match the new roster
+  const newGirlsUsernames = girlsRoster.map((g) => g.username);
+  const oldGirlsUsers = await User.find({ team: 'GIRLS', role: 'PLAYER' });
+  for (const u of oldGirlsUsers) {
+    if (!newGirlsUsernames.includes(u.username)) {
+      await User.deleteOne({ _id: u._id });
+      await Player.deleteOne({ userRef: u._id });
+    }
+  }
+  await Player.deleteMany({ team: 'GIRLS', jerseyNumber: { $gt: 13 } });
+
+  console.log('[Update] Upserting 13 Girls Players & Accounts...');
+  for (const g of girlsRoster) {
+    const rawPass = `${g.username}@khokho`;
+    const passwordHash = await bcrypt.hash(rawPass, 10);
+
+    let playerUser = await User.findOne({ username: g.username });
+    if (!playerUser) {
+      playerUser = await User.create({
+        username: g.username,
+        passwordHash,
+        name: g.name,
+        email: `${g.username}@khokhoarena.org`,
+        role: 'PLAYER',
+        team: 'GIRLS',
+        isActive: true,
+      });
+    } else {
+      playerUser.passwordHash = passwordHash;
+      playerUser.name = g.name;
+      playerUser.team = 'GIRLS';
+      playerUser.role = 'PLAYER';
+      playerUser.isActive = true;
+      await playerUser.save();
+    }
+
+    let playerDoc = await Player.findOne({ team: 'GIRLS', jerseyNumber: g.jersey });
+    if (!playerDoc) {
+      playerDoc = await Player.create({
+        playerId: g.id,
+        name: g.name,
+        team: 'GIRLS',
+        jerseyNumber: g.jersey,
+        position: g.pos,
+        active: true,
+        userRef: playerUser._id,
+        contactInfo: {
+          phone: `+91 97100 ${String(1000 + g.jersey).padStart(5, '0')}`,
+          email: `${g.username}@khokhoarena.org`,
+        },
+      });
+    } else {
+      playerDoc.playerId = g.id;
+      playerDoc.name = g.name;
+      playerDoc.position = g.pos;
+      playerDoc.userRef = playerUser._id;
+      playerDoc.active = true;
+      await playerDoc.save();
+    }
+
+    playerUser.playerRef = playerDoc._id;
+    await playerUser.save();
+  }
+
   const finalBoysCount = await Player.countDocuments({ team: 'BOYS' });
   const finalBoysUsers = await User.countDocuments({ team: 'BOYS', role: 'PLAYER' });
-  console.log(`[Update] Completed! BOYS Players count: ${finalBoysCount}, BOYS Player Users: ${finalBoysUsers}`);
+  const finalGirlsCount = await Player.countDocuments({ team: 'GIRLS' });
+  const finalGirlsUsers = await User.countDocuments({ team: 'GIRLS', role: 'PLAYER' });
+
+  console.log(`[Update] Completed!`);
+  console.log(`[Update] BOYS Players: ${finalBoysCount}, BOYS Users: ${finalBoysUsers}`);
+  console.log(`[Update] GIRLS Players: ${finalGirlsCount}, GIRLS Users: ${finalGirlsUsers}`);
 
   await mongoose.disconnect();
 }

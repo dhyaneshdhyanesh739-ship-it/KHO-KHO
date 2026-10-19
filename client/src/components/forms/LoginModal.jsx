@@ -208,7 +208,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
                       required
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
-                      placeholder="e.g. Dhyanesh or mohan"
+                      placeholder={selectedTeam === 'GIRLS' ? 'e.g. Dhyanesh or madhu' : 'e.g. Dhyanesh or mohan'}
                       className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:border-saffron-500 focus:ring-2 focus:ring-saffron-500/20 text-sm text-navy-900 transition-all outline-none"
                     />
                   </div>
@@ -290,9 +290,9 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
                       </div>
                     ) : (
                       <div className="flex items-center justify-between">
-                        <span className="font-bold text-navy-900">Girls Admin:</span>
+                        <span className="font-bold text-navy-900">Girls Player Login:</span>
                         <span className="font-mono bg-white px-2 py-0.5 rounded border border-slate-200 text-rose-700 font-semibold">
-                          Dhyanesh <span className="text-slate-400">/</span> kiddo@khokho
+                          madhu <span className="text-slate-400">/</span> madhu@khokho
                         </span>
                       </div>
                     )}
