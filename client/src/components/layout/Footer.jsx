@@ -130,9 +130,11 @@ export default function Footer({ onNavigateSection, onOpenLogin }) {
                   <span>+91-7550317811</span>
                 </a>
               </li>
-              <li className="flex items-center gap-3 text-slate-300">
-                <MapPin className="w-5 h-5 text-[#f87171] shrink-0" />
-                <span className="font-semibold tracking-wider">INDIA</span>
+              <li className="flex items-start gap-3 text-slate-300">
+                <MapPin className="w-5 h-5 text-[#f87171] shrink-0 mt-0.5" />
+                <span className="text-xs leading-relaxed">
+                  KIT-KalaignarKarunanidhi Institute of Technology, Kannampalayam Post, Coimbatore - 641402
+                </span>
               </li>
             </ul>
           </div>

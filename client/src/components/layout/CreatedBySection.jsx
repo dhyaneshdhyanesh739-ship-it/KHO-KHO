@@ -97,7 +97,7 @@ export default function CreatedBySection() {
                 <div className="p-3 rounded-xl bg-slate-800/60 border border-slate-700/50 col-span-2 sm:col-span-1">
                   <MapPin className="w-4 h-4 text-emerald-400 mb-1" />
                   <p className="text-xs font-bold text-white">Location</p>
-                  <p className="text-[11px] text-slate-400">India</p>
+                  <p className="text-[11px] text-slate-400">Coimbatore - 641402</p>
                 </div>
               </div>
 

@@ -71,8 +71,9 @@ export default function ContactSection() {
                 </div>
                 <div>
                   <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Arena Location</h4>
-                  <p className="text-sm font-bold text-navy-900">National Kho-Kho Court & Athletics Pavilion</p>
-                  <p className="text-xs font-bold text-saffron-600 uppercase tracking-wider">INDIA</p>
+                  <p className="text-sm font-bold text-navy-900">KIT-KalaignarKarunanidhi Institute of Technology</p>
+                  <p className="text-xs text-slate-600 font-medium mt-0.5">Kannampalayam Post, Coimbatore - 641402</p>
+                  <p className="text-xs font-bold text-saffron-600 uppercase tracking-wider mt-0.5">Tamil Nadu, India</p>
                 </div>
               </div>
 
