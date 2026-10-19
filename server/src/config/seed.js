@@ -66,7 +66,7 @@ export const seedDatabase = async () => {
 
   console.log('[Seed] Created Super Admin Dhyanesh, Boys Admin, and Girls Admin with password kiddo@khokho.');
 
-  // 3. Create Boys Roster (22 Real Players from Sheet)
+  // 3. Create Boys Roster (21 Real Players from Sheet)
   const boysRosterData = [
     { id: 'B-01', username: 'mohan', name: 'MOHAN', jersey: 1, pos: 'Pole Diver', blood: 'O+' },
     { id: 'B-02', username: 'jelphin', name: 'JELPHIN', jersey: 2, pos: 'Running Chaser', blood: 'B+' },
@@ -79,17 +79,16 @@ export const seedDatabase = async () => {
     { id: 'B-09', username: 's.e.d', name: 'S.E.D', jersey: 9, pos: 'All-Rounder', blood: 'B+' },
     { id: 'B-10', username: 'harish', name: 'HARISH', jersey: 10, pos: 'Defender', blood: 'A+' },
     { id: 'B-11', username: 'akash', name: 'AKASH', jersey: 11, pos: 'Chaser', blood: 'O+' },
-    { id: 'B-12', username: 'suriya', name: 'SURIYA', jersey: 12, pos: 'Pole Diver', blood: 'AB-' },
+    { id: 'B-12', username: 'sriram', name: 'SRIRAM', jersey: 12, pos: 'All-Rounder', blood: 'O+' },
     { id: 'B-13', username: 'mega', name: 'MEGA', jersey: 13, pos: 'Running Chaser', blood: 'B+' },
     { id: 'B-14', username: 'abhinav', name: 'ABHINAV', jersey: 14, pos: 'Defender', blood: 'O+' },
     { id: 'B-15', username: 'sanjay', name: 'SANJAY', jersey: 15, pos: 'All-Rounder', blood: 'A+' },
     { id: 'B-16', username: 'lingesh', name: 'LINGESH', jersey: 16, pos: 'Chaser', blood: 'B-' },
-    { id: 'B-17', username: 'paul', name: 'PAUL', jersey: 17, pos: 'Defender', blood: 'O+' },
-    { id: 'B-18', username: 'katta', name: 'KATTA', jersey: 18, pos: 'Pole Diver', blood: 'A+' },
-    { id: 'B-19', username: 'sivaguru', name: 'SIVAGURU', jersey: 19, pos: 'Running Chaser', blood: 'AB+' },
-    { id: 'B-20', username: 'kd', name: 'KD', jersey: 20, pos: 'All-Rounder', blood: 'B+' },
-    { id: 'B-21', username: 'm.t.durai', name: 'M.T.DURAI', jersey: 21, pos: 'Defender', blood: 'A-' },
-    { id: 'B-22', username: 'jeeva', name: 'JEEVA', jersey: 22, pos: 'Chaser', blood: 'B+' },
+    { id: 'B-17', username: 'katta', name: 'KATTA', jersey: 17, pos: 'Pole Diver', blood: 'A+' },
+    { id: 'B-18', username: 'sivaguru', name: 'SIVAGURU', jersey: 18, pos: 'Running Chaser', blood: 'AB+' },
+    { id: 'B-19', username: 'kd', name: 'KD', jersey: 19, pos: 'All-Rounder', blood: 'B+' },
+    { id: 'B-20', username: 'm.t.durai', name: 'M.T.DURAI', jersey: 20, pos: 'Defender', blood: 'A-' },
+    { id: 'B-21', username: 'jeeva', name: 'JEEVA', jersey: 21, pos: 'Chaser', blood: 'B+' },
   ];
 
   const createdBoysPlayers = [];

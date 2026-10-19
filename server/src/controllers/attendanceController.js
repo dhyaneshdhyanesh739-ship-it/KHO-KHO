@@ -369,6 +369,16 @@ export const getPlayerAttendance = async (req, res, next) => {
     const eligible = total - excused;
     const percentage = eligible > 0 ? Math.round((present / eligible) * 100) : 0;
 
+    // Official Match Attendance Policy:
+    // Base match attendance for team members is 75%.
+    // If absent: automatically reduce 2% per session.
+    // If excused: automatically reduce 1% per session.
+    const baseMatchPercentage = 75;
+    const absentDeduction = absent * 2;
+    const excusedDeduction = excused * 1;
+    const totalDeduction = absentDeduction + excusedDeduction;
+    const matchAttendancePercentage = Math.max(0, baseMatchPercentage - totalDeduction);
+
     return res.status(200).json({
       success: true,
       data: {
@@ -387,6 +397,11 @@ export const getPlayerAttendance = async (req, res, next) => {
           excused,
           absent,
           percentage,
+          baseMatchPercentage,
+          absentDeduction,
+          excusedDeduction,
+          totalDeduction,
+          matchAttendancePercentage,
         },
         records,
       },

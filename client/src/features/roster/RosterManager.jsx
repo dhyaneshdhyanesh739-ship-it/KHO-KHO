@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Users, UserPlus, Search, Filter, Download, Upload, Eye, CheckCircle2,
-  XCircle, AlertCircle, Edit, Trash2, ArrowUpDown, Shield, Phone, Mail, FileText
+  XCircle, AlertCircle, Edit, Trash2, ArrowUpDown, Shield, Phone, Mail, FileText, Trophy
 } from 'lucide-react';
 import { api } from '../../services/api';
 
@@ -19,6 +19,8 @@ export default function RosterManager({ team }) {
   const [importModalOpen, setImportModalOpen] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [playerStats, setPlayerStats] = useState(null);
+  const [deleteConfirmPlayer, setDeleteConfirmPlayer] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [actionSuccess, setActionSuccess] = useState('');
   const [actionError, setActionError] = useState('');
 
@@ -76,6 +78,27 @@ export default function RosterManager({ team }) {
     } catch (err) {
       setActionError(err.data?.message || err.message);
       setTimeout(() => setActionError(''), 5000);
+    }
+  };
+
+  const handleDeletePlayer = async (player) => {
+    if (!player) return;
+    setIsDeleting(true);
+    setActionError('');
+    try {
+      const res = await api.players.delete(player._id);
+      if (res.success) {
+        setActionSuccess(res.message);
+        setTimeout(() => setActionSuccess(''), 4000);
+        setDeleteConfirmPlayer(null);
+        setSelectedPlayer(null);
+        loadPlayers();
+      }
+    } catch (err) {
+      setActionError(err.data?.message || err.message || 'Failed to remove team member.');
+      setTimeout(() => setActionError(''), 5000);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -354,12 +377,21 @@ export default function RosterManager({ team }) {
                         onClick={() => handleToggleStatus(p._id)}
                         className={`p-1.5 rounded-lg transition-colors ${
                           p.active
-                            ? 'text-slate-400 hover:text-rose-600 hover:bg-rose-50'
+                            ? 'text-slate-400 hover:text-amber-600 hover:bg-amber-50'
                             : 'text-slate-400 hover:text-emerald-600 hover:bg-emerald-50'
                         }`}
                         title={p.active ? 'Deactivate Athlete' : 'Activate Athlete'}
                       >
                         {p.active ? <XCircle className="w-4 h-4" /> : <CheckCircle2 className="w-4 h-4" />}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setDeleteConfirmPlayer(p)}
+                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                        title={`Remove ${p.name} from Roster`}
+                      >
+                        <Trash2 className="w-4 h-4" />
                       </button>
                     </td>
                   </tr>
@@ -615,21 +647,42 @@ B-24,Suresh Patil,BOYS,24,Chaser,Active,+91 98200 10024,b24@arena.org,O+"
                   Attendance Metrics (Real Database)
                 </h4>
                 {playerStats ? (
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="p-4 rounded-2xl bg-saffron-50 border border-saffron-200 text-center">
-                      <p className="font-editorial text-3xl font-black text-saffron-600">
-                        {playerStats.attendancePercentage}%
+                  <div className="space-y-3">
+                    <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-amber-900 flex items-center gap-1.5">
+                          <Trophy className="w-3.5 h-3.5 text-amber-600" />
+                          <span>Match Attendance Standing</span>
+                        </span>
+                        <span className={`font-editorial font-black text-2xl ${
+                          (playerStats.matchAttendancePercentage ?? Math.max(0, 75 - (playerStats.absentCount * 2) - (playerStats.excusedCount * 1))) >= 75
+                            ? 'text-sportsGreen-dark'
+                            : 'text-amber-600'
+                        }`}>
+                          {playerStats.matchAttendancePercentage ?? Math.max(0, 75 - (playerStats.absentCount * 2) - (playerStats.excusedCount * 1))}%
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-slate-600 mt-1">
+                        Base 75% • Absent: -{playerStats.absentDeduction ?? (playerStats.absentCount * 2)}% ({playerStats.absentCount} × -2%) • Excused: -{playerStats.excusedDeduction ?? (playerStats.excusedCount * 1)}% ({playerStats.excusedCount} × -1%)
                       </p>
-                      <p className="text-xs font-bold text-navy-900 mt-1">Attendance Rate</p>
-                      <p className="text-[10px] text-slate-500">{playerStats.presentCount} of {playerStats.eligibleSessions} Eligible</p>
                     </div>
 
-                    <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-center">
-                      <p className="font-editorial text-3xl font-black text-navy-800">
-                        {playerStats.totalRecorded}
-                      </p>
-                      <p className="text-xs font-bold text-navy-900 mt-1">Total Sessions</p>
-                      <p className="text-[10px] text-slate-500">{playerStats.absentCount} Abs • {playerStats.lateCount} Late</p>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="p-4 rounded-2xl bg-saffron-50 border border-saffron-200 text-center">
+                        <p className="font-editorial text-3xl font-black text-saffron-600">
+                          {playerStats.attendancePercentage}%
+                        </p>
+                        <p className="text-xs font-bold text-navy-900 mt-1">Attendance Rate</p>
+                        <p className="text-[10px] text-slate-500">{playerStats.presentCount} of {playerStats.eligibleSessions} Eligible</p>
+                      </div>
+
+                      <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-center">
+                        <p className="font-editorial text-3xl font-black text-navy-800">
+                          {playerStats.totalRecorded}
+                        </p>
+                        <p className="text-xs font-bold text-navy-900 mt-1">Total Sessions</p>
+                        <p className="text-[10px] text-slate-500">{playerStats.absentCount} Abs • {playerStats.lateCount} Late</p>
+                      </div>
                     </div>
                   </div>
                 ) : (
@@ -671,13 +724,74 @@ B-24,Suresh Patil,BOYS,24,Chaser,Active,+91 98200 10024,b24@arena.org,O+"
               </div>
             </div>
 
-            <button
-              type="button"
-              onClick={() => setSelectedPlayer(null)}
-              className="w-full btn-secondary py-2.5 text-xs mt-6"
-            >
-              Close Profile
-            </button>
+            <div className="pt-4 border-t border-slate-100 space-y-2 mt-6">
+              <button
+                type="button"
+                onClick={() => setDeleteConfirmPlayer(selectedPlayer)}
+                className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 transition-colors"
+              >
+                <Trash2 className="w-4 h-4" />
+                <span>Remove Athlete from Roster</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setSelectedPlayer(null)}
+                className="w-full btn-secondary py-2 text-xs"
+              >
+                Close Profile
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirmPlayer && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/40 backdrop-blur-sm animate-fade-in">
+          <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl border border-slate-200 p-6 space-y-5">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center shrink-0">
+                <Trash2 className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="font-editorial text-lg font-black text-navy-900 leading-tight">
+                  Remove Team Member
+                </h3>
+                <p className="text-xs text-slate-500">
+                  Permanent roster removal confirmation
+                </p>
+              </div>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-rose-50/70 border border-rose-200 text-xs text-rose-800 space-y-1.5">
+              <p className="font-bold">
+                Are you sure you want to remove {deleteConfirmPlayer.name} (#{deleteConfirmPlayer.jerseyNumber})?
+              </p>
+              <p className="text-[11px] text-rose-700 leading-relaxed">
+                This will permanently remove athlete <strong>{deleteConfirmPlayer.playerId}</strong> from the <strong>{team}</strong> roster, delete their portal login account, and clear their attendance records. This action cannot be undone.
+              </p>
+            </div>
+
+            <div className="flex items-center justify-end gap-2.5 pt-2">
+              <button
+                type="button"
+                onClick={() => setDeleteConfirmPlayer(null)}
+                disabled={isDeleting}
+                className="btn-secondary text-xs px-4 py-2"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => handleDeletePlayer(deleteConfirmPlayer)}
+                disabled={isDeleting}
+                className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 transition-colors flex items-center gap-1.5 shadow-sm shadow-rose-600/30 disabled:opacity-50"
+              >
+                <Trash2 className="w-4 h-4" />
+                <span>{isDeleting ? 'Removing...' : 'Confirm Removal'}</span>
+              </button>
+            </div>
           </div>
         </div>
       )}

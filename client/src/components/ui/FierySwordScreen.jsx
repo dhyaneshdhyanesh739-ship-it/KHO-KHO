@@ -1,9 +1,9 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useRef, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { Flame, ArrowRight, Sparkles } from 'lucide-react';
 
-// Advanced Procedural Fire Simulation with Realistic Teardrop Flame Tongues & Embers
-function RealFireCanvas({ orientation = 'vertical' }) {
+// Advanced Procedural Fire Simulation with Realistic Teardrop Flame Tongues & Embers (Horizontal Layout)
+function RealFireCanvas() {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -45,28 +45,16 @@ function RealFireCanvas({ orientation = 'vertical' }) {
     window.addEventListener('mousemove', handlePointer);
     window.addEventListener('touchmove', handlePointer);
 
-    // Realistic Teardrop Flame Tongues
-    // Spawns from the text spine
-    const flameTongueCount = orientation === 'vertical' ? 120 : 160;
+    // Realistic Teardrop Flame Tongues across the horizontal spine
+    const flameTongueCount = 180;
     const flameTongues = [];
 
-    const getSpawnBounds = () => {
-      if (orientation === 'vertical') {
-        return {
-          minX: width / 2 - 45,
-          maxX: width / 2 + 45,
-          minY: height / 2 - 240,
-          maxY: height / 2 + 220,
-        };
-      } else {
-        return {
-          minX: width / 2 - Math.min(width * 0.38, 420),
-          maxX: width / 2 + Math.min(width * 0.38, 420),
-          minY: height / 2 - 40,
-          maxY: height / 2 + 50,
-        };
-      }
-    };
+    const getSpawnBounds = () => ({
+      minX: width / 2 - Math.min(width * 0.42, 460),
+      maxX: width / 2 + Math.min(width * 0.42, 460),
+      minY: height / 2 - 45,
+      maxY: height / 2 + 55,
+    });
 
     for (let i = 0; i < flameTongueCount; i++) {
       const b = getSpawnBounds();
@@ -86,7 +74,7 @@ function RealFireCanvas({ orientation = 'vertical' }) {
     }
 
     // Rising burning embers & glowing ash
-    const emberCount = 85;
+    const emberCount = 95;
     const embers = [];
     for (let i = 0; i < emberCount; i++) {
       const b = getSpawnBounds();
@@ -134,26 +122,22 @@ function RealFireCanvas({ orientation = 'vertical' }) {
 
         const flameGrad = ctx.createLinearGradient(f.x, f.y, f.x, f.y - f.h);
         if (f.life > 0.55) {
-          // Blazing white/yellow core
           flameGrad.addColorStop(0, `rgba(255, 255, 240, ${f.life * 0.95})`);
           flameGrad.addColorStop(0.25, `rgba(254, 240, 138, ${f.life * 0.85})`);
           flameGrad.addColorStop(0.65, `rgba(249, 115, 22, ${f.life * 0.6})`);
           flameGrad.addColorStop(1, 'rgba(220, 38, 38, 0)');
         } else if (f.life > 0.25) {
-          // Hot fiery orange
           flameGrad.addColorStop(0, `rgba(254, 215, 170, ${f.life * 0.85})`);
           flameGrad.addColorStop(0.4, `rgba(249, 115, 22, ${f.life * 0.7})`);
           flameGrad.addColorStop(0.8, `rgba(220, 38, 38, ${f.life * 0.4})`);
           flameGrad.addColorStop(1, 'rgba(153, 27, 27, 0)');
         } else {
-          // Ruby smoke tip
           flameGrad.addColorStop(0, `rgba(239, 68, 68, ${f.life * 0.5})`);
           flameGrad.addColorStop(1, 'rgba(127, 29, 29, 0)');
         }
 
         ctx.fillStyle = flameGrad;
 
-        // Draw curved flame tongue path (tapered teardrop)
         ctx.beginPath();
         const tipX = f.x + Math.sin(t * 2 + f.phase) * f.curl * 8;
         const tipY = f.y - f.h;
@@ -164,17 +148,18 @@ function RealFireCanvas({ orientation = 'vertical' }) {
         ctx.fill();
       });
 
-      // 2. Draw Floating Sparks & Embers
-      embers.forEach((e) => {
+      // 2. Draw Rising Burning Embers
+      for (let i = 0; i < embers.length; i++) {
+        const e = embers[i];
         e.y -= e.speedY;
-        e.x += e.speedX + Math.sin(e.y * 0.02 + t) * 0.7;
+        e.x += e.speedX + Math.sin(t * 2 + i) * 0.5;
         e.alpha -= e.decay;
 
-        if (e.alpha <= 0 || e.y <= 0) {
+        if (e.y < 0 || e.alpha <= 0) {
           e.x = bounds.minX - 60 + Math.random() * (bounds.maxX - bounds.minX + 120);
-          e.y = height * 0.85 + Math.random() * 100;
-          e.alpha = Math.random() * 0.9 + 0.2;
-          e.speedY = Math.random() * 2.4 + 0.9;
+          e.y = height * 0.4 + Math.random() * (height * 0.6);
+          e.alpha = Math.random() * 0.9 + 0.1;
+          e.speedY = Math.random() * 2.2 + 0.8;
         }
 
         ctx.beginPath();
@@ -184,9 +169,9 @@ function RealFireCanvas({ orientation = 'vertical' }) {
         ctx.shadowBlur = 10;
         ctx.shadowColor = e.color;
         ctx.fill();
-      });
+      }
 
-      // 3. Draw Pointer Interaction Sparks
+      // 3. Draw Pointer Sparks on interactive movement
       for (let i = pointerSparks.length - 1; i >= 0; i--) {
         const s = pointerSparks[i];
         s.x += s.vx;
@@ -219,7 +204,7 @@ function RealFireCanvas({ orientation = 'vertical' }) {
       window.removeEventListener('touchmove', handlePointer);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [orientation]);
+  }, []);
 
   return (
     <canvas
@@ -230,11 +215,6 @@ function RealFireCanvas({ orientation = 'vertical' }) {
 }
 
 export default function FierySwordScreen({ onEnterHome }) {
-  // Default to the authentic vertical blade layout as requested from the sword image, with quick toggle
-  const [orientation, setOrientation] = useState('vertical'); // 'vertical' | 'horizontal'
-
-  const letters = ['K', 'H', 'O', '—', 'K', 'H', 'O'];
-
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -251,19 +231,19 @@ export default function FierySwordScreen({ onEnterHome }) {
       />
 
       {/* Dynamic Animated Realistic Fire & Ember Canvas */}
-      <RealFireCanvas orientation={orientation} />
+      <RealFireCanvas />
 
-      {/* Atmospheric Deep Radial Fire Glow Background */}
+      {/* Atmospheric Deep Radial Fire Glow Background (Optimized for Horizontal Text) */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {/* Deep Ruby Core Glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[750px] bg-red-600/35 blur-[160px] rounded-full animate-pulse" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[880px] h-[520px] bg-red-600/35 blur-[160px] rounded-full animate-pulse" />
         {/* Blazing Amber Secondary Core Glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[380px] h-[520px] bg-orange-500/30 blur-[110px] rounded-full" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[620px] h-[360px] bg-orange-500/30 blur-[110px] rounded-full" />
         {/* Hot Molten Core Accent */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[300px] bg-amber-300/25 blur-[75px] rounded-full" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[360px] h-[220px] bg-amber-300/25 blur-[75px] rounded-full" />
       </div>
 
-      {/* Top Header: Tagline & Orientation Switcher */}
+      {/* Top Header: Tagline */}
       <div className="relative z-30 w-full max-w-5xl flex items-center justify-between pt-2">
         <div className="flex items-center gap-2">
           <Flame className="w-4 h-4 text-orange-500 fill-orange-500 animate-pulse" />
@@ -272,159 +252,58 @@ export default function FierySwordScreen({ onEnterHome }) {
           </span>
         </div>
 
-        {/* Orientation Switcher Pill (Stop Propagation so clicking doesn't enter home) */}
-        <div
-          onClick={(e) => e.stopPropagation()}
-          className="inline-flex p-1 rounded-xl bg-neutral-900/90 backdrop-blur-md border border-neutral-800 text-xs shadow-xl"
-        >
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setOrientation('vertical');
-            }}
-            className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
-              orientation === 'vertical'
-                ? 'bg-gradient-to-r from-orange-600 to-red-600 text-white shadow-md'
-                : 'text-neutral-400 hover:text-neutral-200'
-            }`}
-          >
-            ↕ Blade Format
-          </button>
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setOrientation('horizontal');
-            }}
-            className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
-              orientation === 'horizontal'
-                ? 'bg-gradient-to-r from-orange-600 to-red-600 text-white shadow-md'
-                : 'text-neutral-400 hover:text-neutral-200'
-            }`}
-          >
-            ↔ Horizontal
-          </button>
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-orange-400/80 font-semibold px-3 py-1 rounded-full bg-neutral-900/80 border border-neutral-800">
+            SPEED • STRATEGY • SPIRIT
+          </span>
         </div>
       </div>
 
-      {/* Center Stage: REAL TEXT FORMAT with Fire Effects */}
+      {/* Center Stage: Monumental Horizontal Fiery Text */}
       <div
         onClick={onEnterHome}
         className="relative z-20 flex-1 flex flex-col items-center justify-center w-full my-auto cursor-pointer"
       >
-        <AnimatePresence mode="wait">
-          {orientation === 'vertical' ? (
-            /* VERTICAL BLADE FORMAT (Recreating the Sword Inscription in Pure Text & Fire) */
-            <motion.div
-              key="vertical-fire-blade"
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="relative flex flex-col items-center justify-center py-2"
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="relative flex flex-col items-center justify-center text-center px-4"
+        >
+          {/* Top Pill Badge */}
+          <div className="mb-4 sm:mb-6">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-950/60 border border-orange-500/40 text-orange-200 text-xs sm:text-sm uppercase tracking-[0.35em] font-bold shadow-[0_0_20px_rgba(249,115,22,0.4)]">
+              ★ SPEED • STRATEGY • SPIRIT ★
+            </span>
+          </div>
+
+          {/* Monumental Horizontal Text */}
+          <div className="relative group select-none py-2">
+            {/* Backlit Fire Silhouette Glow */}
+            <div
+              className="absolute inset-0 blur-2xl opacity-75 pointer-events-none select-none text-red-600 font-editorial font-black text-6xl sm:text-8xl md:text-9xl lg:text-[10.5rem] tracking-wider leading-none"
+              aria-hidden="true"
             >
-              {/* Flame Crown / Top Aura */}
-              <motion.div
-                animate={{ scale: [1, 1.15, 1], opacity: [0.7, 1, 0.7] }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="mb-2"
-              >
-                <Flame className="w-8 h-8 text-orange-400 fill-orange-400 drop-shadow-[0_0_15px_rgba(249,115,22,0.9)]" />
-              </motion.div>
+              KHO - KHO
+            </div>
 
-              {/* Vertical Column of Molten Letters */}
-              <div className="relative flex flex-col items-center space-y-1 sm:space-y-2">
-                {/* Background Backlit Glow Column */}
-                <div
-                  className="absolute inset-0 blur-2xl opacity-75 pointer-events-none select-none text-red-600 font-editorial font-black text-5xl sm:text-6xl md:text-7xl flex flex-col items-center leading-none"
-                  aria-hidden="true"
-                >
-                  {letters.map((char, i) => (
-                    <span key={i} className={char === '—' ? 'rotate-90 text-2xl my-1' : ''}>
-                      {char}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Main Blazing Fiery Letters */}
-                {letters.map((char, index) => (
-                  <motion.span
-                    key={index}
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.06 * index, duration: 0.5 }}
-                    className={`relative font-editorial font-black leading-none bg-gradient-to-t from-red-600 via-orange-500 to-amber-100 bg-clip-text text-transparent animate-fire-text tracking-wider ${
-                      char === '—'
-                        ? 'text-2xl sm:text-3xl text-orange-400 my-1 rotate-90 font-sans'
-                        : 'text-5xl sm:text-6xl md:text-7xl drop-shadow-[0_0_20px_rgba(249,115,22,0.85)]'
-                    }`}
-                    style={{
-                      WebkitTextStroke: '1px rgba(254, 240, 138, 0.35)',
-                    }}
-                  >
-                    {char}
-                  </motion.span>
-                ))}
-              </div>
-
-              {/* Sub-label under vertical blade */}
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                className="mt-4 text-[11px] sm:text-xs font-mono uppercase tracking-[0.35em] text-orange-300 font-semibold"
-                style={{ textShadow: '0 0 15px rgba(249, 115, 22, 0.9)' }}
-              >
-                SPEED • STRATEGY • SPIRIT
-              </motion.p>
-            </motion.div>
-          ) : (
-            /* HORIZONTAL MONUMENTAL FORMAT */
-            <motion.div
-              key="horizontal-fire-text"
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="relative flex flex-col items-center justify-center text-center px-4"
+            <h1
+              className="relative font-editorial font-black text-6xl sm:text-8xl md:text-9xl lg:text-[10.5rem] tracking-wider leading-none bg-gradient-to-t from-red-600 via-orange-500 to-amber-100 bg-clip-text text-transparent animate-fire-text"
+              style={{
+                WebkitTextStroke: '1.5px rgba(254, 240, 138, 0.4)',
+              }}
             >
-              {/* Top Pill Badge */}
-              <div className="mb-4 sm:mb-6">
-                <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-950/60 border border-orange-500/40 text-orange-200 text-xs sm:text-sm uppercase tracking-[0.35em] font-bold shadow-[0_0_20px_rgba(249,115,22,0.4)]">
-                  ★ SPEED • STRATEGY • SPIRIT ★
-                </span>
-              </div>
+              KHO - KHO
+            </h1>
+          </div>
 
-              {/* Monumental Horizontal Text */}
-              <div className="relative group select-none py-2">
-                {/* Backlit Fire Silhouette Glow */}
-                <div
-                  className="absolute inset-0 blur-2xl opacity-75 pointer-events-none select-none text-red-600 font-editorial font-black text-6xl sm:text-8xl md:text-9xl lg:text-[10.5rem] tracking-wider leading-none"
-                  aria-hidden="true"
-                >
-                  KHO - KHO
-                </div>
-
-                <h1
-                  className="relative font-editorial font-black text-6xl sm:text-8xl md:text-9xl lg:text-[10.5rem] tracking-wider leading-none bg-gradient-to-t from-red-600 via-orange-500 to-amber-100 bg-clip-text text-transparent animate-fire-text"
-                  style={{
-                    WebkitTextStroke: '1.5px rgba(254, 240, 138, 0.4)',
-                  }}
-                >
-                  KHO - KHO
-                </h1>
-              </div>
-
-              <p
-                className="mt-4 sm:mt-6 text-sm sm:text-base font-medium tracking-[0.3em] uppercase text-orange-200 font-mono"
-                style={{ textShadow: '0 0 20px rgba(249, 115, 22, 0.85)' }}
-              >
-                Chasers • Defenders • Champions
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
+          <p
+            className="mt-4 sm:mt-6 text-sm sm:text-base font-medium tracking-[0.3em] uppercase text-orange-200 font-mono"
+            style={{ textShadow: '0 0 20px rgba(249, 115, 22, 0.85)' }}
+          >
+            Chasers • Defenders • Champions
+          </p>
+        </motion.div>
       </div>
 
       {/* Bottom Prompt: Tap to Enter Arena */}

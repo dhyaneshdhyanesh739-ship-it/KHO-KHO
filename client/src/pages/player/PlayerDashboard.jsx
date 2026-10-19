@@ -62,7 +62,20 @@ export default function PlayerDashboard() {
     late: 0,
     excused: 0,
     percentage: 0,
+    eligibleSessions: 0,
   };
+
+  // Official Match Attendance Policy:
+  // Base attendance percentage for the match is 75%.
+  // If absent: automatically reduce 2% per session.
+  // If excused: automatically reduce 1% per session.
+  const absentCount = summary.absent || 0;
+  const excusedCount = summary.excused || 0;
+  const baseMatchPercentage = summary.baseMatchPercentage ?? 75;
+  const absentDeduction = summary.absentDeduction ?? (absentCount * 2);
+  const excusedDeduction = summary.excusedDeduction ?? (excusedCount * 1);
+  const totalDeduction = summary.totalDeduction ?? (absentDeduction + excusedDeduction);
+  const matchAttendancePercentage = summary.matchAttendancePercentage ?? Math.max(0, baseMatchPercentage - totalDeduction);
 
   return (
     <div className="min-h-screen bg-court-sand text-navy-900 pb-16">
@@ -136,18 +149,124 @@ export default function PlayerDashboard() {
               </div>
             </div>
 
-            {/* Attendance Percentage Badge */}
+            {/* Match Attendance Percentage Badge */}
             <div className="p-4 rounded-2xl bg-white border border-slate-200 text-center sm:text-right shadow-sm shrink-0">
-              <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                Personal Attendance
-              </p>
-              <p className="font-editorial text-4xl font-black text-saffron-600 mt-0.5">
-                {summary.percentage}%
+              <div className="flex items-center gap-1.5 justify-center sm:justify-end text-[10px] font-bold uppercase tracking-wider text-saffron-600">
+                <Trophy className="w-3.5 h-3.5 text-amber-500" />
+                <span>Match Attendance</span>
+              </div>
+              <p className={`font-editorial text-4xl font-black mt-0.5 ${
+                matchAttendancePercentage >= 75 ? 'text-sportsGreen-dark' : matchAttendancePercentage >= 70 ? 'text-amber-600' : 'text-rose-600'
+              }`}>
+                {matchAttendancePercentage}%
               </p>
               <p className="text-[11px] text-slate-500 font-medium">
-                {summary.present} Present / {summary.eligibleSessions} Eligible Sessions
+                Base 75% {totalDeduction > 0 ? `• -${totalDeduction}% Deductions` : '• Zero Deductions'}
               </p>
             </div>
+          </div>
+        </div>
+
+        {/* ==================== OFFICIAL MATCH ATTENDANCE BREAKDOWN BANNER ==================== */}
+        <div className="card-premium p-6 bg-gradient-to-br from-white via-amber-50/20 to-white border border-slate-200 shadow-card space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center shadow-xs">
+                <Trophy className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="font-editorial text-base sm:text-lg font-black text-navy-900 leading-tight">
+                  Match Squad Attendance Standing
+                </h3>
+                <p className="text-xs text-slate-500">
+                  Real-time attendance score configured for {user?.team} team fixtures.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className={`badge-tag text-xs font-bold ${
+                totalDeduction === 0
+                  ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                  : 'bg-amber-100 text-amber-800 border border-amber-200'
+              }`}>
+                {totalDeduction === 0 ? '✓ 75% Full Quota Maintained' : `⚠️ -${totalDeduction}% Total Reduction`}
+              </span>
+            </div>
+          </div>
+
+          {/* Three-Pillar Policy Formula Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-1">
+              <div className="flex items-center justify-between text-slate-500 font-bold uppercase text-[10px]">
+                <span>1. Baseline Standard</span>
+                <span className="text-navy-900 font-black">75% Base</span>
+              </div>
+              <p className="font-black text-lg text-navy-900 font-editorial">
+                {baseMatchPercentage}%
+              </p>
+              <p className="text-[11px] text-slate-500">
+                Official starting match qualification quota for all team members.
+              </p>
+            </div>
+
+            <div className="p-3.5 rounded-xl bg-rose-50/70 border border-rose-200 text-xs space-y-1">
+              <div className="flex items-center justify-between text-rose-700 font-bold uppercase text-[10px]">
+                <span>2. Absent Reduction</span>
+                <span className="text-rose-700 font-black">-2% per session</span>
+              </div>
+              <p className="font-black text-lg text-rose-600 font-editorial">
+                {absentCount > 0 ? `-${absentDeduction}%` : '0%'}
+              </p>
+              <p className="text-[11px] text-slate-600">
+                {absentCount} missed session(s) logged • Automatically reduces {absentDeduction}%.
+              </p>
+            </div>
+
+            <div className="p-3.5 rounded-xl bg-purple-50/70 border border-purple-200 text-xs space-y-1">
+              <div className="flex items-center justify-between text-purple-700 font-bold uppercase text-[10px]">
+                <span>3. Excused Reduction</span>
+                <span className="text-purple-700 font-black">-1% per session</span>
+              </div>
+              <p className="font-black text-lg text-purple-600 font-editorial">
+                {excusedCount > 0 ? `-${excusedDeduction}%` : '0%'}
+              </p>
+              <p className="text-[11px] text-slate-600">
+                {excusedCount} excused session(s) logged • Automatically reduces {excusedDeduction}%.
+              </p>
+            </div>
+          </div>
+
+          {/* Visual Deduction Bar */}
+          <div className="space-y-1.5 pt-1">
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-semibold text-slate-600 flex items-center gap-1.5">
+                <span>Calculated Match Attendance:</span>
+                <strong className="text-navy-900 font-editorial text-sm">
+                  75% Base − ({absentDeduction}% Absent + {excusedDeduction}% Excused) = {matchAttendancePercentage}%
+                </strong>
+              </span>
+              <span className="font-black font-editorial text-sm text-saffron-600">
+                {matchAttendancePercentage}%
+              </span>
+            </div>
+
+            {/* Progress Track */}
+            <div className="w-full h-3 rounded-full bg-slate-100 overflow-hidden relative border border-slate-200">
+              <div
+                className={`h-full transition-all duration-500 rounded-full ${
+                  matchAttendancePercentage >= 75
+                    ? 'bg-gradient-to-r from-emerald-500 to-sportsGreen-dark'
+                    : matchAttendancePercentage >= 70
+                    ? 'bg-gradient-to-r from-amber-500 to-saffron-600'
+                    : 'bg-gradient-to-r from-rose-500 to-rose-600'
+                }`}
+                style={{ width: `${Math.min(100, Math.max(0, matchAttendancePercentage))}%` }}
+              />
+            </div>
+            <p className="text-[11px] text-slate-400 text-right">
+              Minimum match selection threshold: 75%
+            </p>
           </div>
         </div>
 
@@ -170,27 +289,29 @@ export default function PlayerDashboard() {
           </div>
 
           <div className="card-premium p-5 text-center">
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Absent</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Absent (-2% Each)</p>
             <p className="font-editorial text-3xl font-black text-rose-600 mt-1">
               {summary.absent}
             </p>
-            <p className="text-[11px] text-slate-400">Unexcused Misses</p>
+            <p className="text-[11px] text-rose-600 font-medium">-{absentDeduction}% Match Deduction</p>
           </div>
 
           <div className="card-premium p-5 text-center">
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Late / Excused</p>
-            <p className="font-editorial text-3xl font-black text-amber-500 mt-1">
-              {summary.late + summary.excused}
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Excused (-1% Each)</p>
+            <p className="font-editorial text-3xl font-black text-purple-600 mt-1">
+              {summary.excused}
             </p>
-            <p className="text-[11px] text-slate-400">{summary.late} Late • {summary.excused} Excused</p>
+            <p className="text-[11px] text-purple-600 font-medium">-{excusedDeduction}% Match Deduction</p>
           </div>
 
           <div className="card-premium p-5 text-center">
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Squad Qualification</p>
-            <p className={`font-editorial text-2xl font-black mt-1 ${summary.percentage >= 75 ? 'text-sportsGreen-dark' : 'text-amber-600'}`}>
-              {summary.percentage >= 75 ? 'Eligible' : 'Under Review'}
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Match Attendance</p>
+            <p className={`font-editorial text-3xl font-black mt-1 ${matchAttendancePercentage >= 75 ? 'text-sportsGreen-dark' : 'text-amber-600'}`}>
+              {matchAttendancePercentage}%
             </p>
-            <p className="text-[11px] text-slate-400">75% Threshold</p>
+            <p className="text-[11px] text-slate-400">
+              {totalDeduction === 0 ? '75% Baseline Maintained' : `-${totalDeduction}% Total Penalty`}
+            </p>
           </div>
         </div>
 

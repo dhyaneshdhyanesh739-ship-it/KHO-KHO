@@ -178,6 +178,7 @@ export default function MatchSquadSelector({ team }) {
         position: playerObj.position,
         roleInMatch: 'Squad Member',
         attendancePercentage: playerObj.attendancePercentage || 0,
+        matchAttendancePercentage: playerObj.matchAttendancePercentage,
         attendanceSessionsPresent: playerObj.sessionsPresent || playerObj.attendanceSessionsPresent || 0,
         attendanceSessionsTotal: playerObj.sessionsEligible || playerObj.attendanceSessionsTotal || 0,
         recommendationScore: playerObj.recommendationScore || 0,
@@ -201,6 +202,7 @@ export default function MatchSquadSelector({ team }) {
         name: playerObj.name,
         position: playerObj.position,
         attendancePercentage: playerObj.attendancePercentage || 0,
+        matchAttendancePercentage: playerObj.matchAttendancePercentage,
         notes: 'Standby reserve',
       },
     ]);
@@ -436,7 +438,7 @@ export default function MatchSquadSelector({ team }) {
                             <div>
                               <p className="font-bold text-navy-900 text-xs">{p.name}</p>
                               <span className="text-[10px] text-slate-400 font-medium">
-                                {p.position} • {p.attendancePercentage}% Attendance
+                                {p.position} • {p.matchAttendancePercentage !== undefined ? `${p.matchAttendancePercentage}% Match Quota (Base 75%)` : `${p.attendancePercentage}% Attendance`}
                               </span>
                             </div>
                           </div>
@@ -518,7 +520,7 @@ export default function MatchSquadSelector({ team }) {
                         <div>
                           <p className="font-bold text-navy-900">{p.name}</p>
                           <p className="text-[10px] text-slate-400">
-                            {p.position} • {p.attendancePercentage}% Attendance
+                            {p.position} • {p.matchAttendancePercentage !== undefined ? `${p.matchAttendancePercentage}% Match Quota (Base 75%)` : `${p.attendancePercentage}% Attendance`}
                           </p>
                         </div>
                       </div>

@@ -102,6 +102,52 @@ export const getOverviewStats = async (req, res, next) => {
       .limit(5)
       .populate('recordedBy', 'name');
 
+    // 7. Team Members Match Attendance (75% Base, -2% Absent, -1% Excused)
+    const activePlayers = await Player.find({ team, active: true }).sort({ jerseyNumber: 1 });
+    const allTeamRecords = await AttendanceRecord.find({ team });
+
+    let totalMatchPctSum = 0;
+    let membersWithDeductions = 0;
+
+    const memberMatchAttendance = activePlayers.map((player) => {
+      const pRecords = allTeamRecords.filter((r) => String(r.player) === String(player._id));
+      const present = pRecords.filter((r) => r.status === 'PRESENT').length;
+      const late = pRecords.filter((r) => r.status === 'LATE').length;
+      const absent = pRecords.filter((r) => r.status === 'ABSENT').length;
+      const excused = pRecords.filter((r) => r.status === 'EXCUSED').length;
+
+      const baseMatchPercentage = 75;
+      const absentDeduction = absent * 2;
+      const excusedDeduction = excused * 1;
+      const totalDeduction = absentDeduction + excusedDeduction;
+      const matchAttendancePercentage = Math.max(0, baseMatchPercentage - totalDeduction);
+
+      totalMatchPctSum += matchAttendancePercentage;
+      if (totalDeduction > 0) membersWithDeductions++;
+
+      return {
+        _id: player._id,
+        playerId: player.playerId,
+        name: player.name,
+        jerseyNumber: player.jerseyNumber,
+        position: player.position,
+        totalSessions: pRecords.length,
+        present,
+        late,
+        absent,
+        excused,
+        baseMatchPercentage,
+        absentDeduction,
+        excusedDeduction,
+        totalDeduction,
+        matchAttendancePercentage,
+      };
+    });
+
+    const averageMatchAttendance = activePlayers.length > 0
+      ? Math.round(totalMatchPctSum / activePlayers.length)
+      : 75;
+
     return res.status(200).json({
       success: true,
       data: {
@@ -119,6 +165,13 @@ export const getOverviewStats = async (req, res, next) => {
           present: monthPresent,
           absent: monthAbsent,
           percentage: monthlyPercentage,
+        },
+        teamMatchAttendance: {
+          basePercentage: 75,
+          averageMatchAttendance,
+          membersWithDeductions,
+          membersFullStanding: activePlayers.length - membersWithDeductions,
+          members: memberMatchAttendance,
         },
         upcomingMatches,
         recentSessions,
@@ -210,7 +263,10 @@ export const getWeeklyReport = async (req, res, next) => {
       const excusedCount = pRecords.filter((r) => r.status === 'EXCUSED').length;
       const absentCount = pRecords.filter((r) => r.status === 'ABSENT').length;
       const eligible = pRecords.length - excusedCount;
-      const pct = eligible > 0 ? Math.round((presentCount / eligible) * 100) : 0;
+      const absentDeduction = absentCount * 2;
+      const excusedDeduction = excusedCount * 1;
+      const totalDeduction = absentDeduction + excusedDeduction;
+      const matchAttendancePercentage = Math.max(0, 75 - totalDeduction);
 
       const dailyBreakdown = {};
       sessions.forEach((s) => {
@@ -232,6 +288,11 @@ export const getWeeklyReport = async (req, res, next) => {
         absentCount,
         totalSessions: pRecords.length,
         percentage: pct,
+        baseMatchPercentage: 75,
+        absentDeduction,
+        excusedDeduction,
+        totalDeduction,
+        matchAttendancePercentage,
         dailyBreakdown,
       };
     });
@@ -280,6 +341,10 @@ export const getMonthlyReport = async (req, res, next) => {
       const absent = pRecords.filter((r) => r.status === 'ABSENT').length;
       const eligible = pRecords.length - excused;
       const percentage = eligible > 0 ? Math.round((present / eligible) * 100) : 0;
+      const absentDeduction = absent * 2;
+      const excusedDeduction = excused * 1;
+      const totalDeduction = absentDeduction + excusedDeduction;
+      const matchAttendancePercentage = Math.max(0, 75 - totalDeduction);
 
       return {
         playerId: player.playerId,
@@ -292,6 +357,11 @@ export const getMonthlyReport = async (req, res, next) => {
         absent,
         totalSessions: pRecords.length,
         percentage,
+        baseMatchPercentage: 75,
+        absentDeduction,
+        excusedDeduction,
+        totalDeduction,
+        matchAttendancePercentage,
       };
     });
 

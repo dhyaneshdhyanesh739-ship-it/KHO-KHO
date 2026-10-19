@@ -251,7 +251,7 @@ export default function SuperAdminDirectory() {
                   <th className="py-3.5 px-5">User / Athlete</th>
                   <th className="py-3.5 px-4">Role & Team</th>
                   <th className="py-3.5 px-4">Login Identifier</th>
-                  <th className="py-3.5 px-4">Default Password</th>
+                  <th className="py-3.5 px-4">Security / Password</th>
                   <th className="py-3.5 px-4">Status</th>
                   <th className="py-3.5 px-5 text-right">Super Admin Action</th>
                 </tr>
@@ -313,21 +313,15 @@ export default function SuperAdminDirectory() {
                       {/* Login Identifier */}
                       <td className="py-3.5 px-4 font-mono text-[11px] text-slate-700">
                         <div>@{u.username}</div>
-                        {!isSuper && !isPlayer && (
-                          <div className="text-[10px] text-saffron-700 font-sans font-bold">Login: Dhyanesh_23</div>
-                        )}
                         {u.email && <div className="text-[10px] text-slate-400 font-sans">{u.email}</div>}
                       </td>
 
-                      {/* Default Password */}
-                      <td className="py-3.5 px-4 font-mono text-[11px] text-slate-500">
-                        {isSuper ? (
-                          <span className="text-amber-700 font-semibold">Dhyanesh@23012007</span>
-                        ) : isPlayer ? (
-                          <span>{u.username}@khokho</span>
-                        ) : (
-                          <span className="text-slate-700">kiddo@khokho</span>
-                        )}
+                      {/* Password Security */}
+                      <td className="py-3.5 px-4 font-mono text-[11px] text-slate-400">
+                        <span className="inline-flex items-center gap-1.5 text-slate-500 font-medium">
+                          <Lock className="w-3 h-3 text-slate-400" />
+                          <span>••••••••</span>
+                        </span>
                       </td>
 
                       {/* Status */}

@@ -1,7 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Lock, User as UserIcon, Eye, EyeOff, ShieldCheck, ArrowLeft, Users, Trophy, Crown, ArrowRight } from 'lucide-react';
+import {
+  X,
+  Lock,
+  User as UserIcon,
+  Eye,
+  EyeOff,
+  ShieldCheck,
+  ArrowLeft,
+  Users,
+  Trophy,
+  Crown,
+  ArrowRight,
+  Key,
+  CheckCircle,
+  AlertCircle,
+} from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { api } from '../../services/api';
 
 export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMode = 'TEAM' }) {
   const { login } = useAuth();
@@ -13,6 +29,21 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
+  // Change Password state
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [changeForm, setChangeForm] = useState({
+    username: '',
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  });
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isSubmittingChangePass, setIsSubmittingChangePass] = useState(false);
+  const [changePassError, setChangePassError] = useState('');
+  const [changePassSuccess, setChangePassSuccess] = useState('');
+
   // Keep activeMode in sync when modal opens
   useEffect(() => {
     if (isOpen) {
@@ -22,6 +53,18 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
       setPassword('');
       setErrorMessage('');
       setShowPassword(false);
+      setIsChangingPassword(false);
+      setChangeForm({
+        username: '',
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+      });
+      setShowCurrentPassword(false);
+      setShowNewPassword(false);
+      setShowConfirmPassword(false);
+      setChangePassError('');
+      setChangePassSuccess('');
     }
   }, [isOpen, initialMode]);
 
@@ -33,6 +76,18 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
     setPassword('');
     setErrorMessage('');
     setShowPassword(false);
+    setIsChangingPassword(false);
+    setChangeForm({
+      username: '',
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: '',
+    });
+    setShowCurrentPassword(false);
+    setShowNewPassword(false);
+    setShowConfirmPassword(false);
+    setChangePassError('');
+    setChangePassSuccess('');
   };
 
   const handleClose = () => {
@@ -43,11 +98,63 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
   const handleSelectTeam = (team) => {
     setSelectedTeam(team);
     setErrorMessage('');
+    setChangePassError('');
   };
 
   const handleSwitchMode = (newMode) => {
     setActiveMode(newMode);
     handleReset();
+  };
+
+  const handleChangePasswordSubmit = async (e) => {
+    e.preventDefault();
+    setChangePassError('');
+    setChangePassSuccess('');
+
+    const targetUser = changeForm.username.trim();
+    if (!targetUser) {
+      setChangePassError('Please enter your username, email, or Player ID.');
+      return;
+    }
+    if (!changeForm.currentPassword) {
+      setChangePassError('Please enter your current password.');
+      return;
+    }
+    if (!changeForm.newPassword) {
+      setChangePassError('Please enter a new password.');
+      return;
+    }
+    if (changeForm.newPassword.length < 6) {
+      setChangePassError('New password must be at least 6 characters long.');
+      return;
+    }
+    if (changeForm.newPassword !== changeForm.confirmPassword) {
+      setChangePassError('New passwords do not match. Please re-enter.');
+      return;
+    }
+
+    setIsSubmittingChangePass(true);
+    try {
+      const response = await api.auth.directChangePassword({
+        username: targetUser,
+        currentPassword: changeForm.currentPassword,
+        newPassword: changeForm.newPassword,
+      });
+
+      if (response.success) {
+        setChangePassSuccess(
+          response.message || 'Password changed successfully! You can now sign in with your new password.'
+        );
+        setUsername(targetUser);
+        setPassword('');
+      } else {
+        setChangePassError(response.message || 'Failed to update password.');
+      }
+    } catch (err) {
+      setChangePassError(err.message || 'Failed to update password. Please check your credentials.');
+    } finally {
+      setIsSubmittingChangePass(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -96,29 +203,41 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
           }`}
         >
           <div className="flex items-center gap-2.5">
-            {selectedTeam && (
+            {(isChangingPassword || selectedTeam) && (
               <button
                 type="button"
-                onClick={() => setSelectedTeam(null)}
+                onClick={() => {
+                  if (isChangingPassword) {
+                    setIsChangingPassword(false);
+                    setChangePassError('');
+                    setChangePassSuccess('');
+                  } else {
+                    setSelectedTeam(null);
+                  }
+                }}
                 className={`p-1.5 rounded-lg transition-colors ${
                   isAdminPortal
                     ? 'text-slate-400 hover:text-white hover:bg-white/10'
                     : 'text-slate-400 hover:text-navy-900 hover:bg-slate-100'
                 }`}
-                title="Back to Selection"
+                title="Back"
               >
                 <ArrowLeft className="w-5 h-5" />
               </button>
             )}
             <div>
               <div className="flex items-center gap-2">
-                {isAdminPortal ? (
+                {isChangingPassword ? (
+                  <Key className="w-5 h-5 text-indigo-400" />
+                ) : isAdminPortal ? (
                   <Crown className="w-5 h-5 text-amber-400" />
                 ) : (
                   <Users className="w-5 h-5 text-saffron-600" />
                 )}
                 <h3 className="font-editorial text-xl font-bold tracking-tight">
-                  {selectedTeam
+                  {isChangingPassword
+                    ? 'Change Password'
+                    : selectedTeam
                     ? selectedTeam === 'ALL'
                       ? 'Super Administrator Portal'
                       : `${selectedTeam === 'BOYS' ? 'Boys' : 'Girls'} ${isAdminPortal ? 'Admin' : 'Athlete'} Sign-In`
@@ -132,7 +251,9 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
                   isAdminPortal ? 'text-purple-200' : 'text-slate-500'
                 }`}
               >
-                {isAdminPortal
+                {isChangingPassword
+                  ? 'Verify current credentials & set a new password'
+                  : isAdminPortal
                   ? 'Coaching Admins & Super Admin Only'
                   : 'Boys & Girls Kho-Kho Team Athletes Only'}
               </p>
@@ -155,7 +276,216 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
         {/* Content Body */}
         <div className="p-6">
           <AnimatePresence mode="wait">
-            {!selectedTeam ? (
+            {isChangingPassword ? (
+              /* Step: Change Password Form */
+              <motion.form
+                key="step-change-password-form"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                onSubmit={handleChangePasswordSubmit}
+                className="space-y-4"
+              >
+                {/* Active Header Tag */}
+                <div className="flex items-center justify-between">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase bg-indigo-100 text-indigo-800">
+                    <Key className="w-3.5 h-3.5 text-indigo-600" />
+                    Security & Credentials
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsChangingPassword(false);
+                      setChangePassError('');
+                      setChangePassSuccess('');
+                    }}
+                    className="text-xs text-slate-500 hover:text-navy-900 underline flex items-center gap-1 cursor-pointer"
+                  >
+                    <ArrowLeft className="w-3 h-3" /> Back to Sign In
+                  </button>
+                </div>
+
+                {/* Success Banner */}
+                {changePassSuccess && (
+                  <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-medium space-y-2.5">
+                    <div className="flex items-start gap-2">
+                      <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                      <span className="leading-relaxed">{changePassSuccess}</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsChangingPassword(false);
+                        setChangePassSuccess('');
+                      }}
+                      className="w-full py-2 px-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition-colors flex items-center justify-center gap-1.5 shadow-sm cursor-pointer"
+                    >
+                      <span>Proceed to Sign In</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                )}
+
+                {/* Error Banner */}
+                {changePassError && (
+                  <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium flex items-start gap-2">
+                    <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                    <div>
+                      <span className="font-bold">Error:</span> {changePassError}
+                    </div>
+                  </div>
+                )}
+
+                {!changePassSuccess && (
+                  <>
+                    {/* Username or Athlete ID */}
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                        Username / Athlete ID / Email
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                          <UserIcon className="w-4 h-4" />
+                        </div>
+                        <input
+                          type="text"
+                          required
+                          value={changeForm.username}
+                          onChange={(e) => setChangeForm({ ...changeForm, username: e.target.value })}
+                          placeholder="Enter your username, email, or player ID (e.g. B01)"
+                          className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-sm text-navy-900 transition-all outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Current Password */}
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                        Current Password
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                          <Lock className="w-4 h-4" />
+                        </div>
+                        <input
+                          type={showCurrentPassword ? 'text' : 'password'}
+                          required
+                          value={changeForm.currentPassword}
+                          onChange={(e) => setChangeForm({ ...changeForm, currentPassword: e.target.value })}
+                          placeholder="Enter current password"
+                          className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-sm text-navy-900 transition-all outline-none"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                          className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                          title={showCurrentPassword ? 'Hide password' : 'Show password'}
+                        >
+                          {showCurrentPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* New Password */}
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                        New Password
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                          <Key className="w-4 h-4" />
+                        </div>
+                        <input
+                          type={showNewPassword ? 'text' : 'password'}
+                          required
+                          minLength={6}
+                          value={changeForm.newPassword}
+                          onChange={(e) => setChangeForm({ ...changeForm, newPassword: e.target.value })}
+                          placeholder="••••••••••••"
+                          className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-sm text-navy-900 transition-all outline-none"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowNewPassword(!showNewPassword)}
+                          className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                          title={showNewPassword ? 'Hide password' : 'Show password'}
+                        >
+                          {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                      </div>
+                      <p className="mt-1 text-[11px] text-slate-400">Must be at least 6 characters long.</p>
+                    </div>
+
+                    {/* Confirm New Password */}
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                        Confirm New Password
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                          <Lock className="w-4 h-4" />
+                        </div>
+                        <input
+                          type={showConfirmPassword ? 'text' : 'password'}
+                          required
+                          minLength={6}
+                          value={changeForm.confirmPassword}
+                          onChange={(e) => setChangeForm({ ...changeForm, confirmPassword: e.target.value })}
+                          placeholder="••••••••••••"
+                          className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-sm text-navy-900 transition-all outline-none"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                          title={showConfirmPassword ? 'Hide password' : 'Show password'}
+                        >
+                          {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Action Button */}
+                    <div className="pt-1">
+                      <button
+                        type="submit"
+                        disabled={isSubmittingChangePass}
+                        className="w-full py-3 rounded-xl font-bold text-white shadow-md transition-all duration-200 flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-indigo-500/25 disabled:opacity-60 cursor-pointer"
+                      >
+                        {isSubmittingChangePass ? (
+                          <span className="inline-flex items-center gap-2">
+                            <svg className="animate-spin h-4 w-4 text-white" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                            </svg>
+                            Updating Password...
+                          </span>
+                        ) : (
+                          <>
+                            <Key className="w-4 h-4" />
+                            <span>Save New Password</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+
+                    <div className="text-center pt-1">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsChangingPassword(false);
+                          setChangePassError('');
+                          setChangePassSuccess('');
+                        }}
+                        className="text-xs text-slate-500 hover:text-navy-900 transition-colors cursor-pointer"
+                      >
+                        Cancel and Return to Sign In
+                      </button>
+                    </div>
+                  </>
+                )}
+              </motion.form>
+            ) : !selectedTeam ? (
               /* Step 1: Portal Division Selection */
               <motion.div
                 key={`step-select-${activeMode}`}
@@ -214,7 +544,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
                           <h4 className="font-bold text-navy-900 group-hover:text-saffron-600 transition-colors text-sm">
                             Boys Coaching Admin
                           </h4>
-                          <p className="text-[11px] text-slate-500">22 Boys Roster Management & Attendance</p>
+                          <p className="text-[11px] text-slate-500">21 Boys Roster Management & Attendance</p>
                         </div>
                       </div>
                       <div className="w-7 h-7 rounded-full bg-slate-100 group-hover:bg-saffron-500 group-hover:text-white flex items-center justify-center text-slate-400 transition-colors text-xs">
@@ -298,7 +628,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
                 )}
 
                 {/* Portal Switcher Link */}
-                <div className="pt-2 text-center border-t border-slate-100">
+                <div className="pt-2 text-center border-t border-slate-100 space-y-2">
                   {isAdminPortal ? (
                     <button
                       type="button"
@@ -318,6 +648,27 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
                       <ArrowRight className="w-3 h-3" />
                     </button>
                   )}
+
+                  <div className="pt-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsChangingPassword(true);
+                        setChangeForm({
+                          username: '',
+                          currentPassword: '',
+                          newPassword: '',
+                          confirmPassword: '',
+                        });
+                        setChangePassError('');
+                        setChangePassSuccess('');
+                      }}
+                      className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition-colors inline-flex items-center gap-1.5 hover:underline cursor-pointer"
+                    >
+                      <Key className="w-3.5 h-3.5 text-indigo-500" />
+                      <span>Need to Change Password? Update Here</span>
+                    </button>
+                  </div>
                 </div>
               </motion.div>
             ) : (
@@ -377,12 +728,8 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
                       onChange={(e) => setUsername(e.target.value)}
                       placeholder={
                         selectedTeam === 'ALL'
-                          ? 'dhyaneshdhyanesh739@gmail.com'
-                          : isAdminPortal
-                          ? 'Dhyanesh_23'
-                          : selectedTeam === 'GIRLS'
-                          ? 'e.g. madhu'
-                          : 'e.g. mohan'
+                          ? 'Enter email or username'
+                          : 'Enter username'
                       }
                       className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-sm text-navy-900 transition-all outline-none"
                     />
@@ -391,7 +738,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
                     {selectedTeam === 'ALL'
                       ? 'Enter your Super Admin email or username'
                       : isAdminPortal
-                      ? 'Enter coaching admin username (Dhyanesh_23)'
+                      ? 'Enter coaching admin username'
                       : 'Enter your assigned team player username'}
                   </p>
                 </div>
@@ -416,10 +763,33 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
                       title={showPassword ? 'Hide password' : 'Show password'}
                     >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+
+                  {/* Downside the password: Change Password Option */}
+                  <div className="flex items-center justify-between mt-2 pt-0.5">
+                    <span className="text-[11px] text-slate-400">Forgot or want to update?</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsChangingPassword(true);
+                        setChangeForm({
+                          username: username.trim(),
+                          currentPassword: '',
+                          newPassword: '',
+                          confirmPassword: '',
+                        });
+                        setChangePassError('');
+                        setChangePassSuccess('');
+                      }}
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition-colors hover:underline cursor-pointer focus:outline-none"
+                    >
+                      <Key className="w-3.5 h-3.5 text-indigo-500" />
+                      <span>Change Password?</span>
                     </button>
                   </div>
                 </div>
@@ -458,52 +828,6 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
                     </>
                   )}
                 </button>
-
-                {/* Credentials Helper Pill */}
-                <div className="pt-2 border-t border-slate-100">
-                  <p className="text-[11px] font-semibold text-slate-500 mb-1">
-                    {isAdminPortal ? 'Admin Credentials Reference:' : 'Athlete Credentials Reference:'}
-                  </p>
-
-                  <div className="space-y-1.5 text-[11px] text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
-                    {isAdminPortal ? (
-                      <>
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200/60 pb-1 gap-1">
-                          <span className="font-bold text-navy-900 flex items-center gap-1">
-                            <span>👑 Super Admin:</span>
-                          </span>
-                          <span className="font-mono bg-white px-2 py-0.5 rounded border border-slate-200 text-indigo-700 font-bold text-[10px] break-all">
-                            dhyaneshdhyanesh739@gmail.com <span className="text-slate-400">/</span> Dhyanesh@23012007
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="font-bold text-navy-900">Coaching Admin:</span>
-                          <span className="font-mono bg-white px-2 py-0.5 rounded border border-slate-200 text-saffron-700 font-semibold text-[10px]">
-                            Dhyanesh_23 <span className="text-slate-400">/</span> kiddo@khokho
-                          </span>
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        {selectedTeam === 'GIRLS' ? (
-                          <div className="flex items-center justify-between">
-                            <span className="font-bold text-navy-900">Girls Team Athlete:</span>
-                            <span className="font-mono bg-white px-2 py-0.5 rounded border border-slate-200 text-rose-700 font-semibold text-[10px]">
-                              madhu <span className="text-slate-400">/</span> madhu@khokho
-                            </span>
-                          </div>
-                        ) : (
-                          <div className="flex items-center justify-between">
-                            <span className="font-bold text-navy-900">Boys Team Athlete:</span>
-                            <span className="font-mono bg-white px-2 py-0.5 rounded border border-slate-200 text-slate-700 text-[10px]">
-                              mohan <span className="text-slate-400">/</span> mohan@khokho
-                            </span>
-                          </div>
-                        )}
-                      </>
-                    )}
-                  </div>
-                </div>
               </motion.form>
             )}
           </AnimatePresence>

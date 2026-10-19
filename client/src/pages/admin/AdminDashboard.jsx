@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import {
   LayoutDashboard, Users, CheckSquare, History, BarChart3, Trophy,
   Megaphone, UserCheck, LogOut, ChevronRight, Menu, X, Calendar, ArrowRight,
-  TrendingUp, Clock, CheckCircle2, Shield, Crown, Dumbbell
+  TrendingUp, Clock, CheckCircle2, Shield, Crown, Dumbbell, Search, AlertTriangle,
+  UserPlus, Trash2, Plus, AlertCircle
 } from 'lucide-react';
 import {
   BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid
@@ -32,6 +33,30 @@ export default function AdminDashboard({ onLogout }) {
   // Overview stats state
   const [overviewStats, setOverviewStats] = useState(null);
   const [loadingOverview, setLoadingOverview] = useState(true);
+  const [matchSearch, setMatchSearch] = useState('');
+  const [matchStatusFilter, setMatchStatusFilter] = useState('ALL'); // 'ALL' | 'DEDUCTIONS' | 'CLEAN'
+
+  // Add Member Modal state
+  const [addMemberModalOpen, setAddMemberModalOpen] = useState(false);
+  const [newMemberDivision, setNewMemberDivision] = useState(team);
+  const [newMemberForm, setNewMemberForm] = useState({
+    name: '',
+    jerseyNumber: '',
+    position: 'All-Rounder',
+    playerId: '',
+    phone: '',
+    email: '',
+    bloodGroup: 'Unknown',
+  });
+  const [isSubmittingMember, setIsSubmittingMember] = useState(false);
+  const [memberFormError, setMemberFormError] = useState('');
+
+  // Delete Member Confirmation state
+  const [deleteConfirmMember, setDeleteConfirmMember] = useState(null);
+  const [isDeletingMember, setIsDeletingMember] = useState(false);
+
+  // Overview Action feedback notification
+  const [overviewNotification, setOverviewNotification] = useState({ type: '', message: '' });
 
   const fetchOverviewStats = async () => {
     try {
@@ -53,6 +78,99 @@ export default function AdminDashboard({ onLogout }) {
     }
   }, [activeTab, team]);
 
+  const handleOpenAddMemberModal = () => {
+    const currentDiv = isSuperAdmin ? activeDivision : team;
+    setNewMemberDivision(currentDiv);
+    setMemberFormError('');
+
+    const raw = overviewStats?.teamMatchAttendance?.members || [];
+    const existingJerseys = new Set(raw.map((m) => Number(m.jerseyNumber)));
+    let nextJersey = 1;
+    while (existingJerseys.has(nextJersey)) {
+      nextJersey++;
+    }
+    const prefix = currentDiv === 'BOYS' ? 'B' : 'G';
+    setNewMemberForm({
+      name: '',
+      jerseyNumber: String(nextJersey),
+      position: 'All-Rounder',
+      playerId: `${prefix}${String(nextJersey).padStart(2, '0')}`,
+      phone: '',
+      email: '',
+      bloodGroup: 'Unknown',
+    });
+    setAddMemberModalOpen(true);
+  };
+
+  const handleCreateMember = async (e) => {
+    e.preventDefault();
+    setMemberFormError('');
+    if (!newMemberForm.name.trim() || !newMemberForm.jerseyNumber || !newMemberForm.playerId.trim()) {
+      setMemberFormError('Athlete Name, Jersey Number, and Player ID are required.');
+      return;
+    }
+
+    setIsSubmittingMember(true);
+    try {
+      const targetTeamDivision = isSuperAdmin ? newMemberDivision : team;
+      const payload = {
+        team: targetTeamDivision,
+        name: newMemberForm.name.trim(),
+        jerseyNumber: Number(newMemberForm.jerseyNumber),
+        position: newMemberForm.position,
+        playerId: newMemberForm.playerId.trim().toUpperCase(),
+        bloodGroup: newMemberForm.bloodGroup,
+        contactInfo: {
+          phone: newMemberForm.phone.trim(),
+          email: newMemberForm.email.trim(),
+        },
+        createLogin: true,
+      };
+
+      const res = await api.players.create(payload);
+      if (res.success) {
+        setAddMemberModalOpen(false);
+        setOverviewNotification({
+          type: 'success',
+          message: res.message || `Successfully added ${newMemberForm.name} to the ${targetTeamDivision} team roster!`,
+        });
+        setTimeout(() => setOverviewNotification({ type: '', message: '' }), 6000);
+        await fetchOverviewStats();
+      }
+    } catch (err) {
+      setMemberFormError(err.data?.message || err.message || 'Failed to add team member.');
+    } finally {
+      setIsSubmittingMember(false);
+    }
+  };
+
+  const handleConfirmDeleteMember = async () => {
+    if (!deleteConfirmMember) return;
+    setIsDeletingMember(true);
+    try {
+      const res = await api.players.delete(deleteConfirmMember._id);
+      if (res.success) {
+        const deletedName = deleteConfirmMember.name;
+        setDeleteConfirmMember(null);
+        setOverviewNotification({
+          type: 'success',
+          message: res.message || `Team member ${deletedName} was successfully removed.`,
+        });
+        setTimeout(() => setOverviewNotification({ type: '', message: '' }), 6000);
+        await fetchOverviewStats();
+      }
+    } catch (err) {
+      setOverviewNotification({
+        type: 'error',
+        message: err.data?.message || err.message || 'Failed to remove team member.',
+      });
+      setTimeout(() => setOverviewNotification({ type: '', message: '' }), 6000);
+      setDeleteConfirmMember(null);
+    } finally {
+      setIsDeletingMember(false);
+    }
+  };
+
   const navItems = [
     { id: 'overview', label: 'Overview', icon: LayoutDashboard },
     ...(isSuperAdmin ? [{ id: 'directory', label: 'Access Anyone (Users)', icon: Crown }] : []),
@@ -65,6 +183,20 @@ export default function AdminDashboard({ onLogout }) {
     { id: 'announcements', label: 'Announcements', icon: Megaphone },
     { id: 'profile', label: 'Admin Profile', icon: UserCheck },
   ];
+
+  const rawMembers = overviewStats?.teamMatchAttendance?.members || [];
+  const filteredMembers = rawMembers.filter((m) => {
+    const matchesSearch =
+      !matchSearch.trim() ||
+      m.name?.toLowerCase().includes(matchSearch.toLowerCase()) ||
+      String(m.jerseyNumber).includes(matchSearch) ||
+      m.playerId?.toLowerCase().includes(matchSearch.toLowerCase());
+
+    if (!matchesSearch) return false;
+    if (matchStatusFilter === 'DEDUCTIONS') return m.totalDeduction > 0;
+    if (matchStatusFilter === 'CLEAN') return m.totalDeduction === 0;
+    return true;
+  });
 
   return (
     <div className="min-h-screen bg-court-sand text-navy-900 flex">
@@ -262,6 +394,33 @@ export default function AdminDashboard({ onLogout }) {
                 </p>
               </div>
 
+              {/* Action Notification Banner */}
+              {overviewNotification.message && (
+                <div
+                  className={`p-4 rounded-2xl border text-xs font-semibold flex items-center justify-between gap-3 animate-fade-in ${
+                    overviewNotification.type === 'success'
+                      ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                      : 'bg-rose-50 border-rose-200 text-rose-800'
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    {overviewNotification.type === 'success' ? (
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    ) : (
+                      <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                    )}
+                    <span>{overviewNotification.message}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setOverviewNotification({ type: '', message: '' })}
+                    className="text-slate-400 hover:text-slate-600 p-1"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              )}
+
               {/* Real MongoDB Overview Stat Cards */}
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                 <div className="card-premium p-5 text-center">
@@ -302,6 +461,244 @@ export default function AdminDashboard({ onLogout }) {
                   <p className="text-[11px] text-slate-500 mt-0.5">
                     Monthly Avg: {overviewStats?.monthlySummary?.percentage || 0}%
                   </p>
+                </div>
+              </div>
+
+              {/* ==================== TEAM MEMBERS MATCH ATTENDANCE MONITOR (75% Base, -2% Absent, -1% Excused) ==================== */}
+              <div className="card-premium p-6 space-y-5 bg-white border border-slate-200 shadow-card">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={`w-10 h-10 rounded-2xl flex items-center justify-center text-white shadow-md ${
+                        team === 'BOYS' ? 'bg-saffron-600 shadow-saffron-500/25' : 'bg-rose-600 shadow-rose-500/25'
+                      }`}
+                    >
+                      <Trophy className="w-5 h-5 text-amber-300" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-editorial text-lg font-black text-navy-900 tracking-tight">
+                          Team Members Match Attendance Monitor
+                        </h3>
+                        <span
+                          className={`badge-tag text-[10px] ${
+                            team === 'BOYS' ? 'bg-saffron-100 text-saffron-800' : 'bg-rose-100 text-rose-800'
+                          }`}
+                        >
+                          {team} Division
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-500 mt-0.5">
+                        Base match quota: <strong>75%</strong> • Absent automatically deducts <strong>-2%</strong> • Excused deducts <strong>-1%</strong>.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <div className="flex items-center gap-1.5 p-1 rounded-xl bg-slate-100 border border-slate-200 text-xs font-semibold">
+                      <button
+                        type="button"
+                        onClick={() => setMatchStatusFilter('ALL')}
+                        className={`px-2.5 py-1 rounded-lg transition-all ${
+                          matchStatusFilter === 'ALL' ? 'bg-white text-navy-900 shadow-xs' : 'text-slate-500 hover:text-navy-900'
+                        }`}
+                      >
+                        All Members ({rawMembers.length})
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setMatchStatusFilter('DEDUCTIONS')}
+                        className={`px-2.5 py-1 rounded-lg transition-all ${
+                          matchStatusFilter === 'DEDUCTIONS' ? 'bg-white text-rose-600 shadow-xs font-bold' : 'text-slate-500 hover:text-navy-900'
+                        }`}
+                      >
+                        Deductions ({overviewStats?.teamMatchAttendance?.membersWithDeductions || 0})
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setMatchStatusFilter('CLEAN')}
+                        className={`px-2.5 py-1 rounded-lg transition-all ${
+                          matchStatusFilter === 'CLEAN' ? 'bg-white text-emerald-700 shadow-xs font-bold' : 'text-slate-500 hover:text-navy-900'
+                        }`}
+                      >
+                        Clean 75% ({overviewStats?.teamMatchAttendance?.membersFullStanding || 0})
+                      </button>
+                    </div>
+
+                    <div className="relative">
+                      <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="text"
+                        value={matchSearch}
+                        onChange={(e) => setMatchSearch(e.target.value)}
+                        placeholder="Search member..."
+                        className="pl-8 pr-3 py-1.5 text-xs rounded-xl border border-slate-200 outline-none focus:border-saffron-500 w-36 sm:w-44"
+                      />
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={handleOpenAddMemberModal}
+                      className="btn-primary text-xs py-1.5 px-3 inline-flex items-center gap-1.5 shadow-sm whitespace-nowrap"
+                    >
+                      <UserPlus className="w-3.5 h-3.5" />
+                      <span>Add Team Member</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Team Match Attendance KPI Pills */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 text-center">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Starting Quota</p>
+                    <p className="font-editorial text-xl font-black text-navy-900 mt-0.5">75% Base</p>
+                    <p className="text-[10px] text-slate-500">Official Standard</p>
+                  </div>
+                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 text-center">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Squad Average</p>
+                    <p className={`font-editorial text-xl font-black mt-0.5 ${
+                      (overviewStats?.teamMatchAttendance?.averageMatchAttendance || 75) >= 70
+                        ? 'text-sportsGreen-dark'
+                        : 'text-amber-600'
+                    }`}>
+                      {overviewStats?.teamMatchAttendance?.averageMatchAttendance || 75}%
+                    </p>
+                    <p className="text-[10px] text-slate-500">Team Match Readiness</p>
+                  </div>
+                  <div className="p-3 rounded-xl bg-rose-50/50 border border-rose-100 text-center">
+                    <p className="text-[10px] font-bold text-rose-500 uppercase tracking-wider">With Deductions</p>
+                    <p className="font-editorial text-xl font-black text-rose-600 mt-0.5">
+                      {overviewStats?.teamMatchAttendance?.membersWithDeductions || 0}
+                    </p>
+                    <p className="text-[10px] text-rose-600">Absences or Excuses</p>
+                  </div>
+                  <div className="p-3 rounded-xl bg-emerald-50/50 border border-emerald-100 text-center">
+                    <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">Zero Penalties</p>
+                    <p className="font-editorial text-xl font-black text-emerald-700 mt-0.5">
+                      {overviewStats?.teamMatchAttendance?.membersFullStanding || 0}
+                    </p>
+                    <p className="text-[10px] text-emerald-700">Full 75% Maintained</p>
+                  </div>
+                </div>
+
+                {/* Team Members List Table */}
+                <div className="overflow-x-auto rounded-xl border border-slate-200">
+                  <table className="w-full text-left border-collapse text-xs">
+                    <thead>
+                      <tr className="border-b border-slate-200 bg-slate-50 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                        <th className="py-3 px-3.5 w-16">Jersey</th>
+                        <th className="py-3 px-3.5">Athlete</th>
+                        <th className="py-3 px-3.5">Position</th>
+                        <th className="py-3 px-3.5 text-center">Sessions Logged</th>
+                        <th className="py-3 px-3.5 text-center">Absent (-2%)</th>
+                        <th className="py-3 px-3.5 text-center">Excused (-1%)</th>
+                        <th className="py-3 px-3.5 text-center">Total Penalty</th>
+                        <th className="py-3 px-3.5 text-center">Match Attendance</th>
+                        <th className="py-3 px-3.5 text-center">Standing</th>
+                        <th className="py-3 px-3.5 text-right">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {loadingOverview ? (
+                        <tr>
+                          <td colSpan={10} className="py-8 text-center text-slate-400">
+                            Loading team members match attendance...
+                          </td>
+                        </tr>
+                      ) : filteredMembers.length === 0 ? (
+                        <tr>
+                          <td colSpan={10} className="py-8 text-center text-slate-400">
+                            No team members match the search / filter criteria.
+                          </td>
+                        </tr>
+                      ) : (
+                        filteredMembers.map((m) => {
+                          const isClean = m.totalDeduction === 0;
+                          return (
+                            <tr key={m._id} className="hover:bg-slate-50/70 transition-colors">
+                              <td className="py-3 px-3.5 font-editorial font-black text-sm text-saffron-600">
+                                #{m.jerseyNumber}
+                              </td>
+                              <td className="py-3 px-3.5">
+                                <p className="font-bold text-navy-900 leading-tight">{m.name}</p>
+                                <p className="text-[10px] font-mono text-slate-400">{m.playerId}</p>
+                              </td>
+                              <td className="py-3 px-3.5">
+                                <span className="badge-tag bg-slate-100 text-slate-600 text-[10px]">
+                                  {m.position}
+                                </span>
+                              </td>
+                              <td className="py-3 px-3.5 text-center">
+                                <span className="font-semibold text-slate-700">
+                                  {m.present} Present / {m.totalSessions} Total
+                                </span>
+                              </td>
+                              <td className="py-3 px-3.5 text-center">
+                                {m.absent > 0 ? (
+                                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-700">
+                                    {m.absent} miss (-{m.absentDeduction}%)
+                                  </span>
+                                ) : (
+                                  <span className="text-slate-400 font-medium">0</span>
+                                )}
+                              </td>
+                              <td className="py-3 px-3.5 text-center">
+                                {m.excused > 0 ? (
+                                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 text-purple-700">
+                                    {m.excused} exc (-{m.excusedDeduction}%)
+                                  </span>
+                                ) : (
+                                  <span className="text-slate-400 font-medium">0</span>
+                                )}
+                              </td>
+                              <td className="py-3 px-3.5 text-center font-bold">
+                                {m.totalDeduction > 0 ? (
+                                  <span className="text-rose-600">-{m.totalDeduction}%</span>
+                                ) : (
+                                  <span className="text-emerald-600">0%</span>
+                                )}
+                              </td>
+                              <td className="py-3 px-3.5 text-center">
+                                <span
+                                  className={`font-editorial font-black text-sm ${
+                                    m.matchAttendancePercentage >= 75
+                                      ? 'text-sportsGreen-dark'
+                                      : m.matchAttendancePercentage >= 70
+                                      ? 'text-amber-600'
+                                      : 'text-rose-600'
+                                  }`}
+                                >
+                                  {m.matchAttendancePercentage}%
+                                </span>
+                              </td>
+                              <td className="py-3 px-3.5 text-center">
+                                <span
+                                  className={`badge-tag text-[10px] ${
+                                    isClean
+                                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                      : 'bg-amber-50 text-amber-700 border border-amber-200'
+                                  }`}
+                                >
+                                  {isClean ? '✓ 75% Full Quota' : `⚠️ -${m.totalDeduction}% Reduced`}
+                                </span>
+                              </td>
+                              <td className="py-3 px-3.5 text-right">
+                                <button
+                                  type="button"
+                                  onClick={() => setDeleteConfirmMember(m)}
+                                  className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors inline-flex items-center gap-1 text-[11px] font-bold"
+                                  title={`Remove ${m.name} from team`}
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                  <span className="hidden md:inline">Remove</span>
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        })
+                      )}
+                    </tbody>
+                  </table>
                 </div>
               </div>
 
@@ -444,6 +841,293 @@ export default function AdminDashboard({ onLogout }) {
 
           {/* ==================== 8. ADMIN PROFILE TAB ==================== */}
           {activeTab === 'profile' && <AdminProfileView />}
+
+          {/* ==================== ADD TEAM MEMBER MODAL ==================== */}
+          {addMemberModalOpen && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/60 backdrop-blur-sm animate-fade-in">
+              <div className="bg-white rounded-2xl shadow-modal w-full max-w-lg border border-slate-100 overflow-hidden flex flex-col max-h-[90vh]">
+                <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                  <div className="flex items-center gap-2.5">
+                    <div
+                      className={`w-8 h-8 rounded-xl flex items-center justify-center text-white ${
+                        (isSuperAdmin ? newMemberDivision : team) === 'BOYS' ? 'bg-saffron-600' : 'bg-rose-600'
+                      }`}
+                    >
+                      <UserPlus className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h3 className="font-editorial text-lg font-bold text-navy-900 leading-tight">
+                        Add New Team Member
+                      </h3>
+                      <p className="text-xs text-slate-500">
+                        Register athlete to the {isSuperAdmin ? newMemberDivision : team} Kho-Kho team
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setAddMemberModalOpen(false)}
+                    className="text-slate-400 hover:text-slate-600 p-1.5 rounded-xl hover:bg-slate-100 transition-colors"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                <form onSubmit={handleCreateMember} className="p-6 space-y-4 overflow-y-auto flex-1">
+                  {memberFormError && (
+                    <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700 flex items-center gap-2">
+                      <AlertCircle className="w-4 h-4 shrink-0 text-rose-500" />
+                      <span>{memberFormError}</span>
+                    </div>
+                  )}
+
+                  {/* Division Selector for Super Admin */}
+                  {isSuperAdmin && (
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+                        Team Division
+                      </label>
+                      <div className="grid grid-cols-2 gap-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setNewMemberDivision('BOYS');
+                            setNewMemberForm((prev) => ({
+                              ...prev,
+                              playerId: prev.playerId.replace(/^G/, 'B'),
+                            }));
+                          }}
+                          className={`py-2 px-3 rounded-xl border text-xs font-bold transition-all ${
+                            newMemberDivision === 'BOYS'
+                              ? 'bg-saffron-50 border-saffron-500 text-saffron-800 shadow-xs'
+                              : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                          }`}
+                        >
+                          Boys Division
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setNewMemberDivision('GIRLS');
+                            setNewMemberForm((prev) => ({
+                              ...prev,
+                              playerId: prev.playerId.replace(/^B/, 'G'),
+                            }));
+                          }}
+                          className={`py-2 px-3 rounded-xl border text-xs font-bold transition-all ${
+                            newMemberDivision === 'GIRLS'
+                              ? 'bg-rose-50 border-rose-500 text-rose-800 shadow-xs'
+                              : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                          }`}
+                        >
+                          Girls Division
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
+                        Athlete Full Name *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={newMemberForm.name}
+                        onChange={(e) => setNewMemberForm({ ...newMemberForm, name: e.target.value })}
+                        placeholder="e.g. Ramesh Kumar"
+                        className="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-saffron-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
+                        Jersey Number *
+                      </label>
+                      <input
+                        type="number"
+                        min="1"
+                        max="99"
+                        required
+                        value={newMemberForm.jerseyNumber}
+                        onChange={(e) => setNewMemberForm({ ...newMemberForm, jerseyNumber: e.target.value })}
+                        placeholder="e.g. 24"
+                        className="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-saffron-500"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
+                        Player ID *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={newMemberForm.playerId}
+                        onChange={(e) =>
+                          setNewMemberForm({ ...newMemberForm, playerId: e.target.value.toUpperCase() })
+                        }
+                        placeholder="e.g. B24"
+                        className="w-full text-xs font-mono px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-saffron-500"
+                      />
+                      <p className="text-[10px] text-slate-400 mt-0.5">Used for athlete portal username</p>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
+                        Playing Position
+                      </label>
+                      <select
+                        value={newMemberForm.position}
+                        onChange={(e) => setNewMemberForm({ ...newMemberForm, position: e.target.value })}
+                        className="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-saffron-500 bg-white"
+                      >
+                        <option value="All-Rounder">All-Rounder</option>
+                        <option value="Chaser">Chaser</option>
+                        <option value="Defender">Defender</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
+                        Phone Number
+                      </label>
+                      <input
+                        type="tel"
+                        value={newMemberForm.phone}
+                        onChange={(e) => setNewMemberForm({ ...newMemberForm, phone: e.target.value })}
+                        placeholder="+91 98765 43210"
+                        className="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-saffron-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
+                        Blood Group
+                      </label>
+                      <select
+                        value={newMemberForm.bloodGroup}
+                        onChange={(e) => setNewMemberForm({ ...newMemberForm, bloodGroup: e.target.value })}
+                        className="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-saffron-500 bg-white"
+                      >
+                        <option value="Unknown">Unknown</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80 text-[11px] text-slate-600 space-y-1">
+                    <p className="font-semibold text-navy-900">✨ Automatic Athlete Onboarding:</p>
+                    <p>• Starts with official <strong>75% base match attendance quota</strong>.</p>
+                    <p>
+                      • Generates login credentials automatically (username:{' '}
+                      <code>{newMemberForm.playerId.toLowerCase() || 'playerid'}</code>).
+                    </p>
+                  </div>
+
+                  <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
+                    <button
+                      type="button"
+                      onClick={() => setAddMemberModalOpen(false)}
+                      className="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 text-xs font-bold hover:bg-slate-50 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={isSubmittingMember}
+                      className="btn-primary text-xs py-2 px-5 inline-flex items-center gap-1.5"
+                    >
+                      {isSubmittingMember ? (
+                        <>
+                          <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          <span>Creating Member...</span>
+                        </>
+                      ) : (
+                        <>
+                          <UserPlus className="w-3.5 h-3.5" />
+                          <span>Add Member</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+
+          {/* ==================== DELETE MEMBER CONFIRMATION MODAL ==================== */}
+          {deleteConfirmMember && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/60 backdrop-blur-sm animate-fade-in">
+              <div className="bg-white rounded-2xl shadow-modal w-full max-w-md border border-slate-100 p-6 space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center shrink-0">
+                    <Trash2 className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-editorial text-lg font-bold text-navy-900 leading-tight">
+                      Remove Team Member
+                    </h3>
+                    <p className="text-xs text-slate-500">
+                      This action will permanently remove the player from the active roster.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200/80 text-xs text-rose-900 space-y-1">
+                  <p className="font-bold">
+                    Athlete: {deleteConfirmMember.name} (#{deleteConfirmMember.jerseyNumber})
+                  </p>
+                  <p className="text-[11px] text-rose-700">
+                    Team Division: <strong>{team}</strong> • Player ID: <code>{deleteConfirmMember.playerId}</code>
+                  </p>
+                  <div className="pt-2 text-[11px] text-rose-800 space-y-0.5 border-t border-rose-200/60">
+                    <p>• Associated player login account will be removed</p>
+                    <p>• Historical attendance logs for this player will be cleaned up</p>
+                    <p>• Roster allocations in match squads will be removed</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-end gap-3 pt-2">
+                  <button
+                    type="button"
+                    disabled={isDeletingMember}
+                    onClick={() => setDeleteConfirmMember(null)}
+                    className="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 text-xs font-bold hover:bg-slate-50 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    disabled={isDeletingMember}
+                    onClick={handleConfirmDeleteMember}
+                    className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold shadow-md shadow-rose-600/25 transition-all inline-flex items-center gap-1.5"
+                  >
+                    {isDeletingMember ? (
+                      <>
+                        <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <span>Removing...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>Confirm Removal</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </main>
       </div>
     </div>

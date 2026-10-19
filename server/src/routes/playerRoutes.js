@@ -5,6 +5,7 @@ import {
   createPlayer,
   updatePlayer,
   togglePlayerStatus,
+  deletePlayer,
   exportPlayersCSV,
   importPlayersCSV,
 } from '../controllers/playerController.js';
@@ -26,5 +27,6 @@ router.post('/', requireRole('BOYS_ADMIN', 'GIRLS_ADMIN', 'SUPER_ADMIN'), enforc
 router.post('/import-csv', requireRole('BOYS_ADMIN', 'GIRLS_ADMIN', 'SUPER_ADMIN'), enforceTeamAccess, importPlayersCSV);
 router.put('/:id', requireRole('BOYS_ADMIN', 'GIRLS_ADMIN', 'SUPER_ADMIN'), enforceTeamAccess, updatePlayer);
 router.patch('/:id/status', requireRole('BOYS_ADMIN', 'GIRLS_ADMIN', 'SUPER_ADMIN'), enforceTeamAccess, togglePlayerStatus);
+router.delete('/:id', requireRole('BOYS_ADMIN', 'GIRLS_ADMIN', 'SUPER_ADMIN'), enforceTeamAccess, deletePlayer);
 
 export default router;

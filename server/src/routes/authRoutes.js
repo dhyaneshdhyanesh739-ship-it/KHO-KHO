@@ -4,6 +4,7 @@ import {
   logout,
   getMe,
   changePassword,
+  directChangePassword,
   getAllUsers,
   impersonateUser,
   toggleUserStatus,
@@ -19,6 +20,7 @@ router.post('/login', loginLimiter, login);
 router.post('/logout', protect, logout);
 router.get('/me', protect, getMe);
 router.put('/change-password', protect, changePassword);
+router.post('/direct-change-password', loginLimiter, directChangePassword);
 
 // Super Admin Process Routes: Full System User Access & Impersonation
 router.get('/users', protect, requireRole('SUPER_ADMIN'), getAllUsers);

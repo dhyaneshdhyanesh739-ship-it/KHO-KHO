@@ -221,34 +221,53 @@ export default function ReportsView({ team }) {
                       <th className="py-3 px-4 text-center">Late</th>
                       <th className="py-3 px-4 text-center">Excused</th>
                       <th className="py-3 px-4 text-center">Week Rate</th>
+                      <th className="py-3 px-4 text-center">Match Quota (75% Base)</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    {weeklyData.playerMatrix.map((item) => (
-                      <tr key={item.player._id} className="hover:bg-slate-50/60">
-                        <td className="py-3 px-4 font-editorial font-black text-saffron-600">
-                          #{item.player.jerseyNumber}
-                        </td>
-                        <td className="py-3 px-4 font-bold text-navy-900">
-                          {item.player.name}
-                        </td>
-                        <td className="py-3 px-4 text-center font-bold text-sportsGreen-dark">
-                          {item.presentCount}
-                        </td>
-                        <td className="py-3 px-4 text-center font-bold text-rose-600">
-                          {item.absentCount}
-                        </td>
-                        <td className="py-3 px-4 text-center text-amber-600 font-medium">
-                          {item.lateCount}
-                        </td>
-                        <td className="py-3 px-4 text-center text-purple-600 font-medium">
-                          {item.excusedCount}
-                        </td>
-                        <td className="py-3 px-4 text-center font-editorial font-black text-sm text-saffron-600">
-                          {item.percentage}%
-                        </td>
-                      </tr>
-                    ))}
+                    {weeklyData.playerMatrix.map((item) => {
+                      const matchPct = item.matchAttendancePercentage ?? Math.max(0, 75 - (item.absentCount * 2) - (item.excusedCount * 1));
+                      const totalDed = item.totalDeduction ?? ((item.absentCount * 2) + (item.excusedCount * 1));
+                      return (
+                        <tr key={item.player._id} className="hover:bg-slate-50/60">
+                          <td className="py-3 px-4 font-editorial font-black text-saffron-600">
+                            #{item.player.jerseyNumber}
+                          </td>
+                          <td className="py-3 px-4 font-bold text-navy-900">
+                            {item.player.name}
+                          </td>
+                          <td className="py-3 px-4 text-center font-bold text-sportsGreen-dark">
+                            {item.presentCount}
+                          </td>
+                          <td className="py-3 px-4 text-center font-bold text-rose-600">
+                            {item.absentCount}
+                          </td>
+                          <td className="py-3 px-4 text-center text-amber-600 font-medium">
+                            {item.lateCount}
+                          </td>
+                          <td className="py-3 px-4 text-center text-purple-600 font-medium">
+                            {item.excusedCount}
+                          </td>
+                          <td className="py-3 px-4 text-center font-editorial font-black text-sm text-saffron-600">
+                            {item.percentage}%
+                          </td>
+                          <td className="py-3 px-4 text-center">
+                            <span className={`font-editorial font-black text-sm ${
+                              matchPct >= 75 ? 'text-sportsGreen-dark' : 'text-amber-600'
+                            }`}>
+                              {matchPct}%
+                            </span>
+                            {totalDed > 0 ? (
+                              <span className="block text-[10px] text-rose-500 font-semibold">
+                                -{totalDed}% deduction
+                              </span>
+                            ) : (
+                              <span className="block text-[10px] text-slate-400">Zero penalty</span>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -335,34 +354,53 @@ export default function ReportsView({ team }) {
                       <th className="py-3 px-4 text-center">Absent</th>
                       <th className="py-3 px-4 text-center">Excused</th>
                       <th className="py-3 px-4 text-center">Monthly Rate</th>
+                      <th className="py-3 px-4 text-center">Match Quota (75% Base)</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    {monthlyData.playerStats.map((item) => (
-                      <tr key={item.playerId} className="hover:bg-slate-50/60">
-                        <td className="py-3 px-4 font-editorial font-black text-saffron-600">
-                          #{item.jerseyNumber}
-                        </td>
-                        <td className="py-3 px-4 font-bold text-navy-900">
-                          {item.name}
-                        </td>
-                        <td className="py-3 px-4 text-slate-500">
-                          {item.position}
-                        </td>
-                        <td className="py-3 px-4 text-center font-bold text-sportsGreen-dark">
-                          {item.present}
-                        </td>
-                        <td className="py-3 px-4 text-center font-bold text-rose-600">
-                          {item.absent}
-                        </td>
-                        <td className="py-3 px-4 text-center text-purple-600">
-                          {item.excused}
-                        </td>
-                        <td className="py-3 px-4 text-center font-editorial font-black text-sm text-saffron-600">
-                          {item.percentage}%
-                        </td>
-                      </tr>
-                    ))}
+                    {monthlyData.playerStats.map((item) => {
+                      const matchPct = item.matchAttendancePercentage ?? Math.max(0, 75 - (item.absent * 2) - (item.excused * 1));
+                      const totalDed = item.totalDeduction ?? ((item.absent * 2) + (item.excused * 1));
+                      return (
+                        <tr key={item.playerId} className="hover:bg-slate-50/60">
+                          <td className="py-3 px-4 font-editorial font-black text-saffron-600">
+                            #{item.jerseyNumber}
+                          </td>
+                          <td className="py-3 px-4 font-bold text-navy-900">
+                            {item.name}
+                          </td>
+                          <td className="py-3 px-4 text-slate-500">
+                            {item.position}
+                          </td>
+                          <td className="py-3 px-4 text-center font-bold text-sportsGreen-dark">
+                            {item.present}
+                          </td>
+                          <td className="py-3 px-4 text-center font-bold text-rose-600">
+                            {item.absent}
+                          </td>
+                          <td className="py-3 px-4 text-center text-purple-600">
+                            {item.excused}
+                          </td>
+                          <td className="py-3 px-4 text-center font-editorial font-black text-sm text-saffron-600">
+                            {item.percentage}%
+                          </td>
+                          <td className="py-3 px-4 text-center">
+                            <span className={`font-editorial font-black text-sm ${
+                              matchPct >= 75 ? 'text-sportsGreen-dark' : 'text-amber-600'
+                            }`}>
+                              {matchPct}%
+                            </span>
+                            {totalDed > 0 ? (
+                              <span className="block text-[10px] text-rose-500 font-semibold">
+                                -{totalDed}% deduction
+                              </span>
+                            ) : (
+                              <span className="block text-[10px] text-slate-400">Zero penalty</span>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>

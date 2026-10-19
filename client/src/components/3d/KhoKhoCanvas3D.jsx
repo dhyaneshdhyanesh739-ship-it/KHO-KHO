@@ -1,23 +1,38 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { Play, Pause, RotateCcw } from 'lucide-react';
 
 export default function KhoKhoCanvas3D({ isGirls = false }) {
   const mountRef = useRef(null);
   const controlsRef = useRef(null);
+  const isSpinningRef = useRef(true);
   const [isAutoSpinning, setIsAutoSpinning] = useState(true);
 
-  const toggleAutoSpin = () => {
-    if (controlsRef.current) {
-      const next = !controlsRef.current.autoRotate;
-      controlsRef.current.autoRotate = next;
-      setIsAutoSpinning(next);
+  const toggleAutoSpin = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
     }
+    const next = !isSpinningRef.current;
+    isSpinningRef.current = next;
+    if (controlsRef.current) {
+      controlsRef.current.autoRotate = next;
+      if (!next && controlsRef.current.sphericalDelta) {
+        controlsRef.current.sphericalDelta.set(0, 0, 0);
+      }
+    }
+    setIsAutoSpinning(next);
   };
 
-  const resetCamera = () => {
+  const resetCamera = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     if (controlsRef.current) {
       controlsRef.current.reset();
+      isSpinningRef.current = true;
       controlsRef.current.autoRotate = true;
       setIsAutoSpinning(true);
     }
@@ -52,9 +67,9 @@ export default function KhoKhoCanvas3D({ isGirls = false }) {
     const controls = new OrbitControls(camera, renderer.domElement);
     controlsRef.current = controls;
     controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-    controls.autoRotate = true;
-    controls.autoRotateSpeed = 0.7;
+    controls.dampingFactor = 0.08;
+    controls.autoRotate = isSpinningRef.current;
+    controls.autoRotateSpeed = 2.4;
     controls.minDistance = 5;
     controls.maxDistance = 22;
     controls.minPolarAngle = Math.PI / 9;
@@ -319,29 +334,38 @@ export default function KhoKhoCanvas3D({ isGirls = false }) {
     // 11. Animation Loop
     let animationFrameId;
     let clock = new THREE.Clock();
+    let animTime = 0;
 
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
-      const elapsedTime = clock.getElapsedTime();
+      const delta = Math.min(clock.getDelta(), 0.1);
+
+      if (isSpinningRef.current) {
+        animTime += delta;
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 2.4;
+      } else {
+        controls.autoRotate = false;
+      }
 
       // Animate active chaser sprinting along the center line
-      const runPathX = Math.sin(elapsedTime * 1.5) * 4.4;
-      const runPathZ = Math.cos(elapsedTime * 1.5) * 0.9;
+      const runPathX = Math.sin(animTime * 1.5) * 4.4;
+      const runPathZ = Math.cos(animTime * 1.5) * 0.9;
       activeChaser.position.x = runPathX;
       activeChaser.position.z = runPathZ;
       // Slight running bob
-      activeChaser.position.y = Math.abs(Math.sin(elapsedTime * 8)) * 0.08;
+      activeChaser.position.y = Math.abs(Math.sin(animTime * 8)) * 0.08;
       // Face movement direction
       const facingAngle = Math.atan2(
-        Math.cos(elapsedTime * 1.5) * -0.9,
-        Math.cos(elapsedTime * 1.5) * 4.4
+        Math.cos(animTime * 1.5) * -0.9,
+        Math.cos(animTime * 1.5) * 4.4
       );
       activeChaser.rotation.y = -facingAngle + Math.PI / 2;
 
       // Pulse the aura
-      auraMesh.scale.setScalar(1 + Math.sin(elapsedTime * 5) * 0.12);
+      auraMesh.scale.setScalar(1 + Math.sin(animTime * 5) * 0.12);
 
-      controls.update();
+      controls.update(delta);
       renderer.render(scene, camera);
     };
 
@@ -392,24 +416,40 @@ export default function KhoKhoCanvas3D({ isGirls = false }) {
       <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
 
       {/* Floating 3D Interaction Controls */}
-      <div className="absolute bottom-3 left-3 z-10 flex items-center gap-2">
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="absolute bottom-3 left-3 z-20 flex items-center gap-2"
+      >
         <button
           type="button"
           onClick={toggleAutoSpin}
-          className="px-2.5 py-1 rounded-lg bg-white/90 backdrop-blur-md border border-slate-200/80 text-[11px] font-semibold text-slate-700 shadow-sm hover:bg-slate-50 transition-colors flex items-center gap-1.5"
-          title={isAutoSpinning ? 'Pause Auto-Spin' : 'Start Auto-Spin'}
+          className={`px-3 py-1.5 rounded-xl border text-xs font-bold transition-all shadow-md flex items-center gap-1.5 cursor-pointer select-none ${
+            isAutoSpinning
+              ? 'bg-white/95 hover:bg-slate-50 text-slate-800 border-slate-200/90 shadow-slate-900/5'
+              : 'bg-saffron-500 hover:bg-saffron-600 text-white border-saffron-600 shadow-saffron-500/30'
+          }`}
+          title={isAutoSpinning ? 'Pause 3D Court Auto-Spin' : 'Start 3D Court Auto-Spin'}
         >
-          <span>{isAutoSpinning ? '⏸️' : '▶️'}</span>
-          <span>{isAutoSpinning ? 'Pause Spin' : 'Auto Spin'}</span>
+          {isAutoSpinning ? (
+            <>
+              <Pause className="w-3.5 h-3.5 text-rose-600 fill-rose-600" />
+              <span>Pause Spin</span>
+            </>
+          ) : (
+            <>
+              <Play className="w-3.5 h-3.5 fill-white text-white" />
+              <span>Resume Spin</span>
+            </>
+          )}
         </button>
 
         <button
           type="button"
           onClick={resetCamera}
-          className="px-2.5 py-1 rounded-lg bg-white/90 backdrop-blur-md border border-slate-200/80 text-[11px] font-semibold text-slate-700 shadow-sm hover:bg-slate-50 transition-colors flex items-center gap-1.5"
-          title="Reset Camera View"
+          className="px-2.5 py-1.5 rounded-xl bg-white/95 hover:bg-slate-50 text-slate-700 border border-slate-200/90 text-xs font-bold transition-all shadow-md shadow-slate-900/5 flex items-center gap-1.5 cursor-pointer select-none"
+          title="Reset Camera View to Default"
         >
-          <span>🔄</span>
+          <RotateCcw className="w-3.5 h-3.5 text-slate-500" />
           <span>Reset View</span>
         </button>
       </div>

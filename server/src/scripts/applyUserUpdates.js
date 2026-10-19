@@ -57,7 +57,7 @@ async function run() {
   );
   console.log('[Update] Updated boysadmin & girlsadmin credentials (kiddo@khokho, Coach Dhyanesh.S.E)');
 
-  // 2. Setup Boys Roster from user sheet (22 players)
+  // 2. Setup Boys Roster from user sheet (21 players)
   const boysRoster = [
     { id: 'B-01', username: 'mohan', name: 'MOHAN', jersey: 1, pos: 'Pole Diver' },
     { id: 'B-02', username: 'jelphin', name: 'JELPHIN', jersey: 2, pos: 'Running Chaser' },
@@ -70,18 +70,21 @@ async function run() {
     { id: 'B-09', username: 's.e.d', name: 'S.E.D', jersey: 9, pos: 'All-Rounder' },
     { id: 'B-10', username: 'harish', name: 'HARISH', jersey: 10, pos: 'Defender' },
     { id: 'B-11', username: 'akash', name: 'AKASH', jersey: 11, pos: 'Chaser' },
-    { id: 'B-12', username: 'suriya', name: 'SURIYA', jersey: 12, pos: 'Pole Diver' },
+    { id: 'B-12', username: 'sriram', name: 'SRIRAM', jersey: 12, pos: 'All-Rounder' },
     { id: 'B-13', username: 'mega', name: 'MEGA', jersey: 13, pos: 'Running Chaser' },
     { id: 'B-14', username: 'abhinav', name: 'ABHINAV', jersey: 14, pos: 'Defender' },
     { id: 'B-15', username: 'sanjay', name: 'SANJAY', jersey: 15, pos: 'All-Rounder' },
     { id: 'B-16', username: 'lingesh', name: 'LINGESH', jersey: 16, pos: 'Chaser' },
-    { id: 'B-17', username: 'paul', name: 'PAUL', jersey: 17, pos: 'Defender' },
-    { id: 'B-18', username: 'katta', name: 'KATTA', jersey: 18, pos: 'Pole Diver' },
-    { id: 'B-19', username: 'sivaguru', name: 'SIVAGURU', jersey: 19, pos: 'Running Chaser' },
-    { id: 'B-20', username: 'kd', name: 'KD', jersey: 20, pos: 'All-Rounder' },
-    { id: 'B-21', username: 'm.t.durai', name: 'M.T.DURAI', jersey: 21, pos: 'Defender' },
-    { id: 'B-22', username: 'jeeva', name: 'JEEVA', jersey: 22, pos: 'Chaser' },
+    { id: 'B-17', username: 'katta', name: 'KATTA', jersey: 17, pos: 'Pole Diver' },
+    { id: 'B-18', username: 'sivaguru', name: 'SIVAGURU', jersey: 18, pos: 'Running Chaser' },
+    { id: 'B-19', username: 'kd', name: 'KD', jersey: 19, pos: 'All-Rounder' },
+    { id: 'B-20', username: 'm.t.durai', name: 'M.T.DURAI', jersey: 20, pos: 'Defender' },
+    { id: 'B-21', username: 'jeeva', name: 'JEEVA', jersey: 21, pos: 'Chaser' },
   ];
+
+  // Explicitly remove suriya and paul accounts and player profiles
+  await User.deleteMany({ username: { $in: ['suriya', 'paul'] } });
+  await Player.deleteMany({ name: { $in: ['SURIYA', 'PAUL'] }, team: 'BOYS' });
 
   // Remove old boys users and player records that do not match the new roster
   const newBoysUsernames = boysRoster.map((b) => b.username);
@@ -92,9 +95,9 @@ async function run() {
       await Player.deleteOne({ userRef: u._id });
     }
   }
-  await Player.deleteMany({ team: 'BOYS', jerseyNumber: { $gt: 22 } });
+  await Player.deleteMany({ team: 'BOYS', jerseyNumber: { $gt: 21 } });
 
-  console.log('[Update] Upserting 22 Boys Players & Accounts...');
+  console.log('[Update] Upserting 21 Boys Players & Accounts...');
   for (const b of boysRoster) {
     const rawPass = `${b.username}@khokho`;
     const passwordHash = await bcrypt.hash(rawPass, 10);

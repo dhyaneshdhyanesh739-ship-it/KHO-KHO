@@ -1,6 +1,7 @@
 import Player from '../models/Player.js';
 import User from '../models/User.js';
 import AttendanceRecord from '../models/AttendanceRecord.js';
+import MatchSquad from '../models/MatchSquad.js';
 import { logAuditEvent } from '../utils/auditLogger.js';
 
 export const getPlayers = async (req, res, next) => {
@@ -78,6 +79,16 @@ export const getPlayerById = async (req, res, next) => {
     const eligibleSessions = totalRecorded - excusedCount;
     const attendancePct = eligibleSessions > 0 ? Math.round((presentCount / eligibleSessions) * 100) : 0;
 
+    // Official Match Attendance Policy:
+    // Base attendance for match: 75%
+    // Absent: reduce 2% per session
+    // Excused: reduce 1% per session
+    const baseMatchPercentage = 75;
+    const absentDeduction = absentCount * 2;
+    const excusedDeduction = excusedCount * 1;
+    const totalDeduction = absentDeduction + excusedDeduction;
+    const matchAttendancePercentage = Math.max(0, baseMatchPercentage - totalDeduction);
+
     return res.status(200).json({
       success: true,
       data: {
@@ -90,6 +101,11 @@ export const getPlayerById = async (req, res, next) => {
           absentCount,
           eligibleSessions,
           attendancePercentage: attendancePct,
+          baseMatchPercentage,
+          absentDeduction,
+          excusedDeduction,
+          totalDeduction,
+          matchAttendancePercentage,
         },
       },
     });
@@ -100,7 +116,7 @@ export const getPlayerById = async (req, res, next) => {
 
 export const createPlayer = async (req, res, next) => {
   try {
-    const team = req.targetTeam;
+    const team = (req.targetTeam && req.targetTeam !== 'ALL') ? req.targetTeam : (req.body.team || 'BOYS');
     const {
       playerId,
       name,
@@ -320,6 +336,66 @@ export const togglePlayerStatus = async (req, res, next) => {
       success: true,
       message: `Player ${player.name} is now ${player.active ? 'Active' : 'Inactive'}.`,
       data: player,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deletePlayer = async (req, res, next) => {
+  try {
+    const player = await Player.findById(req.params.id);
+    if (!player) {
+      return res.status(404).json({ success: false, message: 'Team member not found.' });
+    }
+
+    // Security check: Players or team admins can only access their own team
+    if (req.user.role !== 'SUPER_ADMIN' && player.team !== req.user.team) {
+      return res.status(403).json({
+        success: false,
+        message: 'Security Violation: Cannot remove a team member outside your authorized team.',
+      });
+    }
+
+    // Clean up associated user login account if any exists
+    if (player.userRef) {
+      await User.findByIdAndDelete(player.userRef);
+    }
+
+    // Clean up associated attendance records
+    await AttendanceRecord.deleteMany({ player: player._id });
+
+    // Clean up references in MatchSquad rosters
+    await MatchSquad.updateMany(
+      { team: player.team },
+      {
+        $pull: {
+          selectedPlayers: { player: player._id },
+          reservePlayers: { player: player._id },
+        },
+      }
+    );
+
+    await Player.findByIdAndDelete(player._id);
+
+    await logAuditEvent({
+      actor: req.user,
+      team: player.team,
+      action: 'PLAYER_REMOVED',
+      entity: 'PLAYER',
+      entityId: player._id.toString(),
+      details: {
+        name: player.name,
+        playerId: player.playerId,
+        jerseyNumber: player.jerseyNumber,
+        team: player.team,
+      },
+      ipAddress: req.ip,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: `Team member ${player.name} (#${player.jerseyNumber}, ${player.playerId}) was successfully removed from the ${player.team} roster.`,
     });
   } catch (error) {
     next(error);

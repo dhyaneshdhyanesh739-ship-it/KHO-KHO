@@ -164,10 +164,18 @@ export const getSquadRecommendations = async (req, res, next) => {
       const present = pRecords.filter((r) => r.status === 'PRESENT').length;
       const late = pRecords.filter((r) => r.status === 'LATE').length;
       const excused = pRecords.filter((r) => r.status === 'EXCUSED').length;
+      const absent = pRecords.filter((r) => r.status === 'ABSENT').length;
       const eligible = pRecords.length - excused;
 
       // Attendance percentage
       const attendancePct = eligible > 0 ? Math.round((present / eligible) * 100) : 0;
+
+      // Match Attendance Policy: 75% base, -2% absent, -1% excused
+      const baseMatchPercentage = 75;
+      const absentDeduction = absent * 2;
+      const excusedDeduction = excused * 1;
+      const totalDeduction = absentDeduction + excusedDeduction;
+      const matchAttendancePercentage = Math.max(0, baseMatchPercentage - totalDeduction);
 
       // Position versatility factor: Kho-Kho requires balance between Chasers and Defenders
       let positionFactor = 10;
@@ -183,13 +191,13 @@ export const getSquadRecommendations = async (req, res, next) => {
       // Human-readable ranking factor explanation
       let factorReason = '';
       if (attendancePct >= 90) {
-        factorReason = `Outstanding attendance (${attendancePct}%, ${present}/${eligible} sessions) • Key ${player.position}`;
+        factorReason = `Outstanding attendance (${attendancePct}%, ${present}/${eligible} sessions • ${matchAttendancePercentage}% match quota) • Key ${player.position}`;
       } else if (attendancePct >= (match.eligibilityMinAttendancePct || 75)) {
-        factorReason = `Consistent commitment (${attendancePct}%, ${present}/${eligible} sessions) • Reliable ${player.position}`;
+        factorReason = `Consistent commitment (${attendancePct}%, ${present}/${eligible} sessions • ${matchAttendancePercentage}% match quota) • Reliable ${player.position}`;
       } else if (eligible === 0) {
-        factorReason = `No recent session records available • Pending evaluation`;
+        factorReason = `No recent session records available • Pending evaluation (Base ${matchAttendancePercentage}%)`;
       } else {
-        factorReason = `Below ${match.eligibilityMinAttendancePct}% threshold (${attendancePct}%) • Requires coach exception`;
+        factorReason = `Below ${match.eligibilityMinAttendancePct}% threshold (${attendancePct}% standard, ${matchAttendancePercentage}% match quota) • Requires coach exception`;
       }
 
       return {
@@ -202,8 +210,15 @@ export const getSquadRecommendations = async (req, res, next) => {
         active: player.active,
         attendancePercentage: attendancePct,
         sessionsPresent: present,
+        sessionsAbsent: absent,
+        sessionsExcused: excused,
         sessionsEligible: eligible,
         totalSessionsTracked: pRecords.length,
+        baseMatchPercentage,
+        absentDeduction,
+        excusedDeduction,
+        totalDeduction,
+        matchAttendancePercentage,
         recommendationScore: compositeScore,
         rankingFactor: factorReason,
         isEligible,
