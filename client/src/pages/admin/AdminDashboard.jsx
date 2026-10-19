@@ -437,7 +437,7 @@ export default function AdminDashboard({ onLogout }) {
           {/* ==================== 7. ANNOUNCEMENTS TAB ==================== */}
           {activeTab === 'announcements' && <AnnouncementsManager team={team} />}
 
-          {/* ==================== 8. ADMIN PROFILE & AUDIT LOGS TAB ==================== */}
+          {/* ==================== 8. ADMIN PROFILE TAB ==================== */}
           {activeTab === 'profile' && <AdminProfileView />}
         </main>
       </div>

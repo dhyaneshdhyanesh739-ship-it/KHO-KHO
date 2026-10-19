@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Shield, Key, History, CheckCircle2, AlertCircle, Clock } from 'lucide-react';
+import React, { useState } from 'react';
+import { Shield, Key, CheckCircle2, AlertCircle, Clock } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../services/api';
 
@@ -11,27 +11,6 @@ export default function AdminProfileView() {
   const [passwordSuccess, setPasswordSuccess] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [isUpdatingPass, setIsUpdatingPass] = useState(false);
-
-  const [auditLogs, setAuditLogs] = useState([]);
-  const [loadingLogs, setLoadingLogs] = useState(true);
-
-  useEffect(() => {
-    const fetchLogs = async () => {
-      try {
-        setLoadingLogs(true);
-        const res = await api.content.getAuditLogs(30);
-        if (res && res.data) {
-          setAuditLogs(res.data);
-        }
-      } catch (err) {
-        console.error('Failed to load audit trail:', err);
-      } finally {
-        setLoadingLogs(false);
-      }
-    };
-
-    fetchLogs();
-  }, []);
 
   const handleChangePassword = async (e) => {
     e.preventDefault();
@@ -184,72 +163,6 @@ export default function AdminProfileView() {
                 {isUpdatingPass ? 'Updating...' : 'Update Password'}
               </button>
             </form>
-          </div>
-        </div>
-      </div>
-
-      {/* Security Audit Trail Table */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h3 className="font-editorial text-lg font-bold text-navy-900 flex items-center gap-2">
-            <History className="w-4 h-4 text-slate-500" />
-            Security & Administrative Audit Trail
-          </h3>
-          <span className="text-[11px] text-slate-400 font-semibold">
-            Immutable Activity Log
-          </span>
-        </div>
-
-        <div className="card-premium overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse text-xs">
-              <thead>
-                <tr className="border-b border-slate-100 bg-slate-50/70 text-[11px] font-bold text-slate-500 uppercase">
-                  <th className="py-3 px-4">Timestamp</th>
-                  <th className="py-3 px-4">Actor</th>
-                  <th className="py-3 px-4">Team</th>
-                  <th className="py-3 px-4">Action</th>
-                  <th className="py-3 px-4">Entity</th>
-                  <th className="py-3 px-4">Safe Details</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 text-slate-600">
-                {loadingLogs ? (
-                  <tr>
-                    <td colSpan={6} className="py-8 text-center text-slate-400">Loading audit trail...</td>
-                  </tr>
-                ) : auditLogs.length === 0 ? (
-                  <tr>
-                    <td colSpan={6} className="py-8 text-center text-slate-400">No activity recorded yet.</td>
-                  </tr>
-                ) : (
-                  auditLogs.map((log) => (
-                    <tr key={log._id} className="hover:bg-slate-50/60">
-                      <td className="py-3 px-4 font-mono text-[11px] text-slate-400">
-                        {new Date(log.timestamp).toLocaleString()}
-                      </td>
-                      <td className="py-3 px-4 font-bold text-navy-900">
-                        {log.actorUsername} ({log.actorRole})
-                      </td>
-                      <td className="py-3 px-4">
-                        <span className="badge-tag bg-slate-100 text-slate-700 text-[10px]">
-                          {log.team}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4 font-mono font-bold text-saffron-600 text-[11px]">
-                        {log.action}
-                      </td>
-                      <td className="py-3 px-4">
-                        {log.entity}
-                      </td>
-                      <td className="py-3 px-4 font-mono text-[11px] text-slate-500 max-w-xs truncate">
-                        {JSON.stringify(log.details)}
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
           </div>
         </div>
       </div>
