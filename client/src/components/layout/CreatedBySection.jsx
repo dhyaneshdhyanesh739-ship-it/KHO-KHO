@@ -63,7 +63,7 @@ export default function CreatedBySection() {
                   Dhyanesh.S.E
                 </h3>
                 <p className="text-saffron-400 text-sm font-semibold mt-1">
-                  National Kho-Kho Athlete • Head Coach • Full-Stack Developer
+                  KHO-KHO Player.Head Coach
                 </p>
               </div>
 
