@@ -4,6 +4,10 @@ import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+
 import authRoutes from './routes/authRoutes.js';
 import playerRoutes from './routes/playerRoutes.js';
 import attendanceRoutes from './routes/attendanceRoutes.js';
@@ -15,14 +19,19 @@ import groundActivityRoutes from './routes/groundActivityRoutes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { generalLimiter } from './middleware/rateLimiter.js';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const clientDistPath = path.resolve(__dirname, '../../client/dist');
+
 const app = express();
 
-// Trust proxy for rate limiting behind reverse proxies
+// Trust proxy for rate limiting behind reverse proxies (Render, Railway, etc.)
 app.set('trust proxy', 1);
 
 // Security Headers
 app.use(
   helmet({
+    contentSecurityPolicy: false,
     crossOriginResourcePolicy: { policy: 'cross-origin' },
   })
 );
@@ -37,7 +46,13 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (!origin) return callback(null, true);
+      if (
+        allowedOrigins.includes(origin) ||
+        origin.endsWith('.onrender.com') ||
+        origin.endsWith('.railway.app') ||
+        process.env.NODE_ENV !== 'production'
+      ) {
         callback(null, true);
       } else {
         callback(new Error(`CORS blocked for origin: ${origin}`));
@@ -79,7 +94,20 @@ app.use('/api/announcements', announcementRoutes);
 app.use('/api/ground-activities', groundActivityRoutes);
 app.use('/api', contentRoutes);
 
-// 404 Route Handler
+// Serve static client assets in production (or whenever client/dist exists)
+if (fs.existsSync(clientDistPath)) {
+  app.use(express.static(clientDistPath));
+
+  // SPA fallback for all GET requests that do not target /api
+  app.get('*', (req, res, next) => {
+    if (req.originalUrl.startsWith('/api')) {
+      return next();
+    }
+    res.sendFile(path.resolve(clientDistPath, 'index.html'));
+  });
+}
+
+// 404 Route Handler for unmatched API endpoints
 app.use('*', (req, res) => {
   res.status(404).json({
     success: false,
