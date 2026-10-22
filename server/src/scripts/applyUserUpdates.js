@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import { connectDB } from '../config/db.js';
 import dotenv from 'dotenv';
 import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
@@ -6,11 +6,9 @@ import Player from '../models/Player.js';
 
 dotenv.config();
 
-const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/kho-kho-arena';
-
 async function run() {
-  console.log('[Update] Connecting to MongoDB at', mongoUri);
-  await mongoose.connect(mongoUri);
+  console.log('[Update] Connecting to PostgreSQL...');
+  await connectDB();
 
   // 1. Setup / Update Super Admin Dhyanesh
   const superAdminPasswordHash = await bcrypt.hash('Dhyanesh@23012007', 10);
@@ -240,7 +238,7 @@ async function run() {
   console.log(`[Update] BOYS Players: ${finalBoysCount}, BOYS Users: ${finalBoysUsers}`);
   console.log(`[Update] GIRLS Players: ${finalGirlsCount}, GIRLS Users: ${finalGirlsUsers}`);
 
-  await mongoose.disconnect();
+  process.exit(0);
 }
 
 run().catch((err) => {

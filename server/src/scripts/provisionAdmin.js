@@ -1,13 +1,12 @@
-import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import { connectDB } from '../config/db.js';
 import User from '../models/User.js';
 
 dotenv.config();
 
 const provisionAdmins = async () => {
-  const uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/kho-kho-arena';
-  await mongoose.connect(uri);
-  console.log('[Admin Provisioning] Connected to MongoDB.');
+  await connectDB();
+  console.log('[Admin Provisioning] Connected to PostgreSQL.');
 
   const superUser = process.env.INITIAL_SUPER_ADMIN_USER || 'superadmin';
   const superPass = process.env.INITIAL_SUPER_ADMIN_PASSWORD || 'SuperAdmin@KhoKho2026!';

@@ -1,61 +1,45 @@
-import mongoose from 'mongoose';
+import prisma from '../config/prisma.js';
+import { createModelAdapter } from './prismaAdapter.js';
 
-const attendanceRecordSchema = new mongoose.Schema(
-  {
-    session: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'AttendanceSession',
-      required: [true, 'Session reference is required'],
-    },
-    player: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Player',
-      required: [true, 'Player reference is required'],
-    },
-    team: {
-      type: String,
-      enum: ['BOYS', 'GIRLS'],
-      required: [true, 'Team is required'],
-    },
-    date: {
-      type: String, // YYYY-MM-DD
-      required: [true, 'Date is required'],
-      match: [/^\d{4}-\d{2}-\d{2}$/, 'Date must be formatted as YYYY-MM-DD'],
-    },
-    status: {
-      type: String,
-      enum: {
-        values: ['PRESENT', 'ABSENT', 'LATE', 'EXCUSED'],
-        message: '{VALUE} is not a valid attendance status',
-      },
-      required: [true, 'Status is required'],
-    },
-    notes: {
-      type: String,
-      default: '',
-      maxlength: 300,
-    },
-    recordedBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
-    },
-    updatedBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      default: null,
-    },
-  },
-  {
-    timestamps: true,
+const AttendanceRecord = createModelAdapter('attendanceRecord');
+
+AttendanceRecord.bulkWrite = async function (bulkOps = []) {
+  for (const op of bulkOps) {
+    if (op.updateOne) {
+      const { filter, update } = op.updateOne;
+      const session = String(filter.session._id || filter.session);
+      const player = String(filter.player._id || filter.player);
+      const set = update.$set || {};
+      const setOnInsert = update.$setOnInsert || {};
+
+      await prisma.attendanceRecord.upsert({
+        where: {
+          session_player: {
+            session,
+            player,
+          },
+        },
+        update: {
+          team: set.team,
+          date: set.date,
+          status: set.status,
+          notes: set.notes || '',
+          updatedBy: set.updatedBy ? String(set.updatedBy) : null,
+        },
+        create: {
+          session,
+          player,
+          team: set.team,
+          date: set.date,
+          status: set.status,
+          notes: set.notes || '',
+          recordedBy: String(setOnInsert.recordedBy || set.updatedBy || ''),
+          updatedBy: set.updatedBy ? String(set.updatedBy) : null,
+        },
+      });
+    }
   }
-);
+  return { ok: 1 };
+};
 
-// Compound unique index prevents duplicate attendance records for the same player in the same session
-attendanceRecordSchema.index({ session: 1, player: 1 }, { unique: true });
-// Indices for fast player reports, team dates, and aggregation
-attendanceRecordSchema.index({ player: 1, date: -1 });
-attendanceRecordSchema.index({ team: 1, date: -1, status: 1 });
-
-const AttendanceRecord = mongoose.model('AttendanceRecord', attendanceRecordSchema);
 export default AttendanceRecord;

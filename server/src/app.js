@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
-import mongoose from 'mongoose';
+import prisma from './config/prisma.js';
 
 import path from 'path';
 import fs from 'fs';
@@ -72,14 +72,20 @@ app.use(cookieParser());
 // Rate Limiting
 app.use('/api', generalLimiter);
 
-// Health check endpoint with real MongoDB connection inspection
-app.get('/api/health', (req, res) => {
-  const isDbConnected = mongoose.connection.readyState === 1;
+// Health check endpoint with real PostgreSQL/Prisma connection inspection
+app.get('/api/health', async (req, res) => {
+  let isDbConnected = false;
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    isDbConnected = true;
+  } catch (err) {
+    isDbConnected = false;
+  }
   return res.status(isDbConnected ? 200 : 503).json({
     success: isDbConnected,
     name: 'KHO-KHO ARENA API',
     status: isDbConnected ? 'HEALTHY' : 'DATABASE_DISCONNECTED',
-    database: isDbConnected ? 'Connected to MongoDB' : 'Disconnected from MongoDB',
+    database: isDbConnected ? 'Connected to PostgreSQL (Neon)' : 'Disconnected from PostgreSQL',
     timestamp: new Date().toISOString(),
   });
 });

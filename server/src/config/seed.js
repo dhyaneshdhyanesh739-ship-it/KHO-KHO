@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import { connectDB } from './db.js';
 import dotenv from 'dotenv';
 import User from '../models/User.js';
 import Player from '../models/Player.js';
@@ -322,7 +322,7 @@ export const seedDatabase = async () => {
       category: 'GENERAL',
       isUrgent: true,
       published: true,
-      author: superAdmin._id,
+      author: dhyaneshAdmin._id,
       authorName: 'Athletics Directorate',
     },
     {
@@ -442,8 +442,7 @@ export const seedDatabase = async () => {
 
 // If run directly via `npm run seed`
 if (process.argv[1] && process.argv[1].includes('seed.js')) {
-  mongoose
-    .connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/kho-kho-arena')
+  connectDB()
     .then(async () => {
       await seedDatabase();
       process.exit(0);
