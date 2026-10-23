@@ -1,8 +1,11 @@
 {
-  "buildCommand": "npm --prefix client run build",
+  "buildCommand": "npx prisma generate && npm --prefix client run build",
   "outputDirectory": "client/dist",
-  "framework": "vite",
   "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api"
+    },
     {
       "source": "/(.*)",
       "destination": "/index.html"
