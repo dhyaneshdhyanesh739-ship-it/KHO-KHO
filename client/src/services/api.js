@@ -1,4 +1,17 @@
-const API_BASE = import.meta.env.VITE_API_URL || '/api';
+// Normalize API_BASE:
+// On Vercel (and local dev with Vite proxy), the Express API is co-located under '/api'.
+// Guard against non-existent domains (e.g. kho-kho.onrender.com) or broken URL formats.
+const rawApiUrl = import.meta.env.VITE_API_URL || '';
+const isInvalidOrRender =
+  !rawApiUrl ||
+  rawApiUrl.includes('onrender.com') ||
+  rawApiUrl.startsWith('https//') ||
+  rawApiUrl.startsWith('http//');
+
+export const API_BASE =
+  typeof window !== 'undefined' && (window.location.hostname.includes('vercel.app') || isInvalidOrRender)
+    ? '/api'
+    : (rawApiUrl || '/api');
 
 /**
  * Universal fetch wrapper ensuring cookies are sent (credentials: 'include')
