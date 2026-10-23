@@ -51,6 +51,8 @@ app.use(
         allowedOrigins.includes(origin) ||
         origin.endsWith('.onrender.com') ||
         origin.endsWith('.railway.app') ||
+        origin.endsWith('.vercel.app') ||
+        origin.endsWith('.netlify.app') ||
         process.env.NODE_ENV !== 'production'
       ) {
         callback(null, true);

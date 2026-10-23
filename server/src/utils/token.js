@@ -21,8 +21,8 @@ export const setAuthCookie = (res, token) => {
   const isProd = process.env.NODE_ENV === 'production';
   const cookieOptions = {
     httpOnly: true,
-    secure: isProd ? true : false,
-    sameSite: isProd ? 'strict' : 'lax',
+    secure: process.env.COOKIE_SECURE !== undefined ? process.env.COOKIE_SECURE === 'true' : isProd,
+    sameSite: process.env.COOKIE_SAME_SITE || (isProd ? 'lax' : 'lax'),
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     path: '/',
   };
@@ -34,9 +34,10 @@ export const clearAuthCookie = (res) => {
   const isProd = process.env.NODE_ENV === 'production';
   res.cookie('token', '', {
     httpOnly: true,
-    secure: isProd ? true : false,
-    sameSite: isProd ? 'strict' : 'lax',
+    secure: process.env.COOKIE_SECURE !== undefined ? process.env.COOKIE_SECURE === 'true' : isProd,
+    sameSite: process.env.COOKIE_SAME_SITE || (isProd ? 'lax' : 'lax'),
     expires: new Date(0),
     path: '/',
   });
 };
+
