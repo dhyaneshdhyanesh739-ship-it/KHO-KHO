@@ -2,6 +2,59 @@ import React, { useState, useEffect } from 'react';
 import { Trophy, Medal, Calendar, Sparkles, Maximize2, X, MapPin } from 'lucide-react';
 import { api } from '../../services/api';
 
+const DEFAULT_ACHIEVEMENTS = [
+  {
+    _id: 'cit-championship',
+    title: 'Championship Trophy — Coimbatore Institute of Technology',
+    year: 2025,
+    event: 'Coimbatore Institute of Technology (CIT) State Tournament',
+    result: 'Champions & Gold Trophy',
+    description: 'Unstoppable championship campaign by the team, clinching the prestigious trophy at Coimbatore Institute of Technology.',
+    image: '/achievements/cit_champions_trophy.jpg',
+    category: 'BOYS',
+  },
+  {
+    _id: 'kit-runners',
+    title: 'Runners-Up — Inter-Collegiate UDHAYAM Tournament',
+    year: 2025,
+    event: 'KIT - Kalaignarkarunanidhi Institute of Technology, Coimbatore',
+    result: 'Runner-Up (Silver Trophy)',
+    description: 'Tenacious defensive performance and runner-up podium finish in the prestigious state-level UDHAYAM tournament.',
+    image: '/achievements/kit_udhayam_runners.jpg',
+    category: 'BOYS',
+  },
+  {
+    _id: 'floodlight-trophy',
+    title: 'State Level Floodlight Trophy Winners',
+    year: 2025,
+    event: 'All-India Open Floodlight Night Kho-Kho Championship',
+    result: 'Champions Under Floodlights',
+    description: 'High-voltage night matches under arena floodlights, displaying electrifying pole turns and decisive match points.',
+    image: '/achievements/floodlight_night_trophy.jpg',
+    category: 'COMBINED',
+  },
+  {
+    _id: 'titans-trophy',
+    title: 'Winners 🥇 — Team Titans Championship',
+    year: 2024,
+    event: 'Team Titans Invitational Kho-Kho Trophy',
+    result: 'Winners & Champions (Gold Medal)',
+    description: 'Dominant all-out victories by the Team Titans squad with masterclass defensive running and offensive chases.',
+    image: '/achievements/team_titans_winners.jpg',
+    category: 'BOYS',
+  },
+  {
+    _id: 'cit-ground-meet',
+    title: 'Champions Lineup — CIT Annual Kho-Kho Meet',
+    year: 2024,
+    event: 'Coimbatore Institute of Technology Annual Tournament',
+    result: 'Trophy Champions & Fair Play Award',
+    description: 'Full tournament squad and coaches lined up on the court celebrating the coveted championship cup with coaches.',
+    image: '/achievements/cit_ground_lineup.jpg',
+    category: 'BOYS',
+  },
+];
+
 export default function AchievementsSection() {
   const [achievements, setAchievements] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -9,22 +62,34 @@ export default function AchievementsSection() {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
 
   useEffect(() => {
+    let isMounted = true;
     const fetchAchievements = async () => {
       try {
         setLoading(true);
         const res = await api.content.getAchievements(categoryFilter === 'ALL' ? '' : categoryFilter);
-        if (res && res.data) {
+        if (isMounted && res && res.data && res.data.length > 0) {
           setAchievements(res.data);
+        } else if (isMounted) {
+          setAchievements([]);
         }
       } catch (err) {
-        console.error('Failed to load achievements:', err);
+        console.warn('Using bundled honors archive:', err.message);
+        if (isMounted) setAchievements([]);
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
 
     fetchAchievements();
+    return () => {
+      isMounted = false;
+    };
   }, [categoryFilter]);
+
+  const displayAchievements =
+    achievements.length > 0
+      ? achievements
+      : DEFAULT_ACHIEVEMENTS.filter((item) => categoryFilter === 'ALL' || item.category === categoryFilter);
 
   return (
     <section id="achievements" className="py-20 md:py-28 bg-white border-b border-slate-200">
@@ -62,13 +127,13 @@ export default function AchievementsSection() {
         </div>
 
         {/* Content */}
-        {loading ? (
+        {loading && displayAchievements.length === 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3].map((i) => (
               <div key={i} className="h-80 rounded-3xl bg-slate-100 animate-pulse" />
             ))}
           </div>
-        ) : achievements.length === 0 ? (
+        ) : displayAchievements.length === 0 ? (
           <div className="text-center py-16 px-4 rounded-3xl bg-slate-50 border-2 border-dashed border-slate-200 max-w-md mx-auto">
             <Trophy className="w-12 h-12 text-slate-300 mx-auto mb-3" />
             <h3 className="font-bold text-navy-900 text-base">No achievements found</h3>
@@ -76,7 +141,7 @@ export default function AchievementsSection() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
-            {achievements.map((item) => (
+            {displayAchievements.map((item) => (
               <div
                 key={item._id}
                 className="card-premium flex flex-col justify-between overflow-hidden group hover:border-amber-300 hover:shadow-xl transition-all duration-300 bg-white border border-slate-200 rounded-3xl"

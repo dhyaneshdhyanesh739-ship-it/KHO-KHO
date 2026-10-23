@@ -405,35 +405,49 @@ export const seedDatabase = async () => {
     },
   ]);
 
-  // 9. Create Gallery
+  // 9. Create Gallery (Arena in Motion)
   await GalleryItem.create([
     {
-      title: 'High-Velocity Pole Turn Execution',
-      caption: 'Active chaser executing a razor-sharp pole turn during the state semi-finals.',
+      title: 'CIT Kho-Kho Champions Trophy Collage',
+      caption: 'Championship celebration and trophy presentation at Coimbatore Institute of Technology.',
+      category: 'Trophies',
+      team: 'BOYS',
+      imageUrl: '/achievements/cit_champions_trophy.jpg',
+    },
+    {
+      title: 'KIT UDHAYAM State Tournament Runners-Up',
+      caption: 'Podium runners-up finish and trophy at KIT-Kalaignarkarunanidhi Institute of Technology.',
+      category: 'Trophies',
+      team: 'BOYS',
+      imageUrl: '/achievements/kit_udhayam_runners.jpg',
+    },
+    {
+      title: 'Floodlight Night Championship Glory',
+      caption: 'High-voltage night tournament victory under arena floodlights.',
+      category: 'Celebration',
+      team: 'COMBINED',
+      imageUrl: '/achievements/floodlight_night_trophy.jpg',
+    },
+    {
+      title: 'Team Titans Championship Winners',
+      caption: 'Dominant championship campaign and victory celebrations by Team Titans.',
+      category: 'Celebration',
+      team: 'BOYS',
+      imageUrl: '/achievements/team_titans_winners.jpg',
+    },
+    {
+      title: 'CIT Annual Tournament Ground Presentation',
+      caption: 'Full tournament squad and coaches on the field during the annual awards ceremony.',
       category: 'Action',
       team: 'BOYS',
-      imageUrl: 'https://images.unsplash.com/photo-1517649763962-0c623266ddc0?auto=format&fit=crop&w=1200&q=80',
+      imageUrl: '/achievements/cit_ground_lineup.jpg',
     },
     {
-      title: 'Defensive 3-Batch Evasion Strategy',
-      caption: 'Synchronized running defender weaving between sitting chasers.',
-      category: 'Action',
-      team: 'GIRLS',
-      imageUrl: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=1200&q=80',
-    },
-    {
-      title: 'Pre-Match Tactical Huddle',
-      caption: 'Coach outlining chaser rotation and second-batch defending tactics.',
+      title: 'Intense Tactical Training & Match Drills',
+      caption: 'Pre-match technical preparation, agility footwork, and strategy briefing.',
       category: 'Training',
       team: 'ALL',
-      imageUrl: 'https://images.unsplash.com/photo-1526676037777-05a232554f77?auto=format&fit=crop&w=1200&q=80',
-    },
-    {
-      title: 'National Trophy Presentation Ceremony',
-      caption: 'Celebrating championship triumph at the AIU National Games.',
-      category: 'Trophies',
-      team: 'ALL',
-      imageUrl: 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=1200&q=80',
+      imageUrl: '/achievements/cit_court_match_raw.jpg',
     },
   ]);
 
