@@ -1,0 +1,215 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String    @id @default(uuid())
+  username     String    @unique
+  passwordHash String
+  name         String
+  email        String?   @default("")
+  role         String
+  team         String
+  playerRef    String?
+  isActive     Boolean   @default(true)
+  lastLogin    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@map("users")
+}
+
+model Player {
+  id           String    @id @default(uuid())
+  playerId     String    @unique
+  name         String
+  team         String
+  jerseyNumber Int
+  position     String    @default("All-Rounder")
+  active       Boolean   @default(true)
+  photoUrl     String?   @default("")
+  dateOfBirth  DateTime?
+  bloodGroup   String?   @default("Unknown")
+  heightCm     Float?
+  weightKg     Float?
+  contactInfo  Json?     @default("{}")
+  userRef      String?
+  notes        String?   @default("")
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@unique([team, jerseyNumber])
+  @@map("players")
+}
+
+model AttendanceSession {
+  id            String    @id @default(uuid())
+  team          String
+  date          String
+  sessionLabel  String
+  status        String    @default("DRAFT")
+  notes         String?   @default("")
+  totalEligible Int       @default(0)
+  totalPresent  Int       @default(0)
+  totalAbsent   Int       @default(0)
+  totalLate     Int       @default(0)
+  totalExcused  Int       @default(0)
+  recordedBy    String
+  updatedBy     String?
+  finalizedAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@unique([team, date, sessionLabel])
+  @@map("attendancesessions")
+}
+
+model AttendanceRecord {
+  id         String   @id @default(uuid())
+  session    String
+  player     String
+  team       String
+  date       String
+  status     String
+  notes      String?  @default("")
+  recordedBy String
+  updatedBy  String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([session, player])
+  @@map("attendancerecords")
+}
+
+model Match {
+  id                          String   @id @default(uuid())
+  team                        String
+  opponent                    String
+  competition                 String
+  venue                       String
+  matchDate                   DateTime
+  squadSize                   Int      @default(15)
+  eligibilityMinAttendancePct Float    @default(75)
+  status                      String   @default("SCHEDULED")
+  result                      Json?    @default("{}")
+  squadRef                    String?
+  createdBy                   String
+  createdAt                   DateTime @default(now())
+  updatedAt                   DateTime @updatedAt
+
+  @@map("matches")
+}
+
+model MatchSquad {
+  id              String    @id @default(uuid())
+  match           String    @unique
+  team            String
+  selectedPlayers Json      @default("[]")
+  reservePlayers  Json      @default("[]")
+  status          String    @default("DRAFT")
+  maxSquadSize    Int
+  coachNotes      String?   @default("")
+  finalizedBy     String?
+  finalizedAt     DateTime?
+  publishedAt     DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@map("matchsquads")
+}
+
+model Announcement {
+  id         String   @id @default(uuid())
+  team       String   @default("ALL")
+  title      String
+  message    String
+  category   String   @default("GENERAL")
+  isUrgent   Boolean  @default(false)
+  published  Boolean  @default(true)
+  author     String
+  authorName String   @default("Coaching Staff")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("announcements")
+}
+
+model Achievement {
+  id          String   @id @default(uuid())
+  title       String
+  year        Int
+  event       String
+  result      String
+  description String?  @default("")
+  image       String?  @default("")
+  category    String   @default("COMBINED")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("achievements")
+}
+
+model GalleryItem {
+  id        String   @id @default(uuid())
+  title     String
+  caption   String?  @default("")
+  imageUrl  String
+  category  String   @default("Action")
+  team      String   @default("ALL")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("galleryitems")
+}
+
+model AuditLog {
+  id            String   @id @default(uuid())
+  actor         String?
+  actorUsername String   @default("system")
+  actorRole     String   @default("SYSTEM")
+  team          String   @default("ALL")
+  action        String
+  entity        String
+  entityId      String?  @default("")
+  details       Json?    @default("{}")
+  ipAddress     String?  @default("")
+  timestamp     DateTime @default(now())
+
+  @@map("auditlogs")
+}
+
+model GroundActivity {
+  id            String   @id @default(uuid())
+  team          String
+  date          String
+  title         String
+  focusArea     String   @default("General Ground Training")
+  activities    Json     @default("[]")
+  coachNotes    String?  @default("")
+  sessionTime   String   @default("MORNING")
+  intensity     String   @default("HIGH")
+  createdBy     String
+  createdByName String   @default("Head Coach")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("groundactivities")
+}
+
+model ContactMessage {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  phone     String?  @default("")
+  subject   String
+  message   String
+  status    String   @default("UNREAD")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("contactmessages")
+}
