@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "KHO-KHO ARENA — Professional Sports Team Management System for Boys & Girls Kho-Kho Teams",
   "private": true,
+  "type": "module",
   "workspaces": [
     "server",
     "client"
