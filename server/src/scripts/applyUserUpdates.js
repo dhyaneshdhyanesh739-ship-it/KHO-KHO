@@ -57,7 +57,7 @@ async function run() {
 
   // 2. Setup Boys Roster from user sheet (21 players)
   const boysRoster = [
-    { id: 'B-01', username: 'mohan', name: 'MOHAN', jersey: 1, pos: 'Pole Diver' },
+    { id: 'B-01', username: 's.e.d', name: 'S.E.D', jersey: 1, pos: 'All-Rounder' },
     { id: 'B-02', username: 'jelphin', name: 'JELPHIN', jersey: 2, pos: 'Running Chaser' },
     { id: 'B-03', username: 'vicky.v', name: 'VICKY.V', jersey: 3, pos: 'Defender' },
     { id: 'B-04', username: 'kishore', name: 'KISHORE', jersey: 4, pos: 'All-Rounder' },
@@ -65,7 +65,7 @@ async function run() {
     { id: 'B-06', username: 'elan', name: 'ELAN', jersey: 6, pos: 'Defender' },
     { id: 'B-07', username: 'vimal.s', name: 'VIMAL.S', jersey: 7, pos: 'Pole Diver' },
     { id: 'B-08', username: 'karan', name: 'KARAN', jersey: 8, pos: 'Running Chaser' },
-    { id: 'B-09', username: 's.e.d', name: 'S.E.D', jersey: 9, pos: 'All-Rounder' },
+    { id: 'B-09', username: 'mohan', name: 'MOHAN', jersey: 9, pos: 'Pole Diver' },
     { id: 'B-10', username: 'harish', name: 'HARISH', jersey: 10, pos: 'Defender' },
     { id: 'B-11', username: 'akash', name: 'AKASH', jersey: 11, pos: 'Chaser' },
     { id: 'B-12', username: 'sriram', name: 'SRIRAM', jersey: 12, pos: 'All-Rounder' },
