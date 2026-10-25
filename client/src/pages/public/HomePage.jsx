@@ -11,7 +11,7 @@ import CreatedBySection from '../../components/layout/CreatedBySection';
 import Footer from '../../components/layout/Footer';
 import LoginModal from '../../components/forms/LoginModal';
 
-export default function HomePage({ onLoginSuccess }) {
+export default function HomePage({ onLoginSuccess, onViewDashboard }) {
   const [loginModalState, setLoginModalState] = useState({ isOpen: false, mode: 'TEAM' });
 
   const handleOpenTeamLogin = () => setLoginModalState({ isOpen: true, mode: 'TEAM' });
@@ -32,12 +32,13 @@ export default function HomePage({ onLoginSuccess }) {
         onOpenTeamLogin={handleOpenTeamLogin}
         onOpenAdminLogin={handleOpenAdminLogin}
         onNavigateSection={handleScrollToSection}
+        onGoToDashboard={onViewDashboard}
       />
 
       {/* Main Sections */}
       <main>
         <HeroSection
-          onOpenLogin={() => setLoginModalOpen(true)}
+          onOpenLogin={handleOpenTeamLogin}
           onExploreTeams={() => handleScrollToSection('teams')}
         />
 
@@ -48,7 +49,7 @@ export default function HomePage({ onLoginSuccess }) {
         <AchievementsSection />
 
         <TeamRosterSummarySection
-          onOpenLogin={() => setLoginModalOpen(true)}
+          onOpenLogin={handleOpenTeamLogin}
         />
 
         <GallerySection />
@@ -61,7 +62,7 @@ export default function HomePage({ onLoginSuccess }) {
       {/* Footer */}
       <Footer
         onNavigateSection={handleScrollToSection}
-        onOpenLogin={() => setLoginModalOpen(true)}
+        onOpenLogin={handleOpenTeamLogin}
       />
 
       {/* Login Flow Modal */}

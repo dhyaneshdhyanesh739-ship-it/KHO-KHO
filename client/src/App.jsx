@@ -50,15 +50,15 @@ function AppShell() {
         </div>
       )}
 
-      {/* 2-Step Cinematic Intro: VINI VIDI VICI -> Flaming Sword Tattoo -> Home */}
+      {/* 2-Step Cinematic Intro: VINI VIDI VICI -> Flaming Sword Tattoo -> Home (Only for unauthenticated guests) */}
       <AnimatePresence mode="wait">
-        {introStep === 'CREED' && (
+        {!isAuthenticated && introStep === 'CREED' && (
           <ViniVidiViciIntro
             key="intro-creed"
             onComplete={() => setIntroStep('SWORD')}
           />
         )}
-        {introStep === 'SWORD' && (
+        {!isAuthenticated && introStep === 'SWORD' && (
           <FierySwordScreen
             key="intro-sword"
             onEnterHome={() => setIntroStep('DONE')}
@@ -113,7 +113,13 @@ function AppShell() {
               </button>
             </div>
           )}
-          <HomePage onLoginSuccess={() => setViewingPublic(false)} />
+          <HomePage
+            onLoginSuccess={() => {
+              setViewingPublic(false);
+              setIntroStep('DONE');
+            }}
+            onViewDashboard={() => setViewingPublic(false)}
+          />
         </div>
       )}
     </div>

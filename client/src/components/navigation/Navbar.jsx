@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Menu, X, Shield, ShieldCheck, Crown, LogIn, User, LogOut, ChevronRight, Activity, Trophy } from 'lucide-react';
+import { Menu, X, Shield, ShieldCheck, Crown, LogIn, User, LogOut, ChevronRight, Activity, Trophy, LayoutDashboard } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
-export default function Navbar({ onOpenLogin, onOpenTeamLogin, onOpenAdminLogin, onNavigateSection }) {
+export default function Navbar({ onOpenLogin, onOpenTeamLogin, onOpenAdminLogin, onNavigateSection, onGoToDashboard }) {
   const { user, isAuthenticated, logout, isAdmin, isPlayer } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -84,10 +84,21 @@ export default function Navbar({ onOpenLogin, onOpenTeamLogin, onOpenAdminLogin,
                     {user.role.replace('_', ' ')}
                   </span>
                 </div>
+                {onGoToDashboard && (
+                  <button
+                    type="button"
+                    onClick={onGoToDashboard}
+                    className="bg-saffron-600 hover:bg-saffron-700 text-white font-bold text-xs py-2 px-3 rounded-xl shadow-md transition-all flex items-center gap-1.5 cursor-pointer"
+                    title="Open Dashboard"
+                  >
+                    <LayoutDashboard className="w-3.5 h-3.5" />
+                    <span>Dashboard →</span>
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={logout}
-                  className="p-2 rounded-xl text-slate-500 hover:text-rose-600 hover:bg-rose-50 border border-slate-200 transition-colors"
+                  className="p-2 rounded-xl text-slate-500 hover:text-rose-600 hover:bg-rose-50 border border-slate-200 transition-colors cursor-pointer"
                   title="Logout"
                 >
                   <LogOut className="w-4 h-4" />
@@ -177,6 +188,19 @@ export default function Navbar({ onOpenLogin, onOpenTeamLogin, onOpenAdminLogin,
                   <p className="text-sm font-bold text-navy-900">{user.name}</p>
                   <p className="text-xs text-slate-500">{user.role}</p>
                 </div>
+                {onGoToDashboard && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      onGoToDashboard();
+                    }}
+                    className="w-full btn-primary py-2.5 text-xs font-bold flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+                  >
+                    <LayoutDashboard className="w-4 h-4" />
+                    <span>Open Dashboard →</span>
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={logout}
