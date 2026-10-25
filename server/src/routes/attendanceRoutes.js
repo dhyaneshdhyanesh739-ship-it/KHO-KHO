@@ -17,12 +17,12 @@ router.use(protect);
 
 // Sessions list
 router.get('/sessions', enforceTeamAccess, getSessions);
-router.get('/sessions/:id', getSessionDetails);
-router.get('/player/:playerId', getPlayerAttendance);
+router.get('/sessions/:id', enforceTeamAccess, getSessionDetails);
+router.get('/player/:playerId', enforceTeamAccess, getPlayerAttendance);
 
 // Only admins can create sessions, mark attendance, or finalize
 router.post('/sessions', requireRole('BOYS_ADMIN', 'GIRLS_ADMIN', 'SUPER_ADMIN'), enforceTeamAccess, createSession);
-router.post('/batch', requireRole('BOYS_ADMIN', 'GIRLS_ADMIN', 'SUPER_ADMIN'), saveBatchAttendance);
-router.put('/sessions/:id/finalize', requireRole('BOYS_ADMIN', 'GIRLS_ADMIN', 'SUPER_ADMIN'), finalizeSession);
+router.post('/batch', requireRole('BOYS_ADMIN', 'GIRLS_ADMIN', 'SUPER_ADMIN'), enforceTeamAccess, saveBatchAttendance);
+router.put('/sessions/:id/finalize', requireRole('BOYS_ADMIN', 'GIRLS_ADMIN', 'SUPER_ADMIN'), enforceTeamAccess, finalizeSession);
 
 export default router;

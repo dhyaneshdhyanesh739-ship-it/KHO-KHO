@@ -16,11 +16,11 @@ const router = express.Router();
 router.use(protect);
 
 router.get('/', enforceTeamAccess, getMatches);
-router.get('/:id', getMatchById);
-router.get('/:id/recommendations', requireRole('BOYS_ADMIN', 'GIRLS_ADMIN', 'SUPER_ADMIN'), getSquadRecommendations);
+router.get('/:id', enforceTeamAccess, getMatchById);
+router.get('/:id/recommendations', requireRole('BOYS_ADMIN', 'GIRLS_ADMIN', 'SUPER_ADMIN'), enforceTeamAccess, getSquadRecommendations);
 
 router.post('/', requireRole('BOYS_ADMIN', 'GIRLS_ADMIN', 'SUPER_ADMIN'), enforceTeamAccess, createMatch);
-router.post('/:id/squad', requireRole('BOYS_ADMIN', 'GIRLS_ADMIN', 'SUPER_ADMIN'), saveSquad);
-router.put('/:id/squad/finalize', requireRole('BOYS_ADMIN', 'GIRLS_ADMIN', 'SUPER_ADMIN'), finalizeAndPublishSquad);
+router.post('/:id/squad', requireRole('BOYS_ADMIN', 'GIRLS_ADMIN', 'SUPER_ADMIN'), enforceTeamAccess, saveSquad);
+router.put('/:id/squad/finalize', requireRole('BOYS_ADMIN', 'GIRLS_ADMIN', 'SUPER_ADMIN'), enforceTeamAccess, finalizeAndPublishSquad);
 
 export default router;

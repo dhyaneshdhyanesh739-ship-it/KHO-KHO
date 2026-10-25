@@ -33,7 +33,7 @@ router.get('/contact-messages', protect, requireRole('SUPER_ADMIN', 'BOYS_ADMIN'
 router.get('/audit-logs', protect, requireRole('BOYS_ADMIN', 'GIRLS_ADMIN', 'SUPER_ADMIN'), getAuditLogs);
 
 // Demo Seed Route (For fast demo evaluation)
-router.post('/demo/seed', async (req, res, next) => {
+router.post('/demo/seed', protect, async (req, res, next) => {
   try {
     await seedDatabase();
     return res.status(200).json({

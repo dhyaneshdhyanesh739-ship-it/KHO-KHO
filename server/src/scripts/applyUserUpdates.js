@@ -35,7 +35,7 @@ async function run() {
     dhyaneshUser.team = 'ALL';
     dhyaneshUser.isActive = true;
     await dhyaneshUser.save();
-    console.log('[Update] Updated Super Admin account: Dhyanesh (Email: dhyaneshdhyanesh739@gmail.com, Pass: Dhyanesh@23012007)');
+    console.log('[Update] Updated Super Admin account: Dhyanesh (Email: dhyaneshdhyanesh739@gmail.com)');
   }
 
   // Also ensure superadmin account matches
@@ -53,7 +53,7 @@ async function run() {
     { username: 'girlsadmin' },
     { $set: { passwordHash: coachPasswordHash, name: 'Coach Dhyanesh.S.E', isActive: true } }
   );
-  console.log('[Update] Updated boysadmin & girlsadmin credentials (kiddo@khokho, Coach Dhyanesh.S.E)');
+  console.log('[Update] Updated boysadmin & girlsadmin credentials (Coach Dhyanesh.S.E)');
 
   // 2. Setup Boys Roster from user sheet (21 players)
   const boysRoster = [

@@ -53,8 +53,15 @@ export const createAchievement = async (req, res, next) => {
 
 export const deleteAchievement = async (req, res, next) => {
   try {
-    const achievement = await Achievement.findByIdAndDelete(req.params.id);
-    if (!achievement) return res.status(404).json({ success: false, message: 'Achievement not found.' });
+    const achievement = await Achievement.findById(req.params.id);
+    if (!achievement) {
+      return res.status(404).json({ success: false, message: 'Achievement not found.' });
+    }
+    // Authorization check: ensure the requester belongs to the same team/category
+    if (req.user.role !== 'SUPER_ADMIN' && achievement.team !== req.user.team) {
+      return res.status(403).json({ success: false, message: 'Forbidden: insufficient permissions.' });
+    }
+    await Achievement.findByIdAndDelete(req.params.id);
     return res.status(200).json({ success: true, message: 'Achievement removed.' });
   } catch (error) {
     next(error);
@@ -99,8 +106,14 @@ export const createGalleryItem = async (req, res, next) => {
 
 export const deleteGalleryItem = async (req, res, next) => {
   try {
-    const item = await GalleryItem.findByIdAndDelete(req.params.id);
-    if (!item) return res.status(404).json({ success: false, message: 'Gallery item not found.' });
+    const item = await GalleryItem.findById(req.params.id);
+    if (!item) {
+      return res.status(404).json({ success: false, message: 'Gallery item not found.' });
+    }
+    if (req.user.role !== 'SUPER_ADMIN' && item.team !== req.user.team) {
+      return res.status(403).json({ success: false, message: 'Forbidden: insufficient permissions.' });
+    }
+    await GalleryItem.findByIdAndDelete(req.params.id);
     return res.status(200).json({ success: true, message: 'Gallery item removed.' });
   } catch (error) {
     next(error);

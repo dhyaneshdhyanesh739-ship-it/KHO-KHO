@@ -20,7 +20,7 @@ router.use(protect);
 // Players list & single player viewable by ADMIN or PLAYER (with team isolation)
 router.get('/', enforceTeamAccess, getPlayers);
 router.get('/export-csv', enforceTeamAccess, exportPlayersCSV);
-router.get('/:id', getPlayerById);
+router.get('/:id', enforceTeamAccess, getPlayerById);
 
 // Admin modifications strictly restricted to BOYS_ADMIN, GIRLS_ADMIN, or SUPER_ADMIN
 router.post('/', requireRole('BOYS_ADMIN', 'GIRLS_ADMIN', 'SUPER_ADMIN'), enforceTeamAccess, createPlayer);

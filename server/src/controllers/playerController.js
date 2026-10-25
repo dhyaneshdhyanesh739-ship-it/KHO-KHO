@@ -59,12 +59,9 @@ export const getPlayerById = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Player not found' });
     }
 
-    // Security check: Players or team admins can only access their own team
+    // Ownership check: ensure the player belongs to the requester's team unless requester is SUPER_ADMIN
     if (req.user.role !== 'SUPER_ADMIN' && player.team !== req.user.team) {
-      return res.status(403).json({
-        success: false,
-        message: 'Forbidden: You cannot access players from another team.',
-      });
+      return res.status(403).json({ success: false, message: 'Forbidden: Access to player of another team' });
     }
 
     // Calculate historical attendance stats
