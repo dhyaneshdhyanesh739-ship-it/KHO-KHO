@@ -68,7 +68,7 @@ export const seedDatabase = async () => {
 
   // 3. Create Boys Roster (21 Real Players from Sheet)
   const boysRosterData = [
-    { id: 'B-01', username: 's.e.d', name: 'S.E.D', jersey: 1, pos: 'All-Rounder', blood: 'B+' },
+    { id: 'B-01', username: 'mohan', name: 'MOHAN', jersey: 1, pos: 'Pole Diver', blood: 'O+' },
     { id: 'B-02', username: 'jelphin', name: 'JELPHIN', jersey: 2, pos: 'Running Chaser', blood: 'B+' },
     { id: 'B-03', username: 'vicky.v', name: 'VICKY.V', jersey: 3, pos: 'Defender', blood: 'A+' },
     { id: 'B-04', username: 'kishor', name: 'KISHOR', jersey: 4, pos: 'All-Rounder', blood: 'AB+' },
@@ -76,8 +76,8 @@ export const seedDatabase = async () => {
     { id: 'B-06', username: 'elan', name: 'ELAN', jersey: 6, pos: 'Defender', blood: 'B+' },
     { id: 'B-07', username: 'vimal.s', name: 'VIMAL.S', jersey: 7, pos: 'Pole Diver', blood: 'A-' },
     { id: 'B-08', username: 'karan', name: 'KARAN', jersey: 8, pos: 'Running Chaser', blood: 'O-' },
-    { id: 'B-09', username: 'mohan', name: 'MOHAN', jersey: 9, pos: 'Pole Diver', blood: 'O+' },
-    { id: 'B-10', username: 'harish', name: 'HARISH', jersey: 10, pos: 'Defender', blood: 'A+' },
+    { id: 'B-09', username: 'harish', name: 'HARISH', jersey: 9, pos: 'Defender', blood: 'A+' },
+    { id: 'B-10', username: 's.e.d', name: 'S.E.D', jersey: 10, pos: 'All-Rounder', blood: 'B+' },
     { id: 'B-11', username: 'akash', name: 'AKASH', jersey: 11, pos: 'Chaser', blood: 'O+' },
     { id: 'B-12', username: 'sriram', name: 'SRIRAM', jersey: 12, pos: 'All-Rounder', blood: 'O+' },
     { id: 'B-13', username: 'mega', name: 'MEGA', jersey: 13, pos: 'Running Chaser', blood: 'B+' },
