@@ -168,10 +168,10 @@ export const getSquadRecommendations = async (req, res, next) => {
       const eligible = pRecords.length - excused;
 
       // Attendance percentage
-      const attendancePct = eligible > 0 ? Math.round((present / eligible) * 100) : 0;
+      const attendancePct = eligible > 0 ? Math.round((present / eligible) * 100) : 100;
 
-      // Match Attendance Policy: 75% base, -2% absent, -1% excused
-      const baseMatchPercentage = 75;
+      // Match Attendance Policy: 100% base, -2% absent, -1% excused
+      const baseMatchPercentage = 100;
       const absentDeduction = absent * 2;
       const excusedDeduction = excused * 1;
       const totalDeduction = absentDeduction + excusedDeduction;

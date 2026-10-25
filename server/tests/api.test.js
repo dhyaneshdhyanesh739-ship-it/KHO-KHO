@@ -207,11 +207,11 @@ describe('Kho-Kho Arena Backend Tests', () => {
     expect(res.body.data.allRankings[0].rankingFactor).toBeTruthy();
     expect(res.body.data.allRankings[0].recommendationScore).toBeGreaterThan(0);
     expect(res.body.data.allRankings[0].matchAttendancePercentage).toBeDefined();
-    expect(res.body.data.allRankings[0].baseMatchPercentage).toBe(75);
+    expect(res.body.data.allRankings[0].baseMatchPercentage).toBe(100);
   });
 
-  // Test 8: Match Attendance Policy: 75% Base, -2% Absent, -1% Excused for Boys & Girls
-  test('Calculates 75% Base Match Attendance with automatic -2% absent and -1% excused reduction for both Boys and Girls', async () => {
+  // Test 8: Match Attendance Policy: 100% Base, -2% Absent, -1% Excused for Boys & Girls
+  test('Calculates 100% Base Match Attendance with automatic -2% absent and -1% excused reduction for both Boys and Girls', async () => {
     // 1. Check Boys Player Attendance
     const boysPlayerRes = await request(app)
       .get(`/api/attendance/player/${testBoysPlayerId}`)
@@ -219,11 +219,11 @@ describe('Kho-Kho Arena Backend Tests', () => {
 
     expect(boysPlayerRes.status).toBe(200);
     const bSummary = boysPlayerRes.body.data.summary;
-    expect(bSummary.baseMatchPercentage).toBe(75);
+    expect(bSummary.baseMatchPercentage).toBe(100);
     expect(bSummary.absentDeduction).toBe(bSummary.absent * 2);
     expect(bSummary.excusedDeduction).toBe(bSummary.excused * 1);
     expect(bSummary.totalDeduction).toBe(bSummary.absentDeduction + bSummary.excusedDeduction);
-    expect(bSummary.matchAttendancePercentage).toBe(Math.max(0, 75 - bSummary.totalDeduction));
+    expect(bSummary.matchAttendancePercentage).toBe(Math.max(0, 100 - bSummary.totalDeduction));
 
     // 2. Check Girls Player Attendance
     const girlsPlayerRes = await request(app)
@@ -232,11 +232,11 @@ describe('Kho-Kho Arena Backend Tests', () => {
 
     expect(girlsPlayerRes.status).toBe(200);
     const gSummary = girlsPlayerRes.body.data.summary;
-    expect(gSummary.baseMatchPercentage).toBe(75);
+    expect(gSummary.baseMatchPercentage).toBe(100);
     expect(gSummary.absentDeduction).toBe(gSummary.absent * 2);
     expect(gSummary.excusedDeduction).toBe(gSummary.excused * 1);
     expect(gSummary.totalDeduction).toBe(gSummary.absentDeduction + gSummary.excusedDeduction);
-    expect(gSummary.matchAttendancePercentage).toBe(Math.max(0, 75 - gSummary.totalDeduction));
+    expect(gSummary.matchAttendancePercentage).toBe(Math.max(0, 100 - gSummary.totalDeduction));
 
     // 3. Check Boys Overview Dashboard
     const boysOverview = await request(app)
@@ -246,7 +246,7 @@ describe('Kho-Kho Arena Backend Tests', () => {
     expect(boysOverview.status).toBe(200);
     const bMatch = boysOverview.body.data.teamMatchAttendance;
     expect(bMatch).toBeDefined();
-    expect(bMatch.basePercentage).toBe(75);
+    expect(bMatch.basePercentage).toBe(100);
     expect(bMatch.members.length).toBeGreaterThan(0);
     for (const member of bMatch.members) {
       expect(member.matchAttendancePercentage).toBe(

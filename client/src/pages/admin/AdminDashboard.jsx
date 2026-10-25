@@ -464,7 +464,7 @@ export default function AdminDashboard({ onLogout }) {
                 </div>
               </div>
 
-              {/* ==================== TEAM MEMBERS MATCH ATTENDANCE MONITOR (75% Base, -2% Absent, -1% Excused) ==================== */}
+              {/* ==================== TEAM MEMBERS MATCH ATTENDANCE MONITOR (100% Base, -2% Absent, -1% Excused) ==================== */}
               <div className="card-premium p-6 space-y-5 bg-white border border-slate-200 shadow-card">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
                   <div className="flex items-center gap-3">
@@ -489,7 +489,7 @@ export default function AdminDashboard({ onLogout }) {
                         </span>
                       </div>
                       <p className="text-xs text-slate-500 mt-0.5">
-                        Base match quota: <strong>75%</strong> • Absent automatically deducts <strong>-2%</strong> • Excused deducts <strong>-1%</strong>.
+                        Base match quota: <strong>100%</strong> • Absent automatically deducts <strong>-2%</strong> • Excused deducts <strong>-1%</strong>.
                       </p>
                     </div>
                   </div>
@@ -521,7 +521,7 @@ export default function AdminDashboard({ onLogout }) {
                           matchStatusFilter === 'CLEAN' ? 'bg-white text-emerald-700 shadow-xs font-bold' : 'text-slate-500 hover:text-navy-900'
                         }`}
                       >
-                        Clean 75% ({overviewStats?.teamMatchAttendance?.membersFullStanding || 0})
+                        Clean 100% ({overviewStats?.teamMatchAttendance?.membersFullStanding || 0})
                       </button>
                     </div>
 
@@ -1027,7 +1027,7 @@ export default function AdminDashboard({ onLogout }) {
 
                   <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80 text-[11px] text-slate-600 space-y-1">
                     <p className="font-semibold text-navy-900">✨ Automatic Athlete Onboarding:</p>
-                    <p>• Starts with official <strong>75% base match attendance quota</strong>.</p>
+                    <p>• Starts with official <strong>100% base match attendance quota</strong>.</p>
                     <p>
                       • Generates login credentials automatically (username:{' '}
                       <code>{newMemberForm.playerId.toLowerCase() || 'playerid'}</code>).

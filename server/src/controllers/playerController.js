@@ -77,13 +77,13 @@ export const getPlayerById = async (req, res, next) => {
 
     // Configurable standard policy: Excused sessions excluded from denominator; Late counts as 0.5 or present (we track both)
     const eligibleSessions = totalRecorded - excusedCount;
-    const attendancePct = eligibleSessions > 0 ? Math.round((presentCount / eligibleSessions) * 100) : 0;
+    const attendancePct = eligibleSessions > 0 ? Math.round((presentCount / eligibleSessions) * 100) : 100;
 
     // Official Match Attendance Policy:
-    // Base attendance for match: 75%
+    // Base attendance for match: 100%
     // Absent: reduce 2% per session
     // Excused: reduce 1% per session
-    const baseMatchPercentage = 75;
+    const baseMatchPercentage = 100;
     const absentDeduction = absentCount * 2;
     const excusedDeduction = excusedCount * 1;
     const totalDeduction = absentDeduction + excusedDeduction;

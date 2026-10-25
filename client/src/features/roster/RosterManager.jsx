@@ -655,15 +655,15 @@ B-24,Suresh Patil,BOYS,24,Chaser,Active,+91 98200 10024,b24@arena.org,O+"
                           <span>Match Attendance Standing</span>
                         </span>
                         <span className={`font-editorial font-black text-2xl ${
-                          (playerStats.matchAttendancePercentage ?? Math.max(0, 75 - (playerStats.absentCount * 2) - (playerStats.excusedCount * 1))) >= 75
+                          (playerStats.matchAttendancePercentage ?? Math.max(0, 100 - (playerStats.absentCount * 2) - (playerStats.excusedCount * 1))) >= 75
                             ? 'text-sportsGreen-dark'
                             : 'text-amber-600'
                         }`}>
-                          {playerStats.matchAttendancePercentage ?? Math.max(0, 75 - (playerStats.absentCount * 2) - (playerStats.excusedCount * 1))}%
+                          {playerStats.matchAttendancePercentage ?? Math.max(0, 100 - (playerStats.absentCount * 2) - (playerStats.excusedCount * 1))}%
                         </span>
                       </div>
                       <p className="text-[11px] text-slate-600 mt-1">
-                        Base 75% • Absent: -{playerStats.absentDeduction ?? (playerStats.absentCount * 2)}% ({playerStats.absentCount} × -2%) • Excused: -{playerStats.excusedDeduction ?? (playerStats.excusedCount * 1)}% ({playerStats.excusedCount} × -1%)
+                        Base 100% • Absent: -{playerStats.absentDeduction ?? (playerStats.absentCount * 2)}% ({playerStats.absentCount} × -2%) • Excused: -{playerStats.excusedDeduction ?? (playerStats.excusedCount * 1)}% ({playerStats.excusedCount} × -1%)
                       </p>
                     </div>
 

@@ -66,12 +66,12 @@ export default function PlayerDashboard() {
   };
 
   // Official Match Attendance Policy:
-  // Base attendance percentage for the match is 75%.
+  // Base attendance percentage for the match is 100%.
   // If absent: automatically reduce 2% per session.
   // If excused: automatically reduce 1% per session.
   const absentCount = summary.absent || 0;
   const excusedCount = summary.excused || 0;
-  const baseMatchPercentage = summary.baseMatchPercentage ?? 75;
+  const baseMatchPercentage = summary.baseMatchPercentage ?? 100;
   const absentDeduction = summary.absentDeduction ?? (absentCount * 2);
   const excusedDeduction = summary.excusedDeduction ?? (excusedCount * 1);
   const totalDeduction = summary.totalDeduction ?? (absentDeduction + excusedDeduction);
@@ -156,12 +156,12 @@ export default function PlayerDashboard() {
                 <span>Match Attendance</span>
               </div>
               <p className={`font-editorial text-4xl font-black mt-0.5 ${
-                matchAttendancePercentage >= 75 ? 'text-sportsGreen-dark' : matchAttendancePercentage >= 70 ? 'text-amber-600' : 'text-rose-600'
+                matchAttendancePercentage >= 85 ? 'text-sportsGreen-dark' : matchAttendancePercentage >= 75 ? 'text-amber-600' : 'text-rose-600'
               }`}>
                 {matchAttendancePercentage}%
               </p>
               <p className="text-[11px] text-slate-500 font-medium">
-                Base 75% {totalDeduction > 0 ? `• -${totalDeduction}% Deductions` : '• Zero Deductions'}
+                Base 100% {totalDeduction > 0 ? `• -${totalDeduction}% Deductions` : '• Zero Deductions'}
               </p>
             </div>
           </div>
@@ -190,7 +190,7 @@ export default function PlayerDashboard() {
                   ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
                   : 'bg-amber-100 text-amber-800 border border-amber-200'
               }`}>
-                {totalDeduction === 0 ? '✓ 75% Full Quota Maintained' : `⚠️ -${totalDeduction}% Total Reduction`}
+                {totalDeduction === 0 ? '✓ 100% Full Quota Maintained' : `⚠️ -${totalDeduction}% Total Reduction`}
               </span>
             </div>
           </div>
@@ -200,7 +200,7 @@ export default function PlayerDashboard() {
             <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-1">
               <div className="flex items-center justify-between text-slate-500 font-bold uppercase text-[10px]">
                 <span>1. Baseline Standard</span>
-                <span className="text-navy-900 font-black">75% Base</span>
+                <span className="text-navy-900 font-black">100% Base</span>
               </div>
               <p className="font-black text-lg text-navy-900 font-editorial">
                 {baseMatchPercentage}%
@@ -243,7 +243,7 @@ export default function PlayerDashboard() {
               <span className="font-semibold text-slate-600 flex items-center gap-1.5">
                 <span>Calculated Match Attendance:</span>
                 <strong className="text-navy-900 font-editorial text-sm">
-                  75% Base − ({absentDeduction}% Absent + {excusedDeduction}% Excused) = {matchAttendancePercentage}%
+                  100% Base − ({absentDeduction}% Absent + {excusedDeduction}% Excused) = {matchAttendancePercentage}%
                 </strong>
               </span>
               <span className="font-black font-editorial text-sm text-saffron-600">

@@ -102,7 +102,7 @@ export const getOverviewStats = async (req, res, next) => {
       .limit(5)
       .populate('recordedBy', 'name');
 
-    // 7. Team Members Match Attendance (75% Base, -2% Absent, -1% Excused)
+    // 7. Team Members Match Attendance (100% Base, -2% Absent, -1% Excused)
     const activePlayers = await Player.find({ team, active: true }).sort({ jerseyNumber: 1 });
     const allTeamRecords = await AttendanceRecord.find({ team });
 
@@ -116,7 +116,7 @@ export const getOverviewStats = async (req, res, next) => {
       const absent = pRecords.filter((r) => r.status === 'ABSENT').length;
       const excused = pRecords.filter((r) => r.status === 'EXCUSED').length;
 
-      const baseMatchPercentage = 75;
+      const baseMatchPercentage = 100;
       const absentDeduction = absent * 2;
       const excusedDeduction = excused * 1;
       const totalDeduction = absentDeduction + excusedDeduction;

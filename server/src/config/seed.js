@@ -182,85 +182,8 @@ export const seedDatabase = async () => {
   }
   console.log(`[Seed] Created ${createdGirlsPlayers.length} Girls Players with username@khokho credentials.`);
 
-  // 5. Create Attendance Sessions over the past 2 weeks
-  const sessionLabels = [
-    'Morning Conditioning & Speed Drills',
-    'Tactical Kho & Pole Turn Practice',
-    'Defense 3-Batch Evasion Drills',
-    'Match Simulation & Zigzag Running',
-    'Agility & Stamina Circuit',
-    'Tactical Video & Mat Footwork',
-  ];
-
-  const today = new Date();
-  const generateSessionsForTeam = async (team, adminUser, players) => {
-    for (let i = 12; i >= 0; i--) {
-      const sessionDate = new Date(today);
-      sessionDate.setDate(today.getDate() - i);
-      const dateStr = sessionDate.toISOString().slice(0, 10);
-      const label = sessionLabels[i % sessionLabels.length];
-
-      const session = await AttendanceSession.create({
-        team,
-        date: dateStr,
-        sessionLabel: label,
-        status: i === 0 ? 'DRAFT' : 'FINALIZED',
-        recordedBy: adminUser._id,
-        finalizedAt: i === 0 ? null : new Date(sessionDate),
-      });
-
-      let pres = 0;
-      let abs = 0;
-      let late = 0;
-      let exc = 0;
-
-      const records = [];
-      players.forEach((player, idx) => {
-        // Player attendance distribution: Top 15 players have >85% attendance, others vary
-        let status = 'PRESENT';
-        const rand = (idx * 7 + i * 13) % 100;
-
-        if (idx < 15) {
-          if (rand < 88) status = 'PRESENT';
-          else if (rand < 94) status = 'LATE';
-          else if (rand < 97) status = 'EXCUSED';
-          else status = 'ABSENT';
-        } else {
-          if (rand < 65) status = 'PRESENT';
-          else if (rand < 78) status = 'ABSENT';
-          else if (rand < 88) status = 'LATE';
-          else status = 'EXCUSED';
-        }
-
-        if (status === 'PRESENT') pres++;
-        else if (status === 'ABSENT') abs++;
-        else if (status === 'LATE') late++;
-        else if (status === 'EXCUSED') exc++;
-
-        records.push({
-          session: session._id,
-          player: player._id,
-          team,
-          date: dateStr,
-          status,
-          recordedBy: adminUser._id,
-        });
-      });
-
-      await AttendanceRecord.insertMany(records);
-
-      session.totalEligible = players.length;
-      session.totalPresent = pres;
-      session.totalAbsent = abs;
-      session.totalLate = late;
-      session.totalExcused = exc;
-      await session.save();
-    }
-  };
-
-  await generateSessionsForTeam('BOYS', boysAdmin, createdBoysPlayers);
-  await generateSessionsForTeam('GIRLS', girlsAdmin, createdGirlsPlayers);
-  console.log('[Seed] Populated historical attendance sessions and records.');
+  // 5. Attendance Slate (Attendance officially starts from 26-10-2026 onwards with 100% base match attendance quota)
+  console.log('[Seed] Attendance slate initialized clean. Official recording begins 26-10-2026 with 100% full quota for all athletes.');
 
   // 6. Create Matches
   const boysMatch1Date = new Date(today);
