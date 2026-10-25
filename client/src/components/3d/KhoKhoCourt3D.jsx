@@ -158,13 +158,6 @@ export default function KhoKhoCourt3D({ isGirls = false, className = '' }) {
         </div>
       </div>
 
-      {/* Active Mode Badge */}
-      <div className="absolute top-4 left-4 z-10 pointer-events-none">
-        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-saffron-200 text-xs font-bold text-saffron-800 shadow-sm">
-          <span className="w-2 h-2 rounded-full bg-saffron-500 animate-pulse" />
-          {viewMode === '3d' ? 'Interactive 3D Kho-Kho Court' : 'Regulation Court Layout'}
-        </span>
-      </div>
     </div>
   );
 }
