@@ -432,10 +432,12 @@ export default function ReportsView({ team }) {
               <select
                 value={customStatus}
                 onChange={(e) => setCustomStatus(e.target.value)}
-                className="px-3 py-1.5 rounded-xl border border-slate-200 bg-white font-medium"
+                className="px-3 py-1.5 rounded-xl border border-slate-200 bg-white font-medium text-xs"
               >
                 <option value="ALL">All Statuses</option>
                 <option value="PRESENT">Present Only</option>
+                <option value="OD">OD (On Duty) Only</option>
+                <option value="LEAVE">Leave Only</option>
                 <option value="ABSENT">Absent Only</option>
                 <option value="LATE">Late Only</option>
                 <option value="EXCUSED">Excused Only</option>
@@ -500,14 +502,18 @@ export default function ReportsView({ team }) {
                             className={`badge-tag ${
                               r.status === 'PRESENT'
                                 ? 'bg-emerald-100 text-emerald-800'
+                                : r.status === 'OD'
+                                ? 'bg-sky-100 text-sky-800 border border-sky-300 font-bold'
+                                : r.status === 'LEAVE'
+                                ? 'bg-purple-100 text-purple-800 font-bold'
                                 : r.status === 'ABSENT'
                                 ? 'bg-rose-100 text-rose-800'
                                 : r.status === 'LATE'
                                 ? 'bg-amber-100 text-amber-800'
-                                : 'bg-purple-100 text-purple-800'
+                                : 'bg-slate-100 text-slate-800'
                             }`}
                           >
-                            {r.status}
+                            {r.status === 'OD' ? 'OD (Present)' : r.status}
                           </span>
                         </td>
                         <td className="py-3 px-4 text-slate-500">

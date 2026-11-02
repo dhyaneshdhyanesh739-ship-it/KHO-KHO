@@ -12,7 +12,7 @@ export default function HeroSection({ onOpenLogin, onExploreTeams }) {
   ];
 
   return (
-    <section id="home" className="relative pt-28 pb-16 md:pt-36 md:pb-24 overflow-hidden bg-gradient-to-b from-white via-court-sand to-white">
+    <section id="home" className="relative pt-28 pb-16 md:pt-36 md:pb-24 overflow-hidden bg-gradient-to-b from-white via-court-sand to-white dark:from-[#0b1120] dark:via-[#0f172a] dark:to-[#0b1120] transition-colors duration-200">
       {/* Decorative Warm Saffron Glow */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-gradient-to-tr from-saffron-200/30 to-amber-100/40 blur-3xl pointer-events-none rounded-full" />
 
@@ -119,11 +119,11 @@ export default function HeroSection({ onOpenLogin, onExploreTeams }) {
           {quickStats.map((stat, i) => (
             <div
               key={i}
-              className="p-5 rounded-2xl bg-white border border-slate-100 shadow-card hover:shadow-md transition-shadow text-center"
+              className="p-5 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-100 dark:border-slate-800 shadow-card hover:shadow-md transition-shadow text-center"
             >
-              <p className="font-editorial text-3xl sm:text-4xl font-black text-saffron-600">{stat.value}</p>
-              <p className="text-xs sm:text-sm font-bold text-navy-900 mt-1">{stat.label}</p>
-              <p className="text-[11px] text-slate-400 font-medium">{stat.sub}</p>
+              <p className="font-editorial text-3xl sm:text-4xl font-black text-saffron-600 dark:text-saffron-400">{stat.value}</p>
+              <p className="text-xs sm:text-sm font-bold text-navy-900 dark:text-slate-100 mt-1">{stat.label}</p>
+              <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium">{stat.sub}</p>
             </div>
           ))}
         </motion.div>

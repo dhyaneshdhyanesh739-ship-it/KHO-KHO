@@ -111,10 +111,13 @@ export const getOverviewStats = async (req, res, next) => {
 
     const memberMatchAttendance = activePlayers.map((player) => {
       const pRecords = allTeamRecords.filter((r) => String(r.player) === String(player._id));
-      const present = pRecords.filter((r) => r.status === 'PRESENT').length;
+      const odCount = pRecords.filter((r) => r.status === 'OD').length;
+      const regularPresent = pRecords.filter((r) => r.status === 'PRESENT').length;
+      const present = regularPresent + odCount; // OD counts as present!
       const late = pRecords.filter((r) => r.status === 'LATE').length;
       const absent = pRecords.filter((r) => r.status === 'ABSENT').length;
-      const excused = pRecords.filter((r) => r.status === 'EXCUSED').length;
+      const excused = pRecords.filter((r) => r.status === 'EXCUSED' || r.status === 'LEAVE').length;
+      const leave = pRecords.filter((r) => r.status === 'LEAVE').length;
 
       const baseMatchPercentage = 100;
       const absentDeduction = absent * 2;
@@ -258,9 +261,11 @@ export const getWeeklyReport = async (req, res, next) => {
     // Build player matrix
     const playerMatrix = players.map((player) => {
       const pRecords = records.filter((r) => r.player && String(r.player._id) === String(player._id));
-      const presentCount = pRecords.filter((r) => r.status === 'PRESENT').length;
+      const odCount = pRecords.filter((r) => r.status === 'OD').length;
+      const regularPresent = pRecords.filter((r) => r.status === 'PRESENT').length;
+      const presentCount = regularPresent + odCount; // OD counts as present!
       const lateCount = pRecords.filter((r) => r.status === 'LATE').length;
-      const excusedCount = pRecords.filter((r) => r.status === 'EXCUSED').length;
+      const excusedCount = pRecords.filter((r) => r.status === 'EXCUSED' || r.status === 'LEAVE').length;
       const absentCount = pRecords.filter((r) => r.status === 'ABSENT').length;
       const eligible = pRecords.length - excusedCount;
       const absentDeduction = absentCount * 2;
@@ -335,9 +340,11 @@ export const getMonthlyReport = async (req, res, next) => {
 
     const playerStats = players.map((player) => {
       const pRecords = records.filter((r) => String(r.player) === String(player._id));
-      const present = pRecords.filter((r) => r.status === 'PRESENT').length;
+      const odCount = pRecords.filter((r) => r.status === 'OD').length;
+      const regularPresent = pRecords.filter((r) => r.status === 'PRESENT').length;
+      const present = regularPresent + odCount; // OD counts as present!
       const late = pRecords.filter((r) => r.status === 'LATE').length;
-      const excused = pRecords.filter((r) => r.status === 'EXCUSED').length;
+      const excused = pRecords.filter((r) => r.status === 'EXCUSED' || r.status === 'LEAVE').length;
       const absent = pRecords.filter((r) => r.status === 'ABSENT').length;
       const eligible = pRecords.length - excused;
       const percentage = eligible > 0 ? Math.round((present / eligible) * 100) : 0;

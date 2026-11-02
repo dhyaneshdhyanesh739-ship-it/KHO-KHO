@@ -399,6 +399,50 @@ export function createModelAdapter(modelName) {
       return { deletedCount: res.count };
     },
 
+    async updateOne(filter, update) {
+      try {
+        const cleanUpdate = { ...update };
+        if (cleanUpdate.$set) {
+          Object.assign(cleanUpdate, cleanUpdate.$set);
+          delete cleanUpdate.$set;
+        }
+        delete cleanUpdate._id;
+        delete cleanUpdate.id;
+
+        const where = translateFilter(filter);
+        const item = await delegate.findFirst({ where });
+        if (!item) return { matchedCount: 0, modifiedCount: 0 };
+        await delegate.update({
+          where: { id: item.id },
+          data: cleanUpdate,
+        });
+        return { matchedCount: 1, modifiedCount: 1 };
+      } catch (e) {
+        return { matchedCount: 0, modifiedCount: 0, error: e.message };
+      }
+    },
+
+    async updateMany(filter, update) {
+      try {
+        const cleanUpdate = { ...update };
+        if (cleanUpdate.$set) {
+          Object.assign(cleanUpdate, cleanUpdate.$set);
+          delete cleanUpdate.$set;
+        }
+        delete cleanUpdate._id;
+        delete cleanUpdate.id;
+
+        const where = translateFilter(filter);
+        const res = await delegate.updateMany({
+          where,
+          data: cleanUpdate,
+        });
+        return { matchedCount: res.count, modifiedCount: res.count };
+      } catch (e) {
+        return { matchedCount: 0, modifiedCount: 0, error: e.message };
+      }
+    },
+
     async insertMany(data) {
       if (!Array.isArray(data) || data.length === 0) return [];
       const cleanList = data.map((item) => {

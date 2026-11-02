@@ -137,10 +137,10 @@ export const getPlayerGroundActivities = async (req, res, next) => {
       });
     }
 
-    // 1. Fetch all attendance records where status is PRESENT or LATE
+    // 1. Fetch all attendance records where status is PRESENT, LATE, or OD (on duty is noted as present)
     const attendanceRecords = await AttendanceRecord.find({
       player: player._id,
-      status: { $in: ['PRESENT', 'LATE'] },
+      status: { $in: ['PRESENT', 'LATE', 'OD'] },
     }).select('date status notes');
 
     if (!attendanceRecords || attendanceRecords.length === 0) {

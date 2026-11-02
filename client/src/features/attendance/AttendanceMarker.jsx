@@ -143,10 +143,13 @@ export default function AttendanceMarker({ team }) {
 
   // Calculate live statistics
   const totalEligible = playerRows.length;
-  const presentCount = playerRows.filter((r) => r.status === 'PRESENT').length;
+  const regularPresentCount = playerRows.filter((r) => r.status === 'PRESENT').length;
+  const odCount = playerRows.filter((r) => r.status === 'OD').length;
+  const presentCount = regularPresentCount + odCount; // OD is noted as Present!
   const absentCount = playerRows.filter((r) => r.status === 'ABSENT').length;
   const lateCount = playerRows.filter((r) => r.status === 'LATE').length;
-  const excusedCount = playerRows.filter((r) => r.status === 'EXCUSED').length;
+  const leaveCount = playerRows.filter((r) => r.status === 'LEAVE').length;
+  const excusedCount = playerRows.filter((r) => r.status === 'EXCUSED' || r.status === 'LEAVE').length;
   const eligibleSessions = totalEligible - excusedCount;
   const attendancePercentage = eligibleSessions > 0 ? Math.round((presentCount / eligibleSessions) * 100) : 0;
 
@@ -236,9 +239,22 @@ export default function AttendanceMarker({ team }) {
 
         {/* Live Summary Counter Chips */}
         <div className="flex items-center gap-2 flex-wrap">
-          <div className="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-bold text-navy-800 shadow-sm flex items-center gap-1.5">
+          <div className="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-bold text-navy-800 shadow-sm flex items-center gap-1.5" title="Present total (including OD)">
             <span className="w-2 h-2 rounded-full bg-sportsGreen-dark" />
             <span>Present: {presentCount}</span>
+            {odCount > 0 && (
+              <span className="text-[10px] text-sky-600 font-bold bg-sky-50 px-1.5 py-0.5 rounded-md">
+                +{odCount} OD
+              </span>
+            )}
+          </div>
+          <div className="px-3 py-1.5 rounded-xl bg-sky-50 border border-sky-200 text-xs font-bold text-sky-800 shadow-sm flex items-center gap-1.5" title="On Duty (Officially Noted as Present)">
+            <span className="w-2 h-2 rounded-full bg-sky-500" />
+            <span>OD (Duty): {odCount}</span>
+          </div>
+          <div className="px-3 py-1.5 rounded-xl bg-purple-50 border border-purple-200 text-xs font-bold text-purple-800 shadow-sm flex items-center gap-1.5" title="Authorized Leave">
+            <span className="w-2 h-2 rounded-full bg-purple-500" />
+            <span>Leave: {leaveCount}</span>
           </div>
           <div className="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-bold text-navy-800 shadow-sm flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-rose-500" />
@@ -474,51 +490,88 @@ export default function AttendanceMarker({ team }) {
 
                       {/* Status Toggle Buttons */}
                       <td className="py-3.5 px-4">
-                        <div className="flex items-center justify-center gap-1.5">
+                        <div className="flex items-center justify-center gap-1.5 flex-wrap">
+                          {/* Present Button */}
                           <button
                             type="button"
                             onClick={() => handleStatusChange(player._id, 'PRESENT')}
-                            className={`px-3 py-1.5 rounded-xl font-bold text-[11px] transition-all ${
+                            className={`px-2.5 py-1.5 rounded-xl font-bold text-[11px] transition-all cursor-pointer ${
                               status === 'PRESENT'
                                 ? 'bg-sportsGreen-dark text-white shadow-sm'
                                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                             }`}
+                            title="Mark as Present on Ground"
                           >
                             Present
                           </button>
 
+                          {/* OD (On Duty) Button - Noted as Present */}
+                          <button
+                            type="button"
+                            onClick={() => handleStatusChange(player._id, 'OD')}
+                            className={`px-2.5 py-1.5 rounded-xl font-bold text-[11px] transition-all flex items-center gap-1 cursor-pointer ${
+                              status === 'OD'
+                                ? 'bg-sky-600 text-white shadow-sm ring-1 ring-sky-700'
+                                : 'bg-sky-50 text-sky-800 hover:bg-sky-100 border border-sky-200/90'
+                            }`}
+                            title="On Duty (OD) - Noted as Present for official sports representation"
+                          >
+                            <span>OD</span>
+                            <span className="text-[9px] opacity-90 font-medium">(Present)</span>
+                          </button>
+
+                          {/* Leave Button */}
+                          <button
+                            type="button"
+                            onClick={() => handleStatusChange(player._id, 'LEAVE')}
+                            className={`px-2.5 py-1.5 rounded-xl font-bold text-[11px] transition-all cursor-pointer ${
+                              status === 'LEAVE'
+                                ? 'bg-purple-600 text-white shadow-sm ring-1 ring-purple-700'
+                                : 'bg-purple-50 text-purple-800 hover:bg-purple-100 border border-purple-200/90'
+                            }`}
+                            title="Authorized Leave (Medical / Exam / Personal)"
+                          >
+                            Leave
+                          </button>
+
+                          {/* Absent Button */}
                           <button
                             type="button"
                             onClick={() => handleStatusChange(player._id, 'ABSENT')}
-                            className={`px-3 py-1.5 rounded-xl font-bold text-[11px] transition-all ${
+                            className={`px-2.5 py-1.5 rounded-xl font-bold text-[11px] transition-all cursor-pointer ${
                               status === 'ABSENT'
                                 ? 'bg-rose-600 text-white shadow-sm'
                                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                             }`}
+                            title="Mark as Absent"
                           >
                             Absent
                           </button>
 
+                          {/* Late Button */}
                           <button
                             type="button"
                             onClick={() => handleStatusChange(player._id, 'LATE')}
-                            className={`px-3 py-1.5 rounded-xl font-bold text-[11px] transition-all ${
+                            className={`px-2.5 py-1.5 rounded-xl font-bold text-[11px] transition-all cursor-pointer ${
                               status === 'LATE'
                                 ? 'bg-amber-500 text-white shadow-sm'
                                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                             }`}
+                            title="Mark as Late Arrival"
                           >
                             Late
                           </button>
 
+                          {/* Excused Button */}
                           <button
                             type="button"
                             onClick={() => handleStatusChange(player._id, 'EXCUSED')}
-                            className={`px-3 py-1.5 rounded-xl font-bold text-[11px] transition-all ${
+                            className={`px-2.5 py-1.5 rounded-xl font-bold text-[11px] transition-all cursor-pointer ${
                               status === 'EXCUSED'
-                                ? 'bg-purple-600 text-white shadow-sm'
+                                ? 'bg-slate-700 text-white shadow-sm'
                                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                             }`}
+                            title="Mark as Excused"
                           >
                             Excused
                           </button>
@@ -546,7 +599,7 @@ export default function AttendanceMarker({ team }) {
         {/* Bottom Action Footer */}
         <div className="p-4 border-t border-slate-100 bg-slate-50/50 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-slate-500">
-            Configured Policy: <strong>Excused</strong> sessions are excluded from the denominator. Missing sessions are never assumed to be absences.
+            Configured Policy: <strong>OD (On Duty)</strong> is officially counted as <strong>PRESENT</strong> with 100% credit. <strong>Leave &amp; Excused</strong> sessions are excluded from penalty deductions.
           </p>
 
           <button

@@ -67,9 +67,11 @@ export const getPlayerById = async (req, res, next) => {
     // Calculate historical attendance stats
     const records = await AttendanceRecord.find({ player: player._id });
     const totalRecorded = records.length;
-    const presentCount = records.filter((r) => r.status === 'PRESENT').length;
+    const odCount = records.filter((r) => r.status === 'OD').length;
+    const regularPresent = records.filter((r) => r.status === 'PRESENT').length;
+    const presentCount = regularPresent + odCount; // OD counts as present!
     const lateCount = records.filter((r) => r.status === 'LATE').length;
-    const excusedCount = records.filter((r) => r.status === 'EXCUSED').length;
+    const excusedCount = records.filter((r) => r.status === 'EXCUSED' || r.status === 'LEAVE').length;
     const absentCount = records.filter((r) => r.status === 'ABSENT').length;
 
     // Configurable standard policy: Excused sessions excluded from denominator; Late counts as 0.5 or present (we track both)
@@ -80,6 +82,7 @@ export const getPlayerById = async (req, res, next) => {
     // Base attendance for match: 100%
     // Absent: reduce 2% per session
     // Excused: reduce 1% per session
+    // OD sessions are noted as PRESENT with zero deduction!
     const baseMatchPercentage = 100;
     const absentDeduction = absentCount * 2;
     const excusedDeduction = excusedCount * 1;

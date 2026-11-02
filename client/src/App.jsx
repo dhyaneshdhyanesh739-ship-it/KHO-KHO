@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import HomePage from './pages/public/HomePage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import PlayerDashboard from './pages/player/PlayerDashboard';
@@ -14,20 +15,20 @@ function AppShell() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-court-sand flex flex-col items-center justify-center p-4">
+      <div className="min-h-screen bg-court-sand dark:bg-[#0b1120] text-navy-900 dark:text-slate-100 flex flex-col items-center justify-center p-4 transition-colors duration-200">
         <div className="w-16 h-16 rounded-3xl bg-saffron-500 text-white flex items-center justify-center font-editorial font-black text-2xl shadow-xl shadow-saffron-500/30 animate-bounce">
           KK
         </div>
-        <p className="mt-4 font-editorial font-bold text-navy-900 text-lg">
+        <p className="mt-4 font-editorial font-bold text-navy-900 dark:text-white text-lg">
           KHO-KHO ARENA
         </p>
-        <p className="text-xs text-slate-500 font-medium">Verifying Session Authorization...</p>
+        <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Verifying Session Authorization...</p>
       </div>
     );
   }
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen bg-court-sand dark:bg-[#0b1120] text-navy-900 dark:text-slate-100 transition-colors duration-200">
       {/* Super Admin Impersonation Persistent Banner */}
       {isAuthenticated && isImpersonated && (
         <div className="bg-gradient-to-r from-purple-950 via-indigo-950 to-slate-950 text-white text-xs py-2.5 px-4 flex flex-wrap items-center justify-between sticky top-0 z-[100] shadow-xl border-b border-purple-500/40 gap-2">
@@ -69,35 +70,9 @@ function AppShell() {
       {/* If Authenticated and not explicitly previewing public home */}
       {isAuthenticated && !viewingPublic ? (
         user.role === 'PLAYER' ? (
-          <div>
-            {/* Top Switcher Banner */}
-            <div className="bg-slate-900 text-slate-300 text-xs py-1.5 px-4 flex items-center justify-between">
-              <span>Logged in as <strong>{user.name}</strong> ({user.team} Player)</span>
-              <button
-                type="button"
-                onClick={() => setViewingPublic(true)}
-                className="text-saffron-400 hover:text-white underline font-semibold"
-              >
-                View Public Landing Page
-              </button>
-            </div>
-            <PlayerDashboard />
-          </div>
+          <PlayerDashboard />
         ) : (
-          <div>
-            {/* Top Switcher Banner */}
-            <div className="bg-slate-900 text-slate-300 text-xs py-1.5 px-4 flex items-center justify-between">
-              <span>Administrative Workspace: <strong>{user.name}</strong> ({user.role})</span>
-              <button
-                type="button"
-                onClick={() => setViewingPublic(true)}
-                className="text-saffron-400 hover:text-white underline font-semibold"
-              >
-                View Public Landing Page
-              </button>
-            </div>
-            <AdminDashboard onLogout={logout} />
-          </div>
+          <AdminDashboard onLogout={logout} />
         )
       ) : (
         <div>
@@ -128,8 +103,10 @@ function AppShell() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <AppShell />
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <AppShell />
+      </AuthProvider>
+    </ThemeProvider>
   );
 }

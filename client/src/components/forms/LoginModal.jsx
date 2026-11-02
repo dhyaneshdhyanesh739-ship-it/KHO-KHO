@@ -728,17 +728,23 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
                       onChange={(e) => setUsername(e.target.value)}
                       placeholder={
                         selectedTeam === 'ALL'
-                          ? 'Enter email or username'
-                          : 'Enter username'
+                          ? 'Enter email or username (superadmin)'
+                          : isAdminPortal
+                          ? selectedTeam === 'BOYS'
+                            ? 'Enter username (Vimal or boysadmin)'
+                            : 'Enter username (Keerthana or girlsadmin)'
+                          : 'Enter player username'
                       }
                       className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-sm text-navy-900 transition-all outline-none"
                     />
                   </div>
                   <p className="mt-1 text-[11px] text-slate-400">
                     {selectedTeam === 'ALL'
-                      ? 'Enter your Super Admin email or username'
+                      ? 'Enter your Super Admin email or username (superadmin / dhyanesh)'
                       : isAdminPortal
-                      ? 'Enter coaching admin username'
+                      ? selectedTeam === 'BOYS'
+                        ? 'Enter boys coaching admin username (e.g. Vimal or boysadmin)'
+                        : 'Enter girls coaching admin username (e.g. Keerthana or girlsadmin)'
                       : 'Enter your assigned team player username'}
                   </p>
                 </div>

@@ -6,12 +6,23 @@
   html {
     scroll-behavior: smooth;
     color-scheme: light;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  html.dark {
+    color-scheme: dark;
   }
   
   body {
     background-color: #fdfbf7;
     color: #0f172a;
     overflow-x: hidden;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  html.dark body {
+    background-color: #0b1120;
+    color: #f8fafc;
   }
 
   /* Custom Light Theme Scrollbar */
@@ -29,6 +40,18 @@
   ::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
   }
+
+  /* Custom Dark Theme Scrollbar */
+  html.dark ::-webkit-scrollbar-track {
+    background: #0f172a;
+  }
+  html.dark ::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 4px;
+  }
+  html.dark ::-webkit-scrollbar-thumb:hover {
+    background: #475569;
+  }
 }
 
 @layer components {
@@ -37,24 +60,95 @@
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-navy-800 bg-white hover:bg-slate-50 border border-slate-200 shadow-sm hover:shadow transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:pointer-events-none;
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-navy-800 dark:text-slate-200 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:pointer-events-none;
   }
 
   .btn-outline-orange {
-    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-saffron-600 bg-transparent hover:bg-saffron-50 border border-saffron-300 transition-all duration-200 active:scale-95;
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-saffron-600 dark:text-saffron-400 bg-transparent hover:bg-saffron-50 dark:hover:bg-saffron-950/40 border border-saffron-300 dark:border-saffron-700 transition-all duration-200 active:scale-95;
   }
 
   .card-premium {
-    @apply bg-white rounded-2xl border border-slate-100 shadow-card transition-all duration-200 hover:shadow-md;
+    @apply bg-white dark:bg-[#111827] rounded-2xl border border-slate-100 dark:border-slate-800 shadow-card dark:shadow-black/40 transition-all duration-200 hover:shadow-md;
   }
 
   .glass-card {
-    @apply bg-white/85 backdrop-blur-md border border-white/60 shadow-card;
+    @apply bg-white/85 dark:bg-[#111827]/90 backdrop-blur-md border border-white/60 dark:border-slate-700/60 shadow-card;
   }
 
   .badge-tag {
     @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold tracking-wide uppercase;
   }
+}
+
+/* Global Dark Mode Overrides for Complete Harmony */
+html.dark .bg-court-sand {
+  background-color: #0b1120 !important;
+}
+html.dark .bg-court-ivory {
+  background-color: #0e1628 !important;
+}
+html.dark .bg-court-clay {
+  background-color: #141f36 !important;
+}
+html.dark nav.fixed {
+  background-color: rgba(11, 17, 32, 0.92) !important;
+  border-color: rgba(30, 41, 59, 0.8) !important;
+}
+html.dark header.sticky {
+  background-color: rgba(15, 23, 42, 0.92) !important;
+  border-color: rgba(30, 41, 59, 0.8) !important;
+}
+html.dark aside {
+  background-color: #0b1120 !important;
+  border-color: #1e293b !important;
+}
+html.dark section.bg-white {
+  background-color: #0d1527 !important;
+  border-color: #1e293b !important;
+}
+html.dark section.bg-court-sand {
+  background-color: #0b1120 !important;
+}
+html.dark .text-navy-900 {
+  color: #f8fafc !important;
+}
+html.dark .text-navy-800 {
+  color: #f1f5f9 !important;
+}
+html.dark .text-slate-700 {
+  color: #cbd5e1 !important;
+}
+html.dark .text-slate-600 {
+  color: #94a3b8 !important;
+}
+html.dark .text-slate-500 {
+  color: #8392a5 !important;
+}
+html.dark .border-slate-200 {
+  border-color: #1e293b !important;
+}
+html.dark .border-slate-100 {
+  border-color: #1e293b !important;
+}
+html.dark .border-slate-200\/80 {
+  border-color: rgba(30, 41, 59, 0.8) !important;
+}
+html.dark .bg-slate-50 {
+  background-color: #0f172a !important;
+}
+html.dark .bg-slate-100 {
+  background-color: #1e293b !important;
+}
+html.dark input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+html.dark select,
+html.dark textarea {
+  background-color: #162032 !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #64748b !important;
 }
 
 /* Three.js Canvas Container */

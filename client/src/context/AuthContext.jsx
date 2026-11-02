@@ -113,6 +113,15 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const updateCurrentUser = (updatedUser, updatedToken) => {
+    if (updatedUser) {
+      setUser((prev) => ({ ...prev, ...updatedUser }));
+    }
+    if (updatedToken) {
+      localStorage.setItem('kho_kho_token', updatedToken);
+    }
+  };
+
   const isBoysAdmin = user?.role === 'BOYS_ADMIN';
   const isGirlsAdmin = user?.role === 'GIRLS_ADMIN';
   const isSuperAdmin = user?.role === 'SUPER_ADMIN';
@@ -139,6 +148,7 @@ export const AuthProvider = ({ children }) => {
         impersonateUser,
         exitImpersonation,
         refreshUser,
+        updateCurrentUser,
       }}
     >
       {children}

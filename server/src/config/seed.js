@@ -64,7 +64,31 @@ export const seedDatabase = async () => {
     isActive: true,
   });
 
-  console.log('[Seed] Created Super Admin Dhyanesh, Boys Admin, and Girls Admin with password kiddo@khokho.');
+  // Extra Boys Admin: Vimal
+  const vimalPassword = await User.hashPassword('Vimal@1234');
+  const vimalAdmin = await User.create({
+    username: 'vimal',
+    passwordHash: vimalPassword,
+    name: 'Coach Vimal',
+    email: 'vimal@khokhoarena.org',
+    role: 'BOYS_ADMIN',
+    team: 'BOYS',
+    isActive: true,
+  });
+
+  // Extra Girls Admin: Keerthana
+  const keerthanaAdminPassword = await User.hashPassword('keerthama@1234');
+  const keerthanaAdmin = await User.create({
+    username: 'keerthana',
+    passwordHash: keerthanaAdminPassword,
+    name: 'Coach Keerthana',
+    email: 'coach.keerthana@khokhoarena.org',
+    role: 'GIRLS_ADMIN',
+    team: 'GIRLS',
+    isActive: true,
+  });
+
+  console.log('[Seed] Created Super Admin Dhyanesh, Boys Admin, Girls Admin, Vimal (Boys Admin), and Keerthana (Girls Admin).');
 
   // 3. Create Boys Roster (21 Real Players from Sheet)
   const boysRosterData = [
@@ -130,7 +154,7 @@ export const seedDatabase = async () => {
 
   // 4. Create Girls Roster (13 Real Players from Sheet)
   const girlsRosterData = [
-    { id: 'G-01', username: 'keerthana', name: 'KEERTHANA', jersey: 1, pos: 'Pole Diver', blood: 'O+' },
+    { id: 'G-01', username: 'keerthana.player', name: 'KEERTHANA', jersey: 1, pos: 'Pole Diver', blood: 'O+' },
     { id: 'G-02', username: 'sabiksha', name: 'SABIKSHA', jersey: 2, pos: 'Running Chaser', blood: 'A+' },
     { id: 'G-03', username: 'atshaya', name: 'ATSHAYA', jersey: 3, pos: 'Defender', blood: 'B+' },
     { id: 'G-04', username: 'nisha', name: 'NISHA', jersey: 4, pos: 'All-Rounder', blood: 'AB+' },

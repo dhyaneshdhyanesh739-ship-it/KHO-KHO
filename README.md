@@ -234,9 +234,11 @@ Visit the application in your browser at: **`http://localhost:5173`**
 
 | Account Role | Username | Password | Notes |
 | :--- | :--- | :--- | :--- |
-| **Boys Team Admin** | `boysadmin` | `BoysAdmin@KhoKho2026!` | Coach Dhyanesh.S.E & MuthuvelRaja.S (Manages 23 Boys athletes) |
-| **Girls Team Admin** | `girlsadmin` | `GirlsAdmin@KhoKho2026!` | Coach Keerthana (Manages 13 Girls athletes) |
-| **Super Administrator** | `superadmin` | `SuperAdmin@KhoKho2026!` | Athletics Directorate (Global settings & audit logs) |
+| **Boys Team Admin (Vimal)** | `Vimal` | `Vimal@1234` | Coach Vimal (Boys Team Coaching Admin) |
+| **Boys Team Admin** | `boysadmin` | `BoysAdmin@KhoKho2026!` / `kiddo@khokho` | Coach Dhyanesh.S.E & MuthuvelRaja.S (Boys Team Admin) |
+| **Girls Team Admin (Keerthana)** | `Keerthana` | `keerthama@1234` | Coach Keerthana (Girls Team Coaching Admin) |
+| **Girls Team Admin** | `girlsadmin` | `GirlsAdmin@KhoKho2026!` / `kiddo@khokho` | Coach Keerthana (Girls Team Admin) |
+| **Super Administrator** | `superadmin` / `dhyanesh` | `SuperAdmin@KhoKho2026!` / `Dhyanesh@23012007` | Super Admin Console (Full Access) |
 | **Player (Boys #1)** | `b01` | `b01@KhoKho2026` | Arjun Shinde (Pole Diver, Boys Roster) |
 | **Player (Boys #2)** | `b02` | `b02@KhoKho2026` | Rohan Kadam (Running Chaser, Boys Roster) |
 | **Player (Girls #1)** | `g01` | `g01@KhoKho2026` | Pooja Narvekar (Pole Diver, Girls Roster) |

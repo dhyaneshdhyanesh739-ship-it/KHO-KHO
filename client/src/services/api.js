@@ -74,6 +74,7 @@ export const api = {
     login: (credentials) => apiRequest('/auth/login', { method: 'POST', body: JSON.stringify(credentials) }),
     logout: () => apiRequest('/auth/logout', { method: 'POST' }),
     getMe: () => apiRequest('/auth/me'),
+    updateProfile: (profileData) => apiRequest('/auth/profile', { method: 'PUT', body: JSON.stringify(profileData) }),
     changePassword: (data) => apiRequest('/auth/change-password', { method: 'PUT', body: JSON.stringify(data) }),
     directChangePassword: (data) => apiRequest('/auth/direct-change-password', { method: 'POST', body: JSON.stringify(data) }),
     getAllUsers: () => apiRequest('/auth/users'),
@@ -181,6 +182,16 @@ export const api = {
     sendContact: (data) => apiRequest('/contact', { method: 'POST', body: JSON.stringify(data) }),
     getAuditLogs: (limit = 50) => apiRequest(`/audit-logs?limit=${limit}`),
     seedDemo: () => apiRequest('/demo/seed', { method: 'POST' }),
+  },
+
+  // Media & Cloudinary Storage
+  upload: {
+    getStatus: () => apiRequest('/upload/status'),
+    profilePhoto: (imageData) =>
+      apiRequest('/upload/profile-photo', {
+        method: 'POST',
+        body: JSON.stringify({ image: imageData }),
+      }),
   },
 };
 

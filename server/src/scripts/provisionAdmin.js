@@ -17,6 +17,12 @@ const provisionAdmins = async () => {
   const girlsUser = process.env.INITIAL_GIRLS_ADMIN_USER || 'girlsadmin';
   const girlsPass = process.env.INITIAL_GIRLS_ADMIN_PASSWORD || 'GirlsAdmin@KhoKho2026!';
 
+  const vimalUser = process.env.EXTRA_BOYS_ADMIN_USER || 'Vimal';
+  const vimalPass = process.env.EXTRA_BOYS_ADMIN_PASSWORD || 'Vimal@1234';
+
+  const keerthanaUser = process.env.EXTRA_GIRLS_ADMIN_USER || 'Keerthana';
+  const keerthanaPass = process.env.EXTRA_GIRLS_ADMIN_PASSWORD || 'keerthama@1234';
+
   // Provision Super Admin if not present
   let existingSuper = await User.findOne({ username: superUser.toLowerCase() });
   if (!existingSuper) {
@@ -69,6 +75,54 @@ const provisionAdmins = async () => {
     console.log(`[Admin Provisioning] Created Girls Admin: ${girlsUser}`);
   } else {
     console.log(`[Admin Provisioning] Girls Admin already exists.`);
+  }
+
+  // Provision Extra Boys Admin: Vimal
+  let existingVimal = await User.findOne({ username: vimalUser.toLowerCase() });
+  if (!existingVimal) {
+    const hash = await User.hashPassword(vimalPass);
+    existingVimal = await User.create({
+      username: vimalUser.toLowerCase(),
+      passwordHash: hash,
+      name: 'Coach Vimal',
+      email: 'vimal@khokhoarena.org',
+      role: 'BOYS_ADMIN',
+      team: 'BOYS',
+      isActive: true,
+    });
+    console.log(`[Admin Provisioning] Created Boys Admin: ${vimalUser} (${vimalPass})`);
+  } else {
+    const hash = await User.hashPassword(vimalPass);
+    existingVimal.passwordHash = hash;
+    existingVimal.role = 'BOYS_ADMIN';
+    existingVimal.team = 'BOYS';
+    existingVimal.isActive = true;
+    await existingVimal.save();
+    console.log(`[Admin Provisioning] Updated Boys Admin: ${vimalUser} (${vimalPass})`);
+  }
+
+  // Provision Extra Girls Admin: Keerthana
+  let existingKeerthana = await User.findOne({ username: keerthanaUser.toLowerCase() });
+  if (!existingKeerthana) {
+    const hash = await User.hashPassword(keerthanaPass);
+    existingKeerthana = await User.create({
+      username: keerthanaUser.toLowerCase(),
+      passwordHash: hash,
+      name: 'Coach Keerthana',
+      email: 'coach.keerthana@khokhoarena.org',
+      role: 'GIRLS_ADMIN',
+      team: 'GIRLS',
+      isActive: true,
+    });
+    console.log(`[Admin Provisioning] Created Girls Admin: ${keerthanaUser} (${keerthanaPass})`);
+  } else {
+    const hash = await User.hashPassword(keerthanaPass);
+    existingKeerthana.passwordHash = hash;
+    existingKeerthana.role = 'GIRLS_ADMIN';
+    existingKeerthana.team = 'GIRLS';
+    existingKeerthana.isActive = true;
+    await existingKeerthana.save();
+    console.log(`[Admin Provisioning] Updated Girls Admin: ${keerthanaUser} (${keerthanaPass})`);
   }
 
   console.log('[Admin Provisioning] Completed successfully.');

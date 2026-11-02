@@ -5,6 +5,7 @@ import {
   getMe,
   changePassword,
   directChangePassword,
+  updateProfile,
   getAllUsers,
   impersonateUser,
   toggleUserStatus,
@@ -19,6 +20,7 @@ const router = express.Router();
 router.post('/login', loginLimiter, login);
 router.post('/logout', protect, logout);
 router.get('/me', protect, getMe);
+router.put('/profile', protect, updateProfile);
 router.put('/change-password', protect, changePassword);
 router.post('/direct-change-password', loginLimiter, directChangePassword);
 

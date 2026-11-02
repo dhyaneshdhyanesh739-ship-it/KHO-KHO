@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Menu, X, Shield, ShieldCheck, Crown, LogIn, User, LogOut, ChevronRight, Activity, Trophy, LayoutDashboard } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import ThemeToggle from '../ui/ThemeToggle';
 
 export default function Navbar({ onOpenLogin, onOpenTeamLogin, onOpenAdminLogin, onNavigateSection, onGoToDashboard }) {
   const { user, isAuthenticated, logout, isAdmin, isPlayer } = useAuth();
@@ -66,19 +67,22 @@ export default function Navbar({ onOpenLogin, onOpenTeamLogin, onOpenAdminLogin,
 
           {/* User Status / Portal Actions */}
           <div className="hidden sm:flex items-center gap-3">
+            {/* Theme Toggle Button */}
+            <ThemeToggle variant="icon" />
+
             {isAuthenticated ? (
               <div className="flex items-center gap-3">
                 <div className="text-right">
-                  <p className="text-xs font-bold text-navy-900">{user.name}</p>
+                  <p className="text-xs font-bold text-navy-900 dark:text-slate-100">{user.name}</p>
                   <span
                     className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded-full ${
                       user.role === 'BOYS_ADMIN'
-                        ? 'bg-saffron-100 text-saffron-800'
+                        ? 'bg-saffron-100 dark:bg-saffron-950/80 text-saffron-800 dark:text-saffron-300'
                         : user.role === 'GIRLS_ADMIN'
-                        ? 'bg-rose-100 text-rose-800'
+                        ? 'bg-rose-100 dark:bg-rose-950/80 text-rose-800 dark:text-rose-300'
                         : user.role === 'PLAYER'
-                        ? 'bg-emerald-100 text-emerald-800'
-                        : 'bg-purple-100 text-purple-800'
+                        ? 'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300'
+                        : 'bg-purple-100 dark:bg-purple-950/80 text-purple-800 dark:text-purple-300'
                     }`}
                   >
                     {user.role.replace('_', ' ')}
@@ -98,7 +102,7 @@ export default function Navbar({ onOpenLogin, onOpenTeamLogin, onOpenAdminLogin,
                 <button
                   type="button"
                   onClick={logout}
-                  className="p-2 rounded-xl text-slate-500 hover:text-rose-600 hover:bg-rose-50 border border-slate-200 transition-colors cursor-pointer"
+                  className="p-2 rounded-xl text-slate-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50 border border-slate-200 dark:border-slate-700 transition-colors cursor-pointer"
                   title="Logout"
                 >
                   <LogOut className="w-4 h-4" />
@@ -121,7 +125,7 @@ export default function Navbar({ onOpenLogin, onOpenTeamLogin, onOpenAdminLogin,
                 <button
                   type="button"
                   onClick={onOpenAdminLogin || onOpenLogin}
-                  className="bg-navy-950 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm py-2 px-3 sm:px-4 rounded-xl border border-slate-700 shadow-md transition-all flex items-center gap-2 hover:border-slate-500 active:scale-95 cursor-pointer"
+                  className="bg-navy-950 hover:bg-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800 text-white font-bold text-xs sm:text-sm py-2 px-3 sm:px-4 rounded-xl border border-slate-700 shadow-md transition-all flex items-center gap-2 hover:border-slate-500 active:scale-95 cursor-pointer"
                   title="Coaching & Super Administrator Console"
                 >
                   <ShieldCheck className="w-4 h-4 text-amber-400 shrink-0" />
@@ -133,6 +137,9 @@ export default function Navbar({ onOpenLogin, onOpenTeamLogin, onOpenAdminLogin,
 
           {/* Mobile Menu Actions */}
           <div className="flex lg:hidden items-center gap-1.5">
+            {/* Mobile Theme Toggle */}
+            <ThemeToggle variant="icon" size="sm" />
+
             {!isAuthenticated && (
               <>
                 <button
@@ -156,7 +163,7 @@ export default function Navbar({ onOpenLogin, onOpenTeamLogin, onOpenAdminLogin,
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-1.5 rounded-xl text-slate-600 hover:bg-slate-100 border border-slate-200"
+              className="p-1.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -238,6 +245,12 @@ export default function Navbar({ onOpenLogin, onOpenTeamLogin, onOpenAdminLogin,
                 </button>
               </div>
             )}
+
+            {/* Display Theme Preference */}
+            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+              <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Theme Appearance</span>
+              <ThemeToggle variant="pill" size="sm" />
+            </div>
           </div>
         </div>
       )}

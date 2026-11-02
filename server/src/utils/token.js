@@ -6,8 +6,9 @@ export const generateToken = (user) => {
 
   return jwt.sign(
     {
-      id: user._id,
+      id: user._id || user.id,
       username: user.username,
+      name: user.name,
       role: user.role,
       team: user.team,
       playerRef: user.playerRef,

@@ -51,9 +51,55 @@ async function run() {
   );
   await User.updateOne(
     { username: 'girlsadmin' },
-    { $set: { passwordHash: coachPasswordHash, name: 'Coach Dhyanesh.S.E', isActive: true } }
+    { $set: { passwordHash: coachPasswordHash, name: 'Coach Keerthana', isActive: true } }
   );
-  console.log('[Update] Updated boysadmin & girlsadmin credentials (Coach Dhyanesh.S.E)');
+  console.log('[Update] Updated boysadmin & girlsadmin credentials');
+
+  // Upsert Extra Boys Admin: Vimal (Vimal@1234)
+  const vimalHash = await bcrypt.hash('Vimal@1234', 10);
+  let vimalUser = await User.findOne({ username: 'vimal' });
+  if (!vimalUser) {
+    await User.create({
+      username: 'vimal',
+      passwordHash: vimalHash,
+      name: 'Coach Vimal',
+      email: 'vimal@khokhoarena.org',
+      role: 'BOYS_ADMIN',
+      team: 'BOYS',
+      isActive: true,
+    });
+    console.log('[Update] Created Boys Admin: Vimal (Vimal@1234)');
+  } else {
+    vimalUser.passwordHash = vimalHash;
+    vimalUser.role = 'BOYS_ADMIN';
+    vimalUser.team = 'BOYS';
+    vimalUser.isActive = true;
+    await vimalUser.save();
+    console.log('[Update] Updated Boys Admin: Vimal (Vimal@1234)');
+  }
+
+  // Upsert Extra Girls Admin: Keerthana (keerthama@1234)
+  const keerthanaHash = await bcrypt.hash('keerthama@1234', 10);
+  let keerthanaUser = await User.findOne({ username: 'keerthana' });
+  if (!keerthanaUser) {
+    await User.create({
+      username: 'keerthana',
+      passwordHash: keerthanaHash,
+      name: 'Coach Keerthana',
+      email: 'coach.keerthana@khokhoarena.org',
+      role: 'GIRLS_ADMIN',
+      team: 'GIRLS',
+      isActive: true,
+    });
+    console.log('[Update] Created Girls Admin: Keerthana (keerthama@1234)');
+  } else {
+    keerthanaUser.passwordHash = keerthanaHash;
+    keerthanaUser.role = 'GIRLS_ADMIN';
+    keerthanaUser.team = 'GIRLS';
+    keerthanaUser.isActive = true;
+    await keerthanaUser.save();
+    console.log('[Update] Updated Girls Admin: Keerthana (keerthama@1234)');
+  }
 
   // 2. Setup Boys Roster from user sheet (21 players)
   const boysRoster = [

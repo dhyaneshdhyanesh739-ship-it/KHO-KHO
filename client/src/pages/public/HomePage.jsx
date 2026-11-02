@@ -25,7 +25,7 @@ export default function HomePage({ onLoginSuccess, onViewDashboard }) {
   };
 
   return (
-    <div className="min-h-screen bg-court-sand text-navy-900 selection:bg-saffron-500 selection:text-white">
+    <div className="min-h-screen bg-court-sand dark:bg-[#0b1120] text-navy-900 dark:text-slate-100 selection:bg-saffron-500 selection:text-white transition-colors duration-200">
       {/* Top Navbar */}
       <Navbar
         onOpenLogin={handleOpenTeamLogin}

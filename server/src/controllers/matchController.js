@@ -161,16 +161,18 @@ export const getSquadRecommendations = async (req, res, next) => {
     // 4. Calculate attendance and recommendation score for each player
     const recommendations = players.map((player) => {
       const pRecords = recentRecords.filter((r) => String(r.player) === String(player._id));
-      const present = pRecords.filter((r) => r.status === 'PRESENT').length;
+      const odCount = pRecords.filter((r) => r.status === 'OD').length;
+      const regularPresent = pRecords.filter((r) => r.status === 'PRESENT').length;
+      const present = regularPresent + odCount; // OD counts as present!
       const late = pRecords.filter((r) => r.status === 'LATE').length;
-      const excused = pRecords.filter((r) => r.status === 'EXCUSED').length;
+      const excused = pRecords.filter((r) => r.status === 'EXCUSED' || r.status === 'LEAVE').length;
       const absent = pRecords.filter((r) => r.status === 'ABSENT').length;
       const eligible = pRecords.length - excused;
 
       // Attendance percentage
       const attendancePct = eligible > 0 ? Math.round((present / eligible) * 100) : 100;
 
-      // Match Attendance Policy: 100% base, -2% absent, -1% excused
+      // Match Attendance Policy: 100% base, -2% absent, -1% excused/leave (OD is 0% deduction)
       const baseMatchPercentage = 100;
       const absentDeduction = absent * 2;
       const excusedDeduction = excused * 1;

@@ -77,6 +77,8 @@ npm run seed
 ## Step 4: Login Credentials
 
 Once deployed, visit your live URL at `/login`:
-- **Super Admin**: `dhyanesh` / `kiddo@khokho`
-- **Boys Admin**: `boysadmin` / `kiddo@khokho`
-- **Girls Admin**: `girlsadmin` / `kiddo@khokho`
+- **Super Admin**: `superadmin` / `SuperAdmin@KhoKho2026!` or `dhyanesh` / `Dhyanesh@23012007` / `kiddo@khokho`
+- **Boys Admin (Vimal)**: `Vimal` / `Vimal@1234`
+- **Boys Admin**: `boysadmin` / `BoysAdmin@KhoKho2026!` / `kiddo@khokho`
+- **Girls Admin (Keerthana)**: `Keerthana` / `keerthama@1234`
+- **Girls Admin**: `girlsadmin` / `GirlsAdmin@KhoKho2026!` / `kiddo@khokho`
