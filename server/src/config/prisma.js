@@ -1,7 +1,15 @@
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 dotenv.config();
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+dotenv.config({ path: path.resolve(process.cwd(), 'server/.env') });
 
 const FALLBACK_DATABASE_URL =
   'postgresql://neondb_owner:npg_zNBa4QVpTw7j@ep-withered-art-b51j175v-pooler.c-7.us-east-2.aws.neon.tech/neondb?sslmode=require';
