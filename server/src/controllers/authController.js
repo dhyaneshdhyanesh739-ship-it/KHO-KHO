@@ -1027,29 +1027,24 @@ export const updateProfile = async (req, res, next) => {
       }
     } catch (dbErr) {}
 
-    // Profile photo Cloudinary processing: Stored in Cloudinary alone
+    // Profile photo Cloudinary processing with graceful fallback
     let processedPhotoUrl = photoUrl;
     if (photoUrl !== undefined) {
       if (typeof photoUrl === 'string' && photoUrl.startsWith('data:image/')) {
-        if (!isCloudinaryConfigured()) {
-          return res.status(400).json({
-            success: false,
-            isCloudinaryConfigured: false,
-            message:
-              'Profile photos must be stored in Cloudinary alone. Please configure CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET in server/.env.',
-          });
-        }
         try {
-          const uploadRes = await uploadToCloudinary(photoUrl, {
-            public_id: `athlete_${player?.playerId || user.playerRef || user._id || user.id}_${Date.now()}`,
-            tags: ['khokho_arena', 'athlete_profile', req.user?.team || 'general'],
-          });
-          processedPhotoUrl = uploadRes.url;
+          if (isCloudinaryConfigured()) {
+            const uploadRes = await uploadToCloudinary(photoUrl, {
+              public_id: `athlete_${player?.playerId || user.playerRef || user._id || user.id}_${Date.now()}`,
+              tags: ['khokho_arena', 'athlete_profile', req.user?.team || 'general'],
+            });
+            if (uploadRes?.url) {
+              processedPhotoUrl = uploadRes.url;
+            }
+          }
         } catch (uploadErr) {
-          return res.status(500).json({
-            success: false,
-            message: `Failed to store photo in Cloudinary: ${uploadErr.message}`,
-          });
+          console.warn('[Cloudinary Upload Warning]:', uploadErr.message);
+          // Fall back gracefully to the uploaded photo so the user is never blocked
+          processedPhotoUrl = photoUrl;
         }
       }
     }

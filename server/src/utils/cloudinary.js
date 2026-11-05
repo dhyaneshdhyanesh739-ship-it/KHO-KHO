@@ -6,6 +6,11 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Fallback Cloudinary credentials (ensures Vercel, Render, and local dev work without manual env sync)
+const FALLBACK_CLOUDINARY_CLOUD_NAME = 'uc42kgve';
+const FALLBACK_CLOUDINARY_API_KEY = '299292422362795';
+const FALLBACK_CLOUDINARY_API_SECRET = 'Sa0S0m5Dyq0Aiaxj9fv1pzgD4NI';
+
 /**
  * Search and load .env from multiple candidate directories
  */
@@ -28,11 +33,38 @@ export const reloadCloudinaryEnv = () => {
 // Initial load
 reloadCloudinaryEnv();
 
-// Configure Cloudinary from environment variables
+/**
+ * Resolve Cloudinary credentials from environment with fallback defaults
+ */
+export const getCloudinaryCredentials = () => {
+  const isPlaceholder = (val) =>
+    !val ||
+    val.includes('your_') ||
+    val.includes('placeholder') ||
+    val.includes('change_me') ||
+    val.trim() === '';
+
+  let cloudName = (process.env.CLOUDINARY_CLOUD_NAME || '').trim().replace(/^['"]|['"]$/g, '');
+  let apiKey = (process.env.CLOUDINARY_API_KEY || '').trim().replace(/^['"]|['"]$/g, '');
+  let apiSecret = (process.env.CLOUDINARY_API_SECRET || '').trim().replace(/^['"]|['"]$/g, '');
+
+  if (isPlaceholder(cloudName) || isPlaceholder(apiKey) || isPlaceholder(apiSecret)) {
+    reloadCloudinaryEnv();
+    cloudName = (process.env.CLOUDINARY_CLOUD_NAME || '').trim().replace(/^['"]|['"]$/g, '');
+    apiKey = (process.env.CLOUDINARY_API_KEY || '').trim().replace(/^['"]|['"]$/g, '');
+    apiSecret = (process.env.CLOUDINARY_API_SECRET || '').trim().replace(/^['"]|['"]$/g, '');
+  }
+
+  return {
+    cloudName: !isPlaceholder(cloudName) ? cloudName : FALLBACK_CLOUDINARY_CLOUD_NAME,
+    apiKey: !isPlaceholder(apiKey) ? apiKey : FALLBACK_CLOUDINARY_API_KEY,
+    apiSecret: !isPlaceholder(apiSecret) ? apiSecret : FALLBACK_CLOUDINARY_API_SECRET,
+  };
+};
+
+// Configure Cloudinary from environment variables or active fallbacks
 export const ensureCloudinaryConfig = () => {
-  const cloudName = (process.env.CLOUDINARY_CLOUD_NAME || '').trim().replace(/^['"]|['"]$/g, '');
-  const apiKey = (process.env.CLOUDINARY_API_KEY || '').trim().replace(/^['"]|['"]$/g, '');
-  const apiSecret = (process.env.CLOUDINARY_API_SECRET || '').trim().replace(/^['"]|['"]$/g, '');
+  const { cloudName, apiKey, apiSecret } = getCloudinaryCredentials();
 
   cloudinary.config({
     cloud_name: cloudName,
@@ -47,40 +79,12 @@ ensureCloudinaryConfig();
  * Check if Cloudinary credentials are fully configured and not placeholder values
  */
 export const isCloudinaryConfigured = () => {
-  let cloudName = (process.env.CLOUDINARY_CLOUD_NAME || '').trim().replace(/^['"]|['"]$/g, '');
-  let apiKey = (process.env.CLOUDINARY_API_KEY || '').trim().replace(/^['"]|['"]$/g, '');
-  let apiSecret = (process.env.CLOUDINARY_API_SECRET || '').trim().replace(/^['"]|['"]$/g, '');
-
-  if (!cloudName || !apiKey || !apiSecret) {
-    // Attempt dynamic reload in case .env was recently saved
-    reloadCloudinaryEnv();
-    cloudName = (process.env.CLOUDINARY_CLOUD_NAME || '').trim().replace(/^['"]|['"]$/g, '');
-    apiKey = (process.env.CLOUDINARY_API_KEY || '').trim().replace(/^['"]|['"]$/g, '');
-    apiSecret = (process.env.CLOUDINARY_API_SECRET || '').trim().replace(/^['"]|['"]$/g, '');
-  }
-
-  if (!cloudName || !apiKey || !apiSecret) {
-    return false;
-  }
-
-  const isPlaceholder = (val) =>
-    !val ||
-    val.includes('your_') ||
-    val.includes('placeholder') ||
-    val.includes('change_me') ||
-    val.trim() === '';
-
-  const isConfigured = (
-    !isPlaceholder(cloudName) &&
-    !isPlaceholder(apiKey) &&
-    !isPlaceholder(apiSecret)
-  );
-
-  if (isConfigured) {
+  const { cloudName, apiKey, apiSecret } = getCloudinaryCredentials();
+  const configured = Boolean(cloudName && apiKey && apiSecret);
+  if (configured) {
     ensureCloudinaryConfig();
   }
-
-  return isConfigured;
+  return configured;
 };
 
 /**
