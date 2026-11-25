@@ -10,9 +10,9 @@ export default function TeamRosterSummarySection({ onOpenLogin }) {
       rosterCount: 21,
       squadLimit: 15,
       headCoach: 'Coach Dhyanesh.S.E & MuthuvelRaja.S',
-      badgeColor: 'bg-saffron-100 text-saffron-800 border-saffron-200',
-      gradient: 'from-orange-50/60 to-white',
-      accentColor: 'text-saffron-600',
+      badgeColor: 'bg-saffron-100 dark:bg-saffron-950/70 text-saffron-800 dark:text-saffron-300 border-saffron-200 dark:border-saffron-800',
+      gradient: 'from-orange-50/60 to-white dark:from-slate-900/90 dark:to-slate-950',
+      accentColor: 'text-saffron-600 dark:text-saffron-400',
       tagline: 'Precision Pole Turns & Blistering Zigzag Footwork',
       stats: [
         { label: 'Active Roster', val: '21 Athletes' },
@@ -28,9 +28,9 @@ export default function TeamRosterSummarySection({ onOpenLogin }) {
       rosterCount: 13,
       squadLimit: 12,
       headCoach: 'Coach Keerthana',
-      badgeColor: 'bg-rose-100 text-rose-800 border-rose-200',
-      gradient: 'from-rose-50/60 to-white',
-      accentColor: 'text-rose-600',
+      badgeColor: 'bg-rose-100 dark:bg-rose-950/70 text-rose-800 dark:text-rose-300 border-rose-200 dark:border-rose-800',
+      gradient: 'from-rose-50/60 to-white dark:from-slate-900/90 dark:to-slate-950',
+      accentColor: 'text-rose-600 dark:text-rose-400',
       tagline: 'Synchronized Evasion & High-Agility Batch Running',
       stats: [
         { label: 'Active Roster', val: '13 Athletes' },
@@ -62,42 +62,42 @@ export default function TeamRosterSummarySection({ onOpenLogin }) {
           {teams.map((t) => (
             <div
               key={t.id}
-              className={`rounded-3xl p-8 border border-slate-200 bg-gradient-to-b ${t.gradient} shadow-card hover:shadow-xl transition-all duration-300 flex flex-col justify-between`}
+              className={`rounded-3xl p-8 border border-slate-200 dark:border-slate-800 bg-gradient-to-b ${t.gradient} shadow-card hover:shadow-xl transition-all duration-300 flex flex-col justify-between`}
             >
               <div>
                 <div className="flex items-center justify-between gap-3 mb-6">
                   <span className={`badge-tag border ${t.badgeColor}`}>
                     {t.id} Division
                   </span>
-                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  <span className="text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider">
                     {t.title}
                   </span>
                 </div>
 
-                <h3 className="font-editorial text-2xl sm:text-3xl font-black text-navy-900 mb-2">
+                <h3 className="font-editorial text-2xl sm:text-3xl font-black text-navy-900 dark:text-white mb-2">
                   {t.name}
                 </h3>
                 <p className={`text-xs sm:text-sm font-bold uppercase tracking-wider ${t.accentColor} mb-4`}>
                   {t.tagline}
                 </p>
 
-                <p className="text-sm text-slate-600 leading-relaxed mb-6">
+                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
                   {t.description}
                 </p>
 
                 {/* Team Stats Matrix */}
-                <div className="grid grid-cols-3 gap-3 p-4 rounded-2xl bg-white border border-slate-100 shadow-sm mb-6">
+                <div className="grid grid-cols-3 gap-3 p-4 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-100 dark:border-slate-800 shadow-sm mb-6">
                   {t.stats.map((s, idx) => (
                     <div key={idx} className="text-center">
-                      <p className="font-editorial text-base sm:text-lg font-bold text-navy-900">{s.val}</p>
-                      <p className="text-[11px] text-slate-400 font-medium">{s.label}</p>
+                      <p className="font-editorial text-base sm:text-lg font-bold text-navy-900 dark:text-white">{s.val}</p>
+                      <p className="text-[11px] text-slate-400 dark:text-slate-400 font-medium">{s.label}</p>
                     </div>
                   ))}
                 </div>
 
-                <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 mb-6">
-                  <UserCheck className="w-4 h-4 text-sportsGreen-dark" />
-                  <span>Head Coach: <strong className="text-navy-900">{t.headCoach}</strong></span>
+                <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400 mb-6">
+                  <UserCheck className="w-4 h-4 text-sportsGreen-dark dark:text-sportsGreen" />
+                  <span>Head Coach: <strong className="text-navy-900 dark:text-slate-200">{t.headCoach}</strong></span>
                 </div>
               </div>
 
@@ -105,7 +105,7 @@ export default function TeamRosterSummarySection({ onOpenLogin }) {
               <button
                 type="button"
                 onClick={onOpenLogin}
-                className="w-full btn-secondary py-3 text-sm justify-between group border-slate-300 hover:border-slate-400"
+                className="w-full btn-secondary py-3 text-sm justify-between group border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600"
               >
                 <span>Enter {t.id === 'BOYS' ? 'Boys' : 'Girls'} Portal</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

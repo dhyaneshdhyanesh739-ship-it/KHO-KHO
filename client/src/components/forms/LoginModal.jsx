@@ -192,14 +192,14 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 10 }}
         transition={{ duration: 0.2 }}
-        className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden"
+        className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden"
       >
         {/* Header Bar */}
         <div
           className={`relative px-6 pt-6 pb-4 border-b flex items-center justify-between ${
             isAdminPortal
               ? 'bg-gradient-to-r from-slate-900 to-indigo-950 text-white border-slate-800'
-              : 'bg-white text-navy-900 border-slate-100'
+              : 'bg-white dark:bg-slate-900 text-navy-900 dark:text-white border-slate-100 dark:border-slate-800'
           }`}
         >
           <div className="flex items-center gap-2.5">
@@ -218,7 +218,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
                 className={`p-1.5 rounded-lg transition-colors ${
                   isAdminPortal
                     ? 'text-slate-400 hover:text-white hover:bg-white/10'
-                    : 'text-slate-400 hover:text-navy-900 hover:bg-slate-100'
+                    : 'text-slate-400 hover:text-navy-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
                 }`}
                 title="Back"
               >
@@ -239,7 +239,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
                     ? 'Change Password'
                     : selectedTeam
                     ? selectedTeam === 'ALL'
-                      ? 'Super Administrator Portal'
+                      ? 'Super Admin Portal'
                       : `${selectedTeam === 'BOYS' ? 'Boys' : 'Girls'} ${isAdminPortal ? 'Admin' : 'Athlete'} Sign-In`
                     : isAdminPortal
                     ? 'Admin Portal Login'
@@ -248,7 +248,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
               </div>
               <p
                 className={`text-xs font-medium mt-0.5 ${
-                  isAdminPortal ? 'text-purple-200' : 'text-slate-500'
+                  isAdminPortal ? 'text-purple-200' : 'text-slate-500 dark:text-slate-400'
                 }`}
               >
                 {isChangingPassword
@@ -266,7 +266,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
             className={`p-2 rounded-xl transition-colors ${
               isAdminPortal
                 ? 'text-slate-400 hover:text-white hover:bg-white/10'
-                : 'text-slate-400 hover:text-navy-900 hover:bg-slate-100'
+                : 'text-slate-400 hover:text-navy-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
             <X className="w-5 h-5" />
@@ -340,7 +340,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
                   <>
                     {/* Username or Athlete ID */}
                     <div>
-                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider mb-1.5">
                         Username / Athlete ID / Email
                       </label>
                       <div className="relative">
@@ -353,14 +353,14 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
                           value={changeForm.username}
                           onChange={(e) => setChangeForm({ ...changeForm, username: e.target.value })}
                           placeholder="Enter your username, email, or player ID (e.g. B01)"
-                          className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-sm text-navy-900 transition-all outline-none"
+                          className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/90 text-sm text-navy-900 dark:text-white placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all outline-none"
                         />
                       </div>
                     </div>
 
                     {/* Current Password */}
                     <div>
-                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider mb-1.5">
                         Current Password
                       </label>
                       <div className="relative">
@@ -373,12 +373,12 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
                           value={changeForm.currentPassword}
                           onChange={(e) => setChangeForm({ ...changeForm, currentPassword: e.target.value })}
                           placeholder="Enter current password"
-                          className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-sm text-navy-900 transition-all outline-none"
+                          className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/90 text-sm text-navy-900 dark:text-white placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all outline-none"
                         />
                         <button
                           type="button"
                           onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                          className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                          className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
                           title={showCurrentPassword ? 'Hide password' : 'Show password'}
                         >
                           {showCurrentPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -388,7 +388,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
 
                     {/* New Password */}
                     <div>
-                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider mb-1.5">
                         New Password
                       </label>
                       <div className="relative">
@@ -402,23 +402,23 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
                           value={changeForm.newPassword}
                           onChange={(e) => setChangeForm({ ...changeForm, newPassword: e.target.value })}
                           placeholder="••••••••••••"
-                          className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-sm text-navy-900 transition-all outline-none"
+                          className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/90 text-sm text-navy-900 dark:text-white placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all outline-none"
                         />
                         <button
                           type="button"
                           onClick={() => setShowNewPassword(!showNewPassword)}
-                          className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                          className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
                           title={showNewPassword ? 'Hide password' : 'Show password'}
                         >
                           {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                         </button>
                       </div>
-                      <p className="mt-1 text-[11px] text-slate-400">Must be at least 6 characters long.</p>
+                      <p className="mt-1 text-[11px] text-slate-400 dark:text-slate-400">Must be at least 6 characters long.</p>
                     </div>
 
                     {/* Confirm New Password */}
                     <div>
-                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider mb-1.5">
                         Confirm New Password
                       </label>
                       <div className="relative">
@@ -432,12 +432,12 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
                           value={changeForm.confirmPassword}
                           onChange={(e) => setChangeForm({ ...changeForm, confirmPassword: e.target.value })}
                           placeholder="••••••••••••"
-                          className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-sm text-navy-900 transition-all outline-none"
+                          className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/90 text-sm text-navy-900 dark:text-white placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all outline-none"
                         />
                         <button
                           type="button"
                           onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                          className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                          className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
                           title={showConfirmPassword ? 'Hide password' : 'Show password'}
                         >
                           {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -494,7 +494,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
                 exit={{ opacity: 0, x: 10 }}
                 className="space-y-3.5"
               >
-                <p className="text-xs sm:text-sm text-slate-600">
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
                   {isAdminPortal
                     ? 'Select your administrative division or full console:'
                     : 'Select your team division to access player attendance & fixtures:'}
@@ -507,25 +507,25 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
                     <button
                       type="button"
                       onClick={() => handleSelectTeam('ALL')}
-                      className="w-full group p-3.5 rounded-2xl border-2 border-slate-200 hover:border-purple-600 bg-gradient-to-r from-white via-purple-50/20 to-indigo-50/40 hover:to-purple-50/60 text-left transition-all duration-200 flex items-center justify-between shadow-sm hover:shadow-md cursor-pointer"
+                      className="w-full group p-3.5 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-purple-600 dark:hover:border-purple-500 bg-gradient-to-r from-white via-purple-50/20 to-indigo-50/40 hover:to-purple-50/60 dark:from-slate-800 dark:via-slate-800/90 dark:to-purple-950/30 text-left transition-all duration-200 flex items-center justify-between shadow-sm hover:shadow-md cursor-pointer"
                     >
                       <div className="flex items-center gap-3.5">
-                        <div className="w-11 h-11 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center font-bold text-lg group-hover:scale-105 transition-transform">
+                        <div className="w-11 h-11 rounded-xl bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 flex items-center justify-center font-bold text-lg group-hover:scale-105 transition-transform">
                           <Crown className="w-5 h-5" />
                         </div>
                         <div>
                           <div className="flex items-center gap-2">
-                            <h4 className="font-bold text-navy-900 group-hover:text-purple-700 transition-colors text-sm">
+                            <h4 className="font-bold text-navy-900 dark:text-white group-hover:text-purple-700 dark:group-hover:text-purple-400 transition-colors text-sm">
                               Super Administrator Portal
                             </h4>
-                            <span className="px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[9px] font-black uppercase">
+                            <span className="px-1.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 text-[9px] font-black uppercase">
                               Full Access
                             </span>
                           </div>
-                          <p className="text-[11px] text-slate-500">Access Anyone in Project • Both Squads</p>
+                          <p className="text-[11px] text-slate-500 dark:text-slate-400">Access Anyone in Project • Both Squads</p>
                         </div>
                       </div>
-                      <div className="w-7 h-7 rounded-full bg-slate-100 group-hover:bg-purple-600 group-hover:text-white flex items-center justify-center text-slate-400 transition-colors text-xs">
+                      <div className="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-700 group-hover:bg-purple-600 group-hover:text-white flex items-center justify-center text-slate-400 dark:text-slate-300 transition-colors text-xs">
                         →
                       </div>
                     </button>
@@ -534,20 +534,20 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
                     <button
                       type="button"
                       onClick={() => handleSelectTeam('BOYS')}
-                      className="w-full group p-3.5 rounded-2xl border-2 border-slate-200 hover:border-saffron-500 bg-gradient-to-r from-white to-orange-50/30 hover:to-orange-50/70 text-left transition-all duration-200 flex items-center justify-between shadow-sm hover:shadow-md cursor-pointer"
+                      className="w-full group p-3.5 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-saffron-500 bg-gradient-to-r from-white to-orange-50/30 hover:to-orange-50/70 dark:from-slate-800 dark:to-orange-950/30 text-left transition-all duration-200 flex items-center justify-between shadow-sm hover:shadow-md cursor-pointer"
                     >
                       <div className="flex items-center gap-3.5">
-                        <div className="w-11 h-11 rounded-xl bg-saffron-100 text-saffron-700 flex items-center justify-center font-bold text-lg group-hover:scale-105 transition-transform">
+                        <div className="w-11 h-11 rounded-xl bg-saffron-100 dark:bg-saffron-950/60 text-saffron-700 dark:text-saffron-300 flex items-center justify-center font-bold text-lg group-hover:scale-105 transition-transform">
                           <ShieldCheck className="w-5 h-5" />
                         </div>
                         <div>
-                          <h4 className="font-bold text-navy-900 group-hover:text-saffron-600 transition-colors text-sm">
+                          <h4 className="font-bold text-navy-900 dark:text-white group-hover:text-saffron-600 dark:group-hover:text-saffron-400 transition-colors text-sm">
                             Boys Coaching Admin
                           </h4>
-                          <p className="text-[11px] text-slate-500">21 Boys Roster Management & Attendance</p>
+                          <p className="text-[11px] text-slate-500 dark:text-slate-400">21 Boys Roster Management & Attendance</p>
                         </div>
                       </div>
-                      <div className="w-7 h-7 rounded-full bg-slate-100 group-hover:bg-saffron-500 group-hover:text-white flex items-center justify-center text-slate-400 transition-colors text-xs">
+                      <div className="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-700 group-hover:bg-saffron-500 group-hover:text-white flex items-center justify-center text-slate-400 dark:text-slate-300 transition-colors text-xs">
                         →
                       </div>
                     </button>
@@ -556,20 +556,20 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
                     <button
                       type="button"
                       onClick={() => handleSelectTeam('GIRLS')}
-                      className="w-full group p-3.5 rounded-2xl border-2 border-slate-200 hover:border-rose-500 bg-gradient-to-r from-white to-rose-50/30 hover:to-rose-50/70 text-left transition-all duration-200 flex items-center justify-between shadow-sm hover:shadow-md cursor-pointer"
+                      className="w-full group p-3.5 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-rose-500 bg-gradient-to-r from-white to-rose-50/30 hover:to-rose-50/70 dark:from-slate-800 dark:to-rose-950/30 text-left transition-all duration-200 flex items-center justify-between shadow-sm hover:shadow-md cursor-pointer"
                     >
                       <div className="flex items-center gap-3.5">
-                        <div className="w-11 h-11 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center font-bold text-lg group-hover:scale-105 transition-transform">
+                        <div className="w-11 h-11 rounded-xl bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 flex items-center justify-center font-bold text-lg group-hover:scale-105 transition-transform">
                           <ShieldCheck className="w-5 h-5" />
                         </div>
                         <div>
-                          <h4 className="font-bold text-navy-900 group-hover:text-rose-600 transition-colors text-sm">
+                          <h4 className="font-bold text-navy-900 dark:text-white group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors text-sm">
                             Girls Coaching Admin
                           </h4>
-                          <p className="text-[11px] text-slate-500">13 Girls Roster Management & Attendance</p>
+                          <p className="text-[11px] text-slate-500 dark:text-slate-400">13 Girls Roster Management & Attendance</p>
                         </div>
                       </div>
-                      <div className="w-7 h-7 rounded-full bg-slate-100 group-hover:bg-rose-500 group-hover:text-white flex items-center justify-center text-slate-400 transition-colors text-xs">
+                      <div className="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-700 group-hover:bg-rose-500 group-hover:text-white flex items-center justify-center text-slate-400 dark:text-slate-300 transition-colors text-xs">
                         →
                       </div>
                     </button>
@@ -581,20 +581,20 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
                     <button
                       type="button"
                       onClick={() => handleSelectTeam('BOYS')}
-                      className="w-full group p-4 rounded-2xl border-2 border-slate-200 hover:border-saffron-500 bg-gradient-to-r from-white to-orange-50/30 hover:to-orange-50/70 text-left transition-all duration-200 flex items-center justify-between shadow-sm hover:shadow-md cursor-pointer"
+                      className="w-full group p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-saffron-500 bg-gradient-to-r from-white to-orange-50/30 hover:to-orange-50/70 dark:from-slate-800 dark:to-orange-950/30 text-left transition-all duration-200 flex items-center justify-between shadow-sm hover:shadow-md cursor-pointer"
                     >
                       <div className="flex items-center gap-3.5">
-                        <div className="w-12 h-12 rounded-xl bg-saffron-100 text-saffron-600 flex items-center justify-center font-bold text-lg group-hover:scale-105 transition-transform">
+                        <div className="w-12 h-12 rounded-xl bg-saffron-100 dark:bg-saffron-950/60 text-saffron-600 dark:text-saffron-400 flex items-center justify-center font-bold text-lg group-hover:scale-105 transition-transform">
                           <Users className="w-6 h-6" />
                         </div>
                         <div>
-                          <h4 className="font-bold text-navy-900 group-hover:text-saffron-600 transition-colors">
+                          <h4 className="font-bold text-navy-900 dark:text-white group-hover:text-saffron-600 dark:group-hover:text-saffron-400 transition-colors">
                             Boys Kho-Kho Team
                           </h4>
-                          <p className="text-xs text-slate-500">22 Registered Athlete Members</p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400">22 Registered Athlete Members</p>
                         </div>
                       </div>
-                      <div className="w-7 h-7 rounded-full bg-slate-100 group-hover:bg-saffron-500 group-hover:text-white flex items-center justify-center text-slate-400 transition-colors">
+                      <div className="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-700 group-hover:bg-saffron-500 group-hover:text-white flex items-center justify-center text-slate-400 dark:text-slate-300 transition-colors">
                         →
                       </div>
                     </button>
@@ -603,32 +603,32 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
                     <button
                       type="button"
                       onClick={() => handleSelectTeam('GIRLS')}
-                      className="w-full group p-4 rounded-2xl border-2 border-slate-200 hover:border-rose-500 bg-gradient-to-r from-white to-rose-50/30 hover:to-rose-50/70 text-left transition-all duration-200 flex items-center justify-between shadow-sm hover:shadow-md cursor-pointer"
+                      className="w-full group p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-rose-500 bg-gradient-to-r from-white to-rose-50/30 hover:to-rose-50/70 dark:from-slate-800 dark:to-rose-950/30 text-left transition-all duration-200 flex items-center justify-between shadow-sm hover:shadow-md cursor-pointer"
                     >
                       <div className="flex items-center gap-3.5">
-                        <div className="w-12 h-12 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center font-bold text-lg group-hover:scale-105 transition-transform">
+                        <div className="w-12 h-12 rounded-xl bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center font-bold text-lg group-hover:scale-105 transition-transform">
                           <Trophy className="w-6 h-6" />
                         </div>
                         <div>
-                          <h4 className="font-bold text-navy-900 group-hover:text-rose-600 transition-colors">
+                          <h4 className="font-bold text-navy-900 dark:text-white group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors">
                             Girls Kho-Kho Team
                           </h4>
-                          <p className="text-xs text-slate-500">13 Registered Athlete Members</p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400">13 Registered Athlete Members</p>
                         </div>
                       </div>
-                      <div className="w-7 h-7 rounded-full bg-slate-100 group-hover:bg-rose-500 group-hover:text-white flex items-center justify-center text-slate-400 transition-colors">
+                      <div className="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-700 group-hover:bg-rose-500 group-hover:text-white flex items-center justify-center text-slate-400 dark:text-slate-300 transition-colors">
                         →
                       </div>
                     </button>
 
-                    <div className="p-3 rounded-xl bg-amber-50 border border-amber-200/80 text-[11px] text-amber-900 flex items-center gap-2">
+                    <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/50 border border-amber-200/80 dark:border-amber-800/80 text-[11px] text-amber-900 dark:text-amber-200 flex items-center gap-2">
                       <span className="font-bold">Notice:</span> Only registered squad athletes can sign in here.
                     </div>
                   </>
                 )}
 
                 {/* Portal Switcher Link */}
-                <div className="pt-2 text-center border-t border-slate-100 space-y-2">
+                <div className="pt-2 text-center border-t border-slate-100 dark:border-slate-800 space-y-2">
                   {isAdminPortal ? (
                     <button
                       type="button"
@@ -714,7 +714,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
 
                 {/* Username / Email Field */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider mb-1.5">
                     {selectedTeam === 'ALL' ? 'Email or Username' : 'Username'}
                   </label>
                   <div className="relative">
@@ -735,10 +735,10 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
                             : 'Enter username (Keerthana or girlsadmin)'
                           : 'Enter player username'
                       }
-                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-sm text-navy-900 transition-all outline-none"
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/90 text-sm text-navy-900 dark:text-white placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all outline-none"
                     />
                   </div>
-                  <p className="mt-1 text-[11px] text-slate-400">
+                  <p className="mt-1 text-[11px] text-slate-400 dark:text-slate-400">
                     {selectedTeam === 'ALL'
                       ? 'Enter your Super Admin email or username (superadmin / dhyanesh)'
                       : isAdminPortal
@@ -751,7 +751,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
 
                 {/* Password Field with Toggle */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider mb-1.5">
                     Password
                   </label>
                   <div className="relative">
@@ -764,12 +764,12 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••••••"
-                      className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-sm text-navy-900 transition-all outline-none"
+                      className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/90 text-sm text-navy-900 dark:text-white placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all outline-none"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors cursor-pointer"
                       title={showPassword ? 'Hide password' : 'Show password'}
                     >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}

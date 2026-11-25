@@ -30,7 +30,7 @@ export default function DigitalIdCardModal({ isOpen, onClose, user, player, atte
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.92, y: 15 }}
         transition={{ duration: 0.2 }}
-        className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden"
+        className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden"
       >
         {/* Top Control Bar */}
         <div className="px-5 py-3.5 bg-slate-900 text-white flex items-center justify-between border-b border-slate-800 print:hidden">
@@ -62,12 +62,12 @@ export default function DigitalIdCardModal({ isOpen, onClose, user, player, atte
         </div>
 
         {/* The Printable Pass Body */}
-        <div ref={cardRef} className="p-6 bg-gradient-to-b from-slate-50 to-white">
+        <div ref={cardRef} className="p-6 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950">
           <div
             className={`relative rounded-3xl overflow-hidden border-2 shadow-xl ${
               isBoys
-                ? 'border-saffron-300 bg-gradient-to-br from-amber-50 via-white to-orange-50'
-                : 'border-rose-300 bg-gradient-to-br from-rose-50 via-white to-pink-50'
+                ? 'border-saffron-300 dark:border-saffron-800 bg-gradient-to-br from-amber-50 via-white to-orange-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900'
+                : 'border-rose-300 dark:border-rose-800 bg-gradient-to-br from-rose-50 via-white to-pink-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900'
             }`}
           >
             {/* Header Ribbon */}
@@ -147,37 +147,37 @@ export default function DigitalIdCardModal({ isOpen, onClose, user, player, atte
                     </span>
                   </div>
 
-                  <h4 className="font-editorial text-xl font-black text-navy-900 truncate">
+                  <h4 className="font-editorial text-xl font-black text-navy-900 dark:text-white truncate">
                     {name}
                   </h4>
 
-                  <p className="text-xs font-bold text-slate-600">
-                    Role: <span className="text-navy-900">{position}</span>
+                  <p className="text-xs font-bold text-slate-600 dark:text-slate-300">
+                    Role: <span className="text-navy-900 dark:text-white">{position}</span>
                   </p>
                 </div>
               </div>
 
               {/* Vitals Grid */}
-              <div className="grid grid-cols-3 gap-2 pt-2 border-t border-slate-200/80">
-                <div className="p-2 rounded-xl bg-white border border-slate-200 text-center shadow-xs">
-                  <span className="block text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+              <div className="grid grid-cols-3 gap-2 pt-2 border-t border-slate-200/80 dark:border-slate-700/80">
+                <div className="p-2 rounded-xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-center shadow-xs">
+                  <span className="block text-[9px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider">
                     Blood Group
                   </span>
-                  <span className="font-bold text-xs text-rose-600 font-editorial">
+                  <span className="font-bold text-xs text-rose-600 dark:text-rose-400 font-editorial">
                     {bloodGroup}
                   </span>
                 </div>
 
-                <div className="p-2 rounded-xl bg-white border border-slate-200 text-center shadow-xs">
-                  <span className="block text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+                <div className="p-2 rounded-xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-center shadow-xs">
+                  <span className="block text-[9px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider">
                     Height
                   </span>
-                  <span className="font-bold text-xs text-navy-900 font-editorial">
+                  <span className="font-bold text-xs text-navy-900 dark:text-white font-editorial">
                     {height}
                   </span>
                 </div>
 
-                <div className="p-2 rounded-xl bg-white border border-slate-200 text-center shadow-xs">
+                <div className="p-2 rounded-xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-center shadow-xs">
                   <span className="block text-[9px] font-bold text-slate-400 uppercase tracking-wider">
                     Weight
                   </span>

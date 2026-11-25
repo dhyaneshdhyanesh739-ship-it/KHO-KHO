@@ -219,15 +219,15 @@ export default function TopRightProfilePhoto({
       {/* Floating Dropdown Menu */}
       {isOpen && (
         <div
-          className="absolute right-0 mt-2 w-72 sm:w-80 bg-white rounded-3xl shadow-2xl border border-slate-200/90 py-3 z-50 animate-in fade-in zoom-in-95 duration-150 overflow-hidden"
+          className="absolute right-0 mt-2 w-72 sm:w-80 bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200/90 dark:border-slate-800 py-3 z-50 animate-in fade-in zoom-in-95 duration-150 overflow-hidden"
           style={{ transformOrigin: 'top right' }}
         >
           {/* Header Card: Large Profile Photo & Details */}
           <div
             className={`p-4 mx-3 mb-2 rounded-2xl border flex items-center gap-3.5 ${
               isBoys
-                ? 'bg-gradient-to-br from-amber-50/70 via-white to-orange-50/50 border-amber-200/80'
-                : 'bg-gradient-to-br from-rose-50/70 via-white to-pink-50/50 border-rose-200/80'
+                ? 'bg-gradient-to-br from-amber-50/70 via-white to-orange-50/50 dark:from-slate-800 dark:via-slate-800/90 dark:to-slate-800 border-amber-200/80 dark:border-slate-700'
+                : 'bg-gradient-to-br from-rose-50/70 via-white to-pink-50/50 dark:from-slate-800 dark:via-slate-800/90 dark:to-slate-800 border-rose-200/80 dark:border-slate-700'
             }`}
           >
             {/* Large Avatar with direct file upload overlay */}

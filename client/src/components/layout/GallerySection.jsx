@@ -90,18 +90,18 @@ export default function GallerySection() {
       : DEFAULT_GALLERY.filter((item) => activeCategory === 'ALL' || item.category === activeCategory);
 
   return (
-    <section id="gallery" className="py-20 md:py-28 bg-white border-b border-slate-200">
+    <section id="gallery" className="py-20 md:py-28 bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 text-slate-800 text-xs font-bold uppercase tracking-wider mb-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-bold uppercase tracking-wider mb-3">
             <Camera className="w-3.5 h-3.5 text-saffron-600" />
             Visual Archive
           </div>
-          <h2 className="font-editorial text-3xl sm:text-5xl font-black text-navy-900 tracking-tight">
+          <h2 className="font-editorial text-3xl sm:text-5xl font-black text-navy-900 dark:text-white tracking-tight">
             Arena in Motion
           </h2>
-          <p className="mt-4 text-base sm:text-lg text-slate-600">
+          <p className="mt-4 text-base sm:text-lg text-slate-600 dark:text-slate-400">
             Witness the raw intensity, lightning dives, and triumphant celebrations captured during state and national competitions.
           </p>
 
@@ -115,7 +115,7 @@ export default function GallerySection() {
                 className={`px-4 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                   activeCategory === cat
                     ? 'bg-saffron-600 text-white shadow-sm'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-navy-900'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-navy-900 dark:hover:text-white'
                 }`}
               >
                 {cat === 'ALL' ? 'All Moments' : cat}
@@ -128,14 +128,14 @@ export default function GallerySection() {
         {loading && displayItems.length === 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="h-72 rounded-2xl bg-slate-100 animate-pulse" />
+              <div key={i} className="h-72 rounded-2xl bg-slate-100 dark:bg-slate-800 animate-pulse" />
             ))}
           </div>
         ) : displayItems.length === 0 ? (
-          <div className="text-center py-16 px-4 rounded-3xl bg-slate-50 border-2 border-dashed border-slate-200 max-w-md mx-auto">
-            <ImageIcon className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-            <h3 className="font-bold text-navy-900 text-base">No photographs yet</h3>
-            <p className="text-xs text-slate-500 mt-1">Check back soon for latest match action shots.</p>
+          <div className="text-center py-16 px-4 rounded-3xl bg-slate-50 dark:bg-slate-900/60 border-2 border-dashed border-slate-200 dark:border-slate-800 max-w-md mx-auto">
+            <ImageIcon className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto mb-3" />
+            <h3 className="font-bold text-navy-900 dark:text-white text-base">No photographs yet</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Check back soon for latest match action shots.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

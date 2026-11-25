@@ -211,13 +211,13 @@ export default function AdminDashboard({ onLogout }) {
 
       {/* Sidebar Navigation */}
       <aside
-        className={`fixed lg:static top-0 bottom-0 left-0 z-50 w-72 bg-white border-r border-slate-200/80 p-5 flex flex-col justify-between transition-transform duration-300 lg:translate-x-0 ${
+        className={`fixed lg:static top-0 bottom-0 left-0 z-50 w-72 bg-white dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 p-5 flex flex-col justify-between transition-transform duration-300 lg:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         <div className="space-y-6">
           {/* Logo / Portal Title */}
-          <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+          <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
             <div className="flex items-center gap-3">
               <div
                 className={`w-10 h-10 rounded-2xl flex items-center justify-center text-white font-editorial font-black shadow-md ${
@@ -231,7 +231,7 @@ export default function AdminDashboard({ onLogout }) {
                 {isSuperAdmin ? <Crown className="w-5 h-5 text-amber-300" /> : 'KK'}
               </div>
               <div>
-                <h1 className="font-editorial font-black text-lg text-navy-900 tracking-tight leading-none">
+                <h1 className="font-editorial font-black text-lg text-navy-900 dark:text-white tracking-tight leading-none">
                   {isSuperAdmin ? 'SUPER ADMIN' : `${team} ADMIN`}
                 </h1>
                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
@@ -243,7 +243,7 @@ export default function AdminDashboard({ onLogout }) {
             <button
               type="button"
               onClick={() => setSidebarOpen(false)}
-              className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-navy-900"
+              className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-navy-900 dark:hover:text-white"
             >
               <X className="w-5 h-5" />
             </button>
@@ -251,14 +251,14 @@ export default function AdminDashboard({ onLogout }) {
 
           {/* Super Admin Squad Switcher */}
           {isSuperAdmin && (
-            <div className="p-1 rounded-2xl bg-slate-100 flex gap-1 border border-slate-200/80">
+            <div className="p-1 rounded-2xl bg-slate-100 dark:bg-slate-800 flex gap-1 border border-slate-200/80 dark:border-slate-700">
               <button
                 type="button"
                 onClick={() => setActiveDivision('BOYS')}
                 className={`flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
                   activeDivision === 'BOYS'
-                    ? 'bg-white text-saffron-700 shadow-sm border border-saffron-200'
-                    : 'text-slate-500 hover:text-navy-900'
+                    ? 'bg-white dark:bg-slate-900 text-saffron-700 dark:text-saffron-400 shadow-sm border border-saffron-200 dark:border-saffron-800'
+                    : 'text-slate-500 hover:text-navy-900 dark:hover:text-white'
                 }`}
               >
                 <span>👦 Boys Squad</span>
@@ -268,8 +268,8 @@ export default function AdminDashboard({ onLogout }) {
                 onClick={() => setActiveDivision('GIRLS')}
                 className={`flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
                   activeDivision === 'GIRLS'
-                    ? 'bg-white text-rose-700 shadow-sm border border-rose-200'
-                    : 'text-slate-500 hover:text-navy-900'
+                    ? 'bg-white dark:bg-slate-900 text-rose-700 dark:text-rose-400 shadow-sm border border-rose-200 dark:border-rose-800'
+                    : 'text-slate-500 hover:text-navy-900 dark:hover:text-white'
                 }`}
               >
                 <span>👧 Girls Squad</span>
@@ -346,12 +346,12 @@ export default function AdminDashboard({ onLogout }) {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top Header Bar */}
-        <header className="h-16 bg-white/90 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-8 flex items-center justify-between sticky top-0 z-30">
+        <header className="h-16 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 px-4 sm:px-8 flex items-center justify-between sticky top-0 z-30">
           <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden p-2 rounded-xl text-slate-600 hover:bg-slate-100 border border-slate-200"
+              className="lg:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700"
             >
               <Menu className="w-5 h-5" />
             </button>
@@ -505,12 +505,14 @@ export default function AdminDashboard({ onLogout }) {
                   </div>
 
                   <div className="flex items-center gap-2 flex-wrap">
-                    <div className="flex items-center gap-1.5 p-1 rounded-xl bg-slate-100 border border-slate-200 text-xs font-semibold">
+                    <div className="flex items-center gap-1.5 p-1 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold">
                       <button
                         type="button"
                         onClick={() => setMatchStatusFilter('ALL')}
                         className={`px-2.5 py-1 rounded-lg transition-all ${
-                          matchStatusFilter === 'ALL' ? 'bg-white text-navy-900 shadow-xs' : 'text-slate-500 hover:text-navy-900'
+                          matchStatusFilter === 'ALL'
+                            ? 'bg-white dark:bg-slate-900 text-navy-900 dark:text-white shadow-xs'
+                            : 'text-slate-500 hover:text-navy-900 dark:hover:text-white'
                         }`}
                       >
                         All Members ({rawMembers.length})
@@ -519,7 +521,9 @@ export default function AdminDashboard({ onLogout }) {
                         type="button"
                         onClick={() => setMatchStatusFilter('DEDUCTIONS')}
                         className={`px-2.5 py-1 rounded-lg transition-all ${
-                          matchStatusFilter === 'DEDUCTIONS' ? 'bg-white text-rose-600 shadow-xs font-bold' : 'text-slate-500 hover:text-navy-900'
+                          matchStatusFilter === 'DEDUCTIONS'
+                            ? 'bg-white dark:bg-slate-900 text-rose-600 dark:text-rose-400 shadow-xs font-bold'
+                            : 'text-slate-500 hover:text-navy-900 dark:hover:text-white'
                         }`}
                       >
                         Deductions ({overviewStats?.teamMatchAttendance?.membersWithDeductions || 0})
@@ -528,7 +532,9 @@ export default function AdminDashboard({ onLogout }) {
                         type="button"
                         onClick={() => setMatchStatusFilter('CLEAN')}
                         className={`px-2.5 py-1 rounded-lg transition-all ${
-                          matchStatusFilter === 'CLEAN' ? 'bg-white text-emerald-700 shadow-xs font-bold' : 'text-slate-500 hover:text-navy-900'
+                          matchStatusFilter === 'CLEAN'
+                            ? 'bg-white dark:bg-slate-900 text-emerald-700 dark:text-emerald-400 shadow-xs font-bold'
+                            : 'text-slate-500 hover:text-navy-900 dark:hover:text-white'
                         }`}
                       >
                         Clean 100% ({overviewStats?.teamMatchAttendance?.membersFullStanding || 0})
@@ -855,8 +861,8 @@ export default function AdminDashboard({ onLogout }) {
           {/* ==================== ADD TEAM MEMBER MODAL ==================== */}
           {addMemberModalOpen && (
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/60 backdrop-blur-sm animate-fade-in">
-              <div className="bg-white rounded-2xl shadow-modal w-full max-w-lg border border-slate-100 overflow-hidden flex flex-col max-h-[90vh]">
-                <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+              <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-modal w-full max-w-lg border border-slate-100 dark:border-slate-800 overflow-hidden flex flex-col max-h-[90vh]">
+                <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/50">
                   <div className="flex items-center gap-2.5">
                     <div
                       className={`w-8 h-8 rounded-xl flex items-center justify-center text-white ${
@@ -866,10 +872,10 @@ export default function AdminDashboard({ onLogout }) {
                       <UserPlus className="w-4 h-4" />
                     </div>
                     <div>
-                      <h3 className="font-editorial text-lg font-bold text-navy-900 leading-tight">
+                      <h3 className="font-editorial text-lg font-bold text-navy-900 dark:text-white leading-tight">
                         Add New Team Member
                       </h3>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-slate-500 dark:text-slate-400">
                         Register athlete to the {isSuperAdmin ? newMemberDivision : team} Kho-Kho team
                       </p>
                     </div>
@@ -877,7 +883,7 @@ export default function AdminDashboard({ onLogout }) {
                   <button
                     type="button"
                     onClick={() => setAddMemberModalOpen(false)}
-                    className="text-slate-400 hover:text-slate-600 p-1.5 rounded-xl hover:bg-slate-100 transition-colors"
+                    className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -885,7 +891,7 @@ export default function AdminDashboard({ onLogout }) {
 
                 <form onSubmit={handleCreateMember} className="p-6 space-y-4 overflow-y-auto flex-1">
                   {memberFormError && (
-                    <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700 flex items-center gap-2">
+                    <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 text-xs text-rose-700 dark:text-rose-300 flex items-center gap-2">
                       <AlertCircle className="w-4 h-4 shrink-0 text-rose-500" />
                       <span>{memberFormError}</span>
                     </div>
@@ -894,7 +900,7 @@ export default function AdminDashboard({ onLogout }) {
                   {/* Division Selector for Super Admin */}
                   {isSuperAdmin && (
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
                         Team Division
                       </label>
                       <div className="grid grid-cols-2 gap-2">
@@ -909,8 +915,8 @@ export default function AdminDashboard({ onLogout }) {
                           }}
                           className={`py-2 px-3 rounded-xl border text-xs font-bold transition-all ${
                             newMemberDivision === 'BOYS'
-                              ? 'bg-saffron-50 border-saffron-500 text-saffron-800 shadow-xs'
-                              : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                              ? 'bg-saffron-50 dark:bg-saffron-950/60 border-saffron-500 text-saffron-800 dark:text-saffron-300 shadow-xs'
+                              : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
                           }`}
                         >
                           Boys Division
@@ -926,8 +932,8 @@ export default function AdminDashboard({ onLogout }) {
                           }}
                           className={`py-2 px-3 rounded-xl border text-xs font-bold transition-all ${
                             newMemberDivision === 'GIRLS'
-                              ? 'bg-rose-50 border-rose-500 text-rose-800 shadow-xs'
-                              : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                              ? 'bg-rose-50 dark:bg-rose-950/60 border-rose-500 text-rose-800 dark:text-rose-300 shadow-xs'
+                              : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
                           }`}
                         >
                           Girls Division
@@ -938,7 +944,7 @@ export default function AdminDashboard({ onLogout }) {
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
                         Athlete Full Name *
                       </label>
                       <input
@@ -947,11 +953,11 @@ export default function AdminDashboard({ onLogout }) {
                         value={newMemberForm.name}
                         onChange={(e) => setNewMemberForm({ ...newMemberForm, name: e.target.value })}
                         placeholder="e.g. Ramesh Kumar"
-                        className="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-saffron-500"
+                        className="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-navy-900 dark:text-white focus:outline-none focus:border-saffron-500"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
                         Jersey Number *
                       </label>
                       <input
@@ -962,14 +968,14 @@ export default function AdminDashboard({ onLogout }) {
                         value={newMemberForm.jerseyNumber}
                         onChange={(e) => setNewMemberForm({ ...newMemberForm, jerseyNumber: e.target.value })}
                         placeholder="e.g. 24"
-                        className="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-saffron-500"
+                        className="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-navy-900 dark:text-white focus:outline-none focus:border-saffron-500"
                       />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
                         Player ID *
                       </label>
                       <input
@@ -980,18 +986,18 @@ export default function AdminDashboard({ onLogout }) {
                           setNewMemberForm({ ...newMemberForm, playerId: e.target.value.toUpperCase() })
                         }
                         placeholder="e.g. B24"
-                        className="w-full text-xs font-mono px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-saffron-500"
+                        className="w-full text-xs font-mono px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-navy-900 dark:text-white focus:outline-none focus:border-saffron-500"
                       />
                       <p className="text-[10px] text-slate-400 mt-0.5">Used for athlete portal username</p>
                     </div>
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
                         Playing Position
                       </label>
                       <select
                         value={newMemberForm.position}
                         onChange={(e) => setNewMemberForm({ ...newMemberForm, position: e.target.value })}
-                        className="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-saffron-500 bg-white"
+                        className="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-navy-900 dark:text-white focus:outline-none focus:border-saffron-500"
                       >
                         <option value="All-Rounder">All-Rounder</option>
                         <option value="Chaser">Chaser</option>
@@ -1002,7 +1008,7 @@ export default function AdminDashboard({ onLogout }) {
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
                         Phone Number
                       </label>
                       <input
@@ -1010,17 +1016,17 @@ export default function AdminDashboard({ onLogout }) {
                         value={newMemberForm.phone}
                         onChange={(e) => setNewMemberForm({ ...newMemberForm, phone: e.target.value })}
                         placeholder="+91 98765 43210"
-                        className="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-saffron-500"
+                        className="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-navy-900 dark:text-white focus:outline-none focus:border-saffron-500"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
                         Blood Group
                       </label>
                       <select
                         value={newMemberForm.bloodGroup}
                         onChange={(e) => setNewMemberForm({ ...newMemberForm, bloodGroup: e.target.value })}
-                        className="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-saffron-500 bg-white"
+                        className="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-navy-900 dark:text-white focus:outline-none focus:border-saffron-500"
                       >
                         <option value="Unknown">Unknown</option>
                         <option value="A+">A+</option>
@@ -1035,8 +1041,8 @@ export default function AdminDashboard({ onLogout }) {
                     </div>
                   </div>
 
-                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80 text-[11px] text-slate-600 space-y-1">
-                    <p className="font-semibold text-navy-900">✨ Automatic Athlete Onboarding:</p>
+                  <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 text-[11px] text-slate-600 dark:text-slate-300 space-y-1">
+                    <p className="font-semibold text-navy-900 dark:text-white">✨ Automatic Athlete Onboarding:</p>
                     <p>• Starts with official <strong>100% base match attendance quota</strong>.</p>
                     <p>
                       • Generates login credentials automatically (username:{' '}
@@ -1044,11 +1050,11 @@ export default function AdminDashboard({ onLogout }) {
                     </p>
                   </div>
 
-                  <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
+                  <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
                     <button
                       type="button"
                       onClick={() => setAddMemberModalOpen(false)}
-                      className="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 text-xs font-bold hover:bg-slate-50 transition-colors"
+                      className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-xs font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
                     >
                       Cancel
                     </button>
@@ -1078,29 +1084,29 @@ export default function AdminDashboard({ onLogout }) {
           {/* ==================== DELETE MEMBER CONFIRMATION MODAL ==================== */}
           {deleteConfirmMember && (
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/60 backdrop-blur-sm animate-fade-in">
-              <div className="bg-white rounded-2xl shadow-modal w-full max-w-md border border-slate-100 p-6 space-y-4">
+              <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-modal w-full max-w-md border border-slate-100 dark:border-slate-800 p-6 space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-2xl bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0">
                     <Trash2 className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="font-editorial text-lg font-bold text-navy-900 leading-tight">
+                    <h3 className="font-editorial text-lg font-bold text-navy-900 dark:text-white leading-tight">
                       Remove Team Member
                     </h3>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
                       This action will permanently remove the player from the active roster.
                     </p>
                   </div>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200/80 text-xs text-rose-900 space-y-1">
+                <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200/80 dark:border-rose-900/60 text-xs text-rose-900 dark:text-rose-200 space-y-1">
                   <p className="font-bold">
                     Athlete: {deleteConfirmMember.name} (#{deleteConfirmMember.jerseyNumber})
                   </p>
-                  <p className="text-[11px] text-rose-700">
+                  <p className="text-[11px] text-rose-700 dark:text-rose-300">
                     Team Division: <strong>{team}</strong> • Player ID: <code>{deleteConfirmMember.playerId}</code>
                   </p>
-                  <div className="pt-2 text-[11px] text-rose-800 space-y-0.5 border-t border-rose-200/60">
+                  <div className="pt-2 text-[11px] text-rose-800 dark:text-rose-300 space-y-0.5 border-t border-rose-200/60 dark:border-rose-900/60">
                     <p>• Associated player login account will be removed</p>
                     <p>• Historical attendance logs for this player will be cleaned up</p>
                     <p>• Roster allocations in match squads will be removed</p>
@@ -1112,7 +1118,7 @@ export default function AdminDashboard({ onLogout }) {
                     type="button"
                     disabled={isDeletingMember}
                     onClick={() => setDeleteConfirmMember(null)}
-                    className="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 text-xs font-bold hover:bg-slate-50 transition-colors"
+                    className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-xs font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
                   >
                     Cancel
                   </button>

@@ -56,29 +56,29 @@ export default function AboutKhoKhoSection() {
   ];
 
   return (
-    <section id="about-kho-kho" className="py-20 md:py-28 bg-white border-y border-slate-200/80">
+    <section id="about-kho-kho" className="py-20 md:py-28 bg-white dark:bg-slate-950 border-y border-slate-200/80 dark:border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-saffron-50 border border-saffron-200 text-saffron-700 text-xs font-bold uppercase tracking-wider mb-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-saffron-50 dark:bg-saffron-950/50 border border-saffron-200 dark:border-saffron-800 text-saffron-700 dark:text-saffron-400 text-xs font-bold uppercase tracking-wider mb-3">
             Heritage & Modern Regulations
           </div>
-          <h2 className="font-editorial text-3xl sm:text-5xl font-black text-navy-900 tracking-tight">
+          <h2 className="font-editorial text-3xl sm:text-5xl font-black text-navy-900 dark:text-white tracking-tight">
             The Science & Art of Kho-Kho
           </h2>
-          <p className="mt-4 text-base sm:text-lg text-slate-600">
+          <p className="mt-4 text-base sm:text-lg text-slate-600 dark:text-slate-400">
             One of India's oldest and most dynamic traditional sports, modern competitive Kho-Kho is an electrifying contest of explosive sprinting, strategic evasion, and telepathic teamwork.
           </p>
 
           {/* Interactive Navigation Tabs */}
-          <div className="flex items-center justify-center gap-2 mt-8 p-1.5 rounded-2xl bg-slate-100 max-w-md mx-auto">
+          <div className="flex items-center justify-center gap-2 mt-8 p-1.5 rounded-2xl bg-slate-100 dark:bg-slate-800/90 border border-slate-200/60 dark:border-slate-700 max-w-md mx-auto">
             <button
               type="button"
               onClick={() => setActiveTab('rules')}
               className={`flex-1 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
                 activeTab === 'rules'
-                  ? 'bg-white text-saffron-600 shadow-sm'
-                  : 'text-slate-600 hover:text-navy-900'
+                  ? 'bg-white dark:bg-slate-900 text-saffron-600 dark:text-saffron-400 shadow-sm'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-navy-900 dark:hover:text-white'
               }`}
             >
               Regulation Rules
@@ -88,8 +88,8 @@ export default function AboutKhoKhoSection() {
               onClick={() => setActiveTab('roles')}
               className={`flex-1 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
                 activeTab === 'roles'
-                  ? 'bg-white text-saffron-600 shadow-sm'
-                  : 'text-slate-600 hover:text-navy-900'
+                  ? 'bg-white dark:bg-slate-900 text-saffron-600 dark:text-saffron-400 shadow-sm'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-navy-900 dark:hover:text-white'
               }`}
             >
               Specialist Roles
@@ -99,8 +99,8 @@ export default function AboutKhoKhoSection() {
               onClick={() => setActiveTab('etiquette')}
               className={`flex-1 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
                 activeTab === 'etiquette'
-                  ? 'bg-white text-saffron-600 shadow-sm'
-                  : 'text-slate-600 hover:text-navy-900'
+                  ? 'bg-white dark:bg-slate-900 text-saffron-600 dark:text-saffron-400 shadow-sm'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-navy-900 dark:hover:text-white'
               }`}
             >
               Sportsmanship
@@ -117,13 +117,13 @@ export default function AboutKhoKhoSection() {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: idx * 0.05 }}
-                className="card-premium p-6 hover:border-saffron-300 transition-colors"
+                className="card-premium p-6 hover:border-saffron-300 dark:hover:border-saffron-500/50 transition-colors"
               >
-                <div className="w-9 h-9 rounded-xl bg-saffron-100 text-saffron-700 font-editorial font-black text-sm flex items-center justify-center mb-4">
+                <div className="w-9 h-9 rounded-xl bg-saffron-100 dark:bg-saffron-950/60 text-saffron-700 dark:text-saffron-400 font-editorial font-black text-sm flex items-center justify-center mb-4">
                   0{idx + 1}
                 </div>
-                <h3 className="font-editorial text-lg font-bold text-navy-900 mb-2">{rule.title}</h3>
-                <p className="text-sm text-slate-600 leading-relaxed">{rule.desc}</p>
+                <h3 className="font-editorial text-lg font-bold text-navy-900 dark:text-white mb-2">{rule.title}</h3>
+                <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{rule.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -141,11 +141,11 @@ export default function AboutKhoKhoSection() {
                 className="card-premium p-6 flex flex-col justify-between"
               >
                 <div>
-                  <span className="badge-tag bg-amber-100 text-amber-800 mb-3">{role.badge}</span>
-                  <h3 className="font-editorial text-xl font-bold text-navy-900 mb-2">{role.name}</h3>
-                  <p className="text-sm text-slate-600 leading-relaxed">{role.desc}</p>
+                  <span className="badge-tag bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 mb-3">{role.badge}</span>
+                  <h3 className="font-editorial text-xl font-bold text-navy-900 dark:text-white mb-2">{role.name}</h3>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{role.desc}</p>
                 </div>
-                <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-saffron-600 font-bold">
+                <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-saffron-600 dark:text-saffron-400 font-bold">
                   <span>Tracked in Roster</span>
                   <ChevronRight className="w-4 h-4" />
                 </div>
@@ -162,32 +162,32 @@ export default function AboutKhoKhoSection() {
             className="card-premium p-8 max-w-4xl mx-auto space-y-6"
           >
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-100">
-                <h4 className="font-bold text-navy-900 mb-2 flex items-center gap-2">
+              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+                <h4 className="font-bold text-navy-900 dark:text-white mb-2 flex items-center gap-2">
                   <Shield className="w-4 h-4 text-sportsGreen-dark" />
                   Fair Play & Respect
                 </h4>
-                <p className="text-xs text-slate-600 leading-relaxed">
+                <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                   Kho-Kho strictly emphasizes non-violent, respectful contact. Violent pushing, shirt-pulling, or deliberate tripping results in immediate penalty fouls and warning cards.
                 </p>
               </div>
 
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-100">
-                <h4 className="font-bold text-navy-900 mb-2 flex items-center gap-2">
+              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+                <h4 className="font-bold text-navy-900 dark:text-white mb-2 flex items-center gap-2">
                   <Users className="w-4 h-4 text-saffron-600" />
                   Batch Unity
                 </h4>
-                <p className="text-xs text-slate-600 leading-relaxed">
+                <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                   Defending trios must move in tight synchronized coordination. Mutual trust between defenders saves vital seconds and frustrates opposing chasers.
                 </p>
               </div>
 
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-100">
-                <h4 className="font-bold text-navy-900 mb-2 flex items-center gap-2">
+              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+                <h4 className="font-bold text-navy-900 dark:text-white mb-2 flex items-center gap-2">
                   <Award className="w-4 h-4 text-amber-600" />
                   Referee Reverence
                 </h4>
-                <p className="text-xs text-slate-600 leading-relaxed">
+                <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                   Decisions made by the umpires, referee, and timekeeper are accepted with humility, preserving the noble heritage of indigenous Indian sportsmanship.
                 </p>
               </div>

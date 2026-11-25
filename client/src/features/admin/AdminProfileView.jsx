@@ -55,29 +55,29 @@ export default function AdminProfileView() {
                 {user?.name?.slice(0, 2).toUpperCase() || 'AD'}
               </div>
               <div>
-                <h3 className="font-editorial text-xl font-bold text-navy-900">{user?.name}</h3>
-                <span className="badge-tag bg-slate-100 text-slate-700 mt-1">
+                <h3 className="font-editorial text-xl font-bold text-navy-900 dark:text-white">{user?.name}</h3>
+                <span className="badge-tag bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 mt-1">
                   {user?.role?.replace('_', ' ')} • {user?.team}
                 </span>
               </div>
             </div>
 
             <div className="space-y-3 text-xs">
-              <div className="flex justify-between py-1 border-b border-slate-50">
-                <span className="text-slate-500">Username</span>
-                <strong className="font-mono text-navy-900">{user?.username}</strong>
+              <div className="flex justify-between py-1 border-b border-slate-50 dark:border-slate-800">
+                <span className="text-slate-500 dark:text-slate-400">Username</span>
+                <strong className="font-mono text-navy-900 dark:text-white">{user?.username}</strong>
               </div>
-              <div className="flex justify-between py-1 border-b border-slate-50">
-                <span className="text-slate-500">Email Reference</span>
-                <strong className="text-navy-900">{user?.email || 'Registered with Sports Directorate'}</strong>
+              <div className="flex justify-between py-1 border-b border-slate-50 dark:border-slate-800">
+                <span className="text-slate-500 dark:text-slate-400">Email Reference</span>
+                <strong className="text-navy-900 dark:text-white">{user?.email || 'Registered with Sports Directorate'}</strong>
               </div>
-              <div className="flex justify-between py-1 border-b border-slate-50">
-                <span className="text-slate-500">Team Domain</span>
-                <strong className="text-saffron-600">{user?.team} Team (Strict Isolation Enforced)</strong>
+              <div className="flex justify-between py-1 border-b border-slate-50 dark:border-slate-800">
+                <span className="text-slate-500 dark:text-slate-400">Team Domain</span>
+                <strong className="text-saffron-600 dark:text-saffron-400">{user?.team} Team (Strict Isolation Enforced)</strong>
               </div>
               <div className="flex justify-between py-1">
-                <span className="text-slate-500">Last Session Login</span>
-                <strong className="text-slate-700">
+                <span className="text-slate-500 dark:text-slate-400">Last Session Login</span>
+                <strong className="text-slate-700 dark:text-slate-200">
                   {user?.lastLogin ? new Date(user.lastLogin).toLocaleString() : 'Current Session Active'}
                 </strong>
               </div>
@@ -88,23 +88,23 @@ export default function AdminProfileView() {
         {/* Change Password Form */}
         <div className="lg:col-span-7">
           <div className="card-premium p-6">
-            <h3 className="font-editorial text-lg font-bold text-navy-900 mb-2 flex items-center gap-2">
-              <Key className="w-4 h-4 text-saffron-600" />
+            <h3 className="font-editorial text-lg font-bold text-navy-900 dark:text-white mb-2 flex items-center gap-2">
+              <Key className="w-4 h-4 text-saffron-600 dark:text-saffron-400" />
               Update Account Password
             </h3>
-            <p className="text-xs text-slate-500 mb-4">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
               Securely update your coaching administrative access credentials.
             </p>
 
             {passwordSuccess && (
-              <div className="p-3.5 rounded-xl bg-sportsGreen-light border border-emerald-300 text-sportsGreen-dark text-xs font-semibold flex items-center gap-2 mb-4">
+              <div className="p-3.5 rounded-xl bg-sportsGreen-light dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-sportsGreen-dark dark:text-emerald-300 text-xs font-semibold flex items-center gap-2 mb-4">
                 <CheckCircle2 className="w-4 h-4" />
                 <span>{passwordSuccess}</span>
               </div>
             )}
 
             {passwordError && (
-              <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold flex items-center gap-2 mb-4">
+              <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 text-xs font-semibold flex items-center gap-2 mb-4">
                 <AlertCircle className="w-4 h-4" />
                 <span>{passwordError}</span>
               </div>
@@ -112,7 +112,7 @@ export default function AdminProfileView() {
 
             <form onSubmit={handleChangePassword} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold uppercase text-slate-700 mb-1">
+                <label className="block text-xs font-bold uppercase text-slate-700 dark:text-slate-300 mb-1">
                   Current Password *
                 </label>
                 <input
@@ -121,13 +121,13 @@ export default function AdminProfileView() {
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:border-saffron-500 outline-none"
+                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-navy-900 dark:text-white focus:border-saffron-500 outline-none"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold uppercase text-slate-700 mb-1">
+                  <label className="block text-xs font-bold uppercase text-slate-700 dark:text-slate-300 mb-1">
                     New Password *
                   </label>
                   <input
@@ -136,12 +136,12 @@ export default function AdminProfileView() {
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="Minimum 6 characters"
-                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:border-saffron-500 outline-none"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-navy-900 dark:text-white focus:border-saffron-500 outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase text-slate-700 mb-1">
+                  <label className="block text-xs font-bold uppercase text-slate-700 dark:text-slate-300 mb-1">
                     Confirm New Password *
                   </label>
                   <input
@@ -150,7 +150,7 @@ export default function AdminProfileView() {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Repeat new password"
-                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:border-saffron-500 outline-none"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-navy-900 dark:text-white focus:border-saffron-500 outline-none"
                   />
                 </div>
               </div>

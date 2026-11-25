@@ -195,7 +195,7 @@ export default function SuperAdminDirectory() {
       )}
 
       {/* Search and Filters */}
-      <div className="p-4 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="p-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
         {/* Search Input */}
         <div className="relative w-full md:w-80">
           <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -204,7 +204,7 @@ export default function SuperAdminDirectory() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by name, username, email..."
-            className="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-200 text-xs outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
+            className="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-navy-900 dark:text-white text-xs outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
           />
         </div>
 
@@ -222,8 +222,8 @@ export default function SuperAdminDirectory() {
               onClick={() => setRoleFilter(tab.id)}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
                 roleFilter === tab.id
-                  ? 'bg-slate-900 text-white shadow-sm'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  ? 'bg-slate-900 dark:bg-saffron-600 text-white shadow-sm'
+                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
               }`}
             >
               {tab.label}
@@ -233,7 +233,7 @@ export default function SuperAdminDirectory() {
       </div>
 
       {/* Users Table / Directory */}
-      <div className="bg-white rounded-3xl border border-slate-200 shadow-card overflow-hidden">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-card overflow-hidden">
         {loading ? (
           <div className="py-16 text-center text-slate-400 text-xs">
             <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-indigo-500" />
@@ -247,7 +247,7 @@ export default function SuperAdminDirectory() {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-slate-100 bg-slate-50/75 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                <tr className="border-b border-slate-100 dark:border-slate-800 bg-slate-50/75 dark:bg-slate-800/60 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
                   <th className="py-3.5 px-5">User / Athlete</th>
                   <th className="py-3.5 px-4">Role & Team</th>
                   <th className="py-3.5 px-4">Login Identifier</th>
@@ -256,7 +256,7 @@ export default function SuperAdminDirectory() {
                   <th className="py-3.5 px-5 text-right">Super Admin Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-xs">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
                 {filteredUsers.map((u) => {
                   const isCurrent = u._id === currentUser?.id;
                   const isPlayer = u.role === 'PLAYER';
@@ -264,7 +264,7 @@ export default function SuperAdminDirectory() {
                   const isSuper = u.role === 'SUPER_ADMIN';
 
                   return (
-                    <tr key={u._id} className="hover:bg-slate-50/80 transition-colors">
+                    <tr key={u._id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors">
                       {/* Name & Player Info */}
                       <td className="py-3.5 px-5">
                         <div className="flex items-center gap-3">
@@ -281,7 +281,7 @@ export default function SuperAdminDirectory() {
                           </div>
                           <div>
                             <div className="flex items-center gap-2">
-                              <span className="font-bold text-navy-900">{u.name}</span>
+                              <span className="font-bold text-navy-900 dark:text-white">{u.name}</span>
                               {isCurrent && (
                                 <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
                                   You
@@ -311,7 +311,7 @@ export default function SuperAdminDirectory() {
                       </td>
 
                       {/* Login Identifier */}
-                      <td className="py-3.5 px-4 font-mono text-[11px] text-slate-700">
+                      <td className="py-3.5 px-4 font-mono text-[11px] text-slate-700 dark:text-slate-300">
                         <div>@{u.username}</div>
                         {u.email && <div className="text-[10px] text-slate-400 font-sans">{u.email}</div>}
                       </td>
@@ -398,17 +398,17 @@ export default function SuperAdminDirectory() {
 
       {/* Password Reset Modal */}
       {resetModalUser && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/40 backdrop-blur-sm">
-          <div className="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl border border-slate-200">
-            <h3 className="font-editorial text-lg font-bold text-navy-900">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/60 backdrop-blur-sm">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 max-w-sm w-full shadow-2xl border border-slate-200 dark:border-slate-800">
+            <h3 className="font-editorial text-lg font-bold text-navy-900 dark:text-white">
               Reset Password for @{resetModalUser.username}
             </h3>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
               Set a new secure password for {resetModalUser.name}.
             </p>
             <form onSubmit={handleResetPassword} className="mt-4 space-y-4">
               <div>
-                <label className="block text-[11px] font-bold text-slate-600 uppercase mb-1">
+                <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-300 uppercase mb-1">
                   New Password
                 </label>
                 <input
@@ -417,14 +417,14 @@ export default function SuperAdminDirectory() {
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="Enter at least 6 characters"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-navy-900 dark:text-white text-xs outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
                 />
               </div>
               <div className="flex items-center justify-end gap-2 pt-2">
                 <button
                   type="button"
                   onClick={() => setResetModalUser(null)}
-                  className="px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100"
+                  className="px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
                 >
                   Cancel
                 </button>

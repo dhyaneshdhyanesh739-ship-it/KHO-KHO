@@ -220,7 +220,7 @@ export default function EditProfileModal({
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 15 }}
         transition={{ duration: 0.2 }}
-        className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden my-auto"
+        className="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden my-auto"
       >
         {/* Header Bar */}
         <div
@@ -267,16 +267,16 @@ export default function EditProfileModal({
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex border-b border-slate-200 bg-slate-50/80 px-6 pt-2">
+        <div className="flex border-b border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/60 px-6 pt-2">
           <button
             type="button"
             onClick={() => setActiveTab('identity')}
             className={`pb-3 px-3 text-xs font-bold uppercase tracking-wider transition-all border-b-2 flex items-center gap-2 cursor-pointer ${
               activeTab === 'identity'
                 ? isBoys
-                  ? 'border-saffron-600 text-saffron-700 bg-white rounded-t-xl'
-                  : 'border-rose-600 text-rose-700 bg-white rounded-t-xl'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                  ? 'border-saffron-600 text-saffron-700 dark:text-saffron-400 bg-white dark:bg-slate-900 rounded-t-xl'
+                  : 'border-rose-600 text-rose-700 dark:text-rose-400 bg-white dark:bg-slate-900 rounded-t-xl'
+                : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
             <User className="w-3.5 h-3.5" />
@@ -289,9 +289,9 @@ export default function EditProfileModal({
             className={`pb-3 px-3 text-xs font-bold uppercase tracking-wider transition-all border-b-2 flex items-center gap-2 cursor-pointer ${
               activeTab === 'about'
                 ? isBoys
-                  ? 'border-saffron-600 text-saffron-700 bg-white rounded-t-xl'
-                  : 'border-rose-600 text-rose-700 bg-white rounded-t-xl'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                  ? 'border-saffron-600 text-saffron-700 dark:text-saffron-400 bg-white dark:bg-slate-900 rounded-t-xl'
+                  : 'border-rose-600 text-rose-700 dark:text-rose-400 bg-white dark:bg-slate-900 rounded-t-xl'
+                : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
             <Sparkles className="w-3.5 h-3.5" />
@@ -304,9 +304,9 @@ export default function EditProfileModal({
             className={`pb-3 px-3 text-xs font-bold uppercase tracking-wider transition-all border-b-2 flex items-center gap-2 cursor-pointer ${
               activeTab === 'vitals'
                 ? isBoys
-                  ? 'border-saffron-600 text-saffron-700 bg-white rounded-t-xl'
-                  : 'border-rose-600 text-rose-700 bg-white rounded-t-xl'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                  ? 'border-saffron-600 text-saffron-700 dark:text-saffron-400 bg-white dark:bg-slate-900 rounded-t-xl'
+                  : 'border-rose-600 text-rose-700 dark:text-rose-400 bg-white dark:bg-slate-900 rounded-t-xl'
+                : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
             <Activity className="w-3.5 h-3.5" />

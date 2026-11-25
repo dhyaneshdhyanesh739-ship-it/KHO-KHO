@@ -24,7 +24,7 @@ export default function HeroSection({ onOpenLogin, onExploreTeams }) {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-saffron-50 border border-saffron-200 text-saffron-700 text-xs font-bold uppercase tracking-wider"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-saffron-50 dark:bg-saffron-950/60 border border-saffron-200 dark:border-saffron-800 text-saffron-700 dark:text-saffron-300 text-xs font-bold uppercase tracking-wider"
             >
               <Zap className="w-3.5 h-3.5 text-saffron-600 fill-saffron-600" />
               Official Kho-Kho Athletic Management System
@@ -34,7 +34,7 @@ export default function HeroSection({ onOpenLogin, onExploreTeams }) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="font-editorial text-4xl sm:text-6xl lg:text-7xl font-black text-navy-900 tracking-tight leading-[1.05]"
+              className="font-editorial text-4xl sm:text-6xl lg:text-7xl font-black text-navy-900 dark:text-white tracking-tight leading-[1.05]"
             >
               SPEED.<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-saffron-600 via-saffron-500 to-amber-500">
@@ -47,7 +47,7 @@ export default function HeroSection({ onOpenLogin, onExploreTeams }) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-base sm:text-lg text-slate-600 max-w-xl mx-auto lg:mx-0 font-normal leading-relaxed"
+              className="text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-xl mx-auto lg:mx-0 font-normal leading-relaxed"
             >
               Empowering India's indigenous high-speed tag sport with unified team administration. Dedicated management for Boys and Girls squads, precision attendance tracking, and attendance-driven match squad selection.
             </motion.p>
@@ -79,18 +79,18 @@ export default function HeroSection({ onOpenLogin, onExploreTeams }) {
             </motion.div>
 
             {/* Micro Pillars */}
-            <div className="pt-6 grid grid-cols-3 gap-3 border-t border-slate-200/80 max-w-md mx-auto lg:mx-0">
+            <div className="pt-6 grid grid-cols-3 gap-3 border-t border-slate-200/80 dark:border-slate-800 max-w-md mx-auto lg:mx-0">
               <div className="text-left">
-                <p className="text-xs font-bold text-navy-900">Isolated Portals</p>
-                <p className="text-[11px] text-slate-500">Boys & Girls Admin RBAC</p>
+                <p className="text-xs font-bold text-navy-900 dark:text-white">Isolated Portals</p>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">Boys & Girls Admin RBAC</p>
               </div>
               <div className="text-left">
-                <p className="text-xs font-bold text-navy-900">Real-Time Data</p>
-                <p className="text-[11px] text-slate-500">100% MongoDB Connected</p>
+                <p className="text-xs font-bold text-navy-900 dark:text-white">Real-Time Data</p>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">100% MongoDB Connected</p>
               </div>
               <div className="text-left">
-                <p className="text-xs font-bold text-navy-900">Fair Selection</p>
-                <p className="text-[11px] text-slate-500">Attendance-Ranked Squad</p>
+                <p className="text-xs font-bold text-navy-900 dark:text-white">Fair Selection</p>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">Attendance-Ranked Squad</p>
               </div>
             </div>
           </div>

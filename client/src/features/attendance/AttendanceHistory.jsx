@@ -46,11 +46,11 @@ export default function AttendanceHistory({ team, onSelectSession }) {
             >
               {team} Archive
             </span>
-            <h2 className="font-editorial text-2xl font-black text-navy-900 tracking-tight">
+            <h2 className="font-editorial text-2xl font-black text-navy-900 dark:text-white tracking-tight">
               Attendance History & Session Log
             </h2>
           </div>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             Historical log of all recorded training sessions, coaches in charge, and finalization audits.
           </p>
         </div>
@@ -59,26 +59,26 @@ export default function AttendanceHistory({ team, onSelectSession }) {
       {/* Filter Bar */}
       <div className="card-premium p-4 flex flex-wrap items-center gap-3">
         <div className="flex items-center gap-2 text-xs">
-          <span className="font-bold text-slate-600">Date Range:</span>
+          <span className="font-bold text-slate-600 dark:text-slate-300">Date Range:</span>
           <input
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            className="px-3 py-1.5 rounded-xl border border-slate-200 text-xs text-navy-900 bg-white"
+            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs text-navy-900 dark:text-white bg-white dark:bg-slate-800"
           />
           <span className="text-slate-400">to</span>
           <input
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            className="px-3 py-1.5 rounded-xl border border-slate-200 text-xs text-navy-900 bg-white"
+            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs text-navy-900 dark:text-white bg-white dark:bg-slate-800"
           />
         </div>
 
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-3 py-1.5 rounded-xl border border-slate-200 text-xs text-navy-900 bg-white font-medium"
+          className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs text-navy-900 dark:text-white bg-white dark:bg-slate-800 font-medium"
         >
           <option value="">All Statuses</option>
           <option value="FINALIZED">Finalized Only</option>
@@ -93,7 +93,7 @@ export default function AttendanceHistory({ team, onSelectSession }) {
               setEndDate('');
               setStatusFilter('');
             }}
-            className="text-xs text-slate-500 hover:text-navy-900 underline ml-auto"
+            className="text-xs text-slate-500 dark:text-slate-400 hover:text-navy-900 dark:hover:text-white underline ml-auto"
           >
             Clear Filters
           </button>
@@ -105,7 +105,7 @@ export default function AttendanceHistory({ team, onSelectSession }) {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-slate-100 bg-slate-50/70 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+              <tr className="border-b border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/60 text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                 <th className="py-3.5 px-4">Date</th>
                 <th className="py-3.5 px-4">Session Label</th>
                 <th className="py-3.5 px-4">Status</th>
@@ -116,7 +116,7 @@ export default function AttendanceHistory({ team, onSelectSession }) {
                 <th className="py-3.5 px-4 text-right">Recorded By</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-xs text-navy-800">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-xs text-navy-800 dark:text-slate-200">
               {loading ? (
                 <tr>
                   <td colSpan={8} className="py-12 text-center text-slate-400">
@@ -126,8 +126,8 @@ export default function AttendanceHistory({ team, onSelectSession }) {
               ) : sessions.length === 0 ? (
                 <tr>
                   <td colSpan={8} className="py-12 text-center">
-                    <Calendar className="w-10 h-10 text-slate-300 mx-auto mb-2" />
-                    <p className="font-bold text-slate-600">No attendance sessions recorded yet</p>
+                    <Calendar className="w-10 h-10 text-slate-300 dark:text-slate-600 mx-auto mb-2" />
+                    <p className="font-bold text-slate-600 dark:text-slate-300">No attendance sessions recorded yet</p>
                     <p className="text-slate-400 text-[11px] mt-0.5">Use "Mark Attendance" to log a new practice session.</p>
                   </td>
                 </tr>
@@ -140,13 +140,13 @@ export default function AttendanceHistory({ team, onSelectSession }) {
                     <tr
                       key={s._id}
                       onClick={() => onSelectSession && onSelectSession(s._id)}
-                      className="hover:bg-slate-50/80 cursor-pointer transition-colors"
+                      className="hover:bg-slate-50/80 dark:hover:bg-slate-800/50 cursor-pointer transition-colors"
                     >
-                      <td className="py-3.5 px-4 font-bold text-navy-900">
+                      <td className="py-3.5 px-4 font-bold text-navy-900 dark:text-white">
                         {s.date}
                       </td>
 
-                      <td className="py-3.5 px-4 font-semibold text-slate-700">
+                      <td className="py-3.5 px-4 font-semibold text-slate-700 dark:text-slate-300">
                         {s.sessionLabel}
                       </td>
 
@@ -171,15 +171,15 @@ export default function AttendanceHistory({ team, onSelectSession }) {
                         {s.totalAbsent || 0}
                       </td>
 
-                      <td className="py-3.5 px-4 text-center text-slate-500">
+                      <td className="py-3.5 px-4 text-center text-slate-500 dark:text-slate-400">
                         {s.totalLate || 0}L / {s.totalExcused || 0}E
                       </td>
 
-                      <td className="py-3.5 px-4 text-center font-editorial font-black text-sm text-saffron-600">
+                      <td className="py-3.5 px-4 text-center font-editorial font-black text-sm text-saffron-600 dark:text-saffron-400">
                         {rate}%
                       </td>
 
-                      <td className="py-3.5 px-4 text-right text-slate-500">
+                      <td className="py-3.5 px-4 text-right text-slate-500 dark:text-slate-400">
                         {s.recordedBy?.name || 'Staff'}
                       </td>
                     </tr>

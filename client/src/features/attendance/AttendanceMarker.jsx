@@ -228,43 +228,43 @@ export default function AttendanceMarker({ team }) {
             >
               {team} Team
             </span>
-            <h2 className="font-editorial text-2xl font-black text-navy-900 tracking-tight">
+            <h2 className="font-editorial text-2xl font-black text-navy-900 dark:text-white tracking-tight">
               Mark Session Attendance
             </h2>
           </div>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             Official daily attendance logging • Verified MongoDB storage & automatic squad eligibility tracking
           </p>
         </div>
 
         {/* Live Summary Counter Chips */}
         <div className="flex items-center gap-2 flex-wrap">
-          <div className="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-bold text-navy-800 shadow-sm flex items-center gap-1.5" title="Present total (including OD)">
+          <div className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-navy-800 dark:text-slate-200 shadow-sm flex items-center gap-1.5" title="Present total (including OD)">
             <span className="w-2 h-2 rounded-full bg-sportsGreen-dark" />
             <span>Present: {presentCount}</span>
             {odCount > 0 && (
-              <span className="text-[10px] text-sky-600 font-bold bg-sky-50 px-1.5 py-0.5 rounded-md">
+              <span className="text-[10px] text-sky-600 dark:text-sky-400 font-bold bg-sky-50 dark:bg-sky-950/60 px-1.5 py-0.5 rounded-md">
                 +{odCount} OD
               </span>
             )}
           </div>
-          <div className="px-3 py-1.5 rounded-xl bg-sky-50 border border-sky-200 text-xs font-bold text-sky-800 shadow-sm flex items-center gap-1.5" title="On Duty (Officially Noted as Present)">
+          <div className="px-3 py-1.5 rounded-xl bg-sky-50 dark:bg-sky-950/60 border border-sky-200 dark:border-sky-800 text-xs font-bold text-sky-800 dark:text-sky-300 shadow-sm flex items-center gap-1.5" title="On Duty (Officially Noted as Present)">
             <span className="w-2 h-2 rounded-full bg-sky-500" />
             <span>OD (Duty): {odCount}</span>
           </div>
-          <div className="px-3 py-1.5 rounded-xl bg-purple-50 border border-purple-200 text-xs font-bold text-purple-800 shadow-sm flex items-center gap-1.5" title="Authorized Leave">
+          <div className="px-3 py-1.5 rounded-xl bg-purple-50 dark:bg-purple-950/60 border border-purple-200 dark:border-purple-800 text-xs font-bold text-purple-800 dark:text-purple-300 shadow-sm flex items-center gap-1.5" title="Authorized Leave">
             <span className="w-2 h-2 rounded-full bg-purple-500" />
             <span>Leave: {leaveCount}</span>
           </div>
-          <div className="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-bold text-navy-800 shadow-sm flex items-center gap-1.5">
+          <div className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-navy-800 dark:text-slate-200 shadow-sm flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-rose-500" />
             <span>Absent: {absentCount}</span>
           </div>
-          <div className="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-bold text-navy-800 shadow-sm flex items-center gap-1.5">
+          <div className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-navy-800 dark:text-slate-200 shadow-sm flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-amber-500" />
             <span>Late: {lateCount}</span>
           </div>
-          <div className="px-3 py-1.5 rounded-xl bg-saffron-50 border border-saffron-200 text-xs font-black text-saffron-700 shadow-sm">
+          <div className="px-3 py-1.5 rounded-xl bg-saffron-50 dark:bg-saffron-950/60 border border-saffron-200 dark:border-saffron-800 text-xs font-black text-saffron-700 dark:text-saffron-300 shadow-sm">
             Rate: {attendancePercentage}%
           </div>
         </div>
@@ -305,28 +305,28 @@ export default function AttendanceMarker({ team }) {
 
       {/* Session Configuration Card */}
       <div className="card-premium p-6">
-        <h3 className="font-editorial text-base font-bold text-navy-900 mb-4 flex items-center gap-2">
-          <Calendar className="w-4 h-4 text-saffron-600" />
+        <h3 className="font-editorial text-base font-bold text-navy-900 dark:text-white mb-4 flex items-center gap-2">
+          <Calendar className="w-4 h-4 text-saffron-600 dark:text-saffron-400" />
           Session Parameters
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Date Picker */}
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
               Training Date
             </label>
             <input
               type="date"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
-              className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 bg-white font-medium text-navy-900 outline-none focus:border-saffron-500"
+              className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 font-medium text-navy-900 dark:text-white outline-none focus:border-saffron-500"
             />
           </div>
 
           {/* Session Selector / Existing */}
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
               Session Label
             </label>
             {sessionsOnDate.length > 0 ? (
@@ -341,7 +341,7 @@ export default function AttendanceMarker({ team }) {
                     loadSessionDetails(val);
                   }
                 }}
-                className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 bg-white font-medium text-navy-900 outline-none"
+                className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 font-medium text-navy-900 dark:text-white outline-none"
               >
                 {sessionsOnDate.map((s) => (
                   <option key={s._id} value={s._id}>
@@ -354,7 +354,7 @@ export default function AttendanceMarker({ team }) {
               <select
                 value={sessionLabel}
                 onChange={(e) => setSessionLabel(e.target.value)}
-                className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 bg-white font-medium text-navy-900 outline-none"
+                className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 font-medium text-navy-900 dark:text-white outline-none"
               >
                 {DEFAULT_SESSION_LABELS.map((label) => (
                   <option key={label} value={label}>
@@ -372,7 +372,7 @@ export default function AttendanceMarker({ team }) {
               <button
                 type="button"
                 onClick={handleSelectAllPresent}
-                className="flex-1 btn-secondary text-xs py-2 text-sportsGreen-dark hover:bg-emerald-50 border-emerald-200"
+                className="flex-1 btn-secondary text-xs py-2 text-sportsGreen-dark dark:text-sportsGreen hover:bg-emerald-50 dark:hover:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800"
               >
                 <Check className="w-3.5 h-3.5" />
                 Select All Present
@@ -399,21 +399,21 @@ export default function AttendanceMarker({ team }) {
               value={customLabel}
               onChange={(e) => setCustomLabel(e.target.value)}
               placeholder="Enter custom training session description..."
-              className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 outline-none focus:border-saffron-500"
+              className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-navy-900 dark:text-white outline-none focus:border-saffron-500"
             />
           </div>
         )}
 
         {/* Status Indicator Bar */}
         {activeSession && (
-          <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+          <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
             <div className="flex items-center gap-2">
               <span>Session Status:</span>
               <span
                 className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full font-bold ${
                   activeSession.status === 'FINALIZED'
-                    ? 'bg-purple-100 text-purple-800'
-                    : 'bg-amber-100 text-amber-800'
+                    ? 'bg-purple-100 dark:bg-purple-950/60 text-purple-800 dark:text-purple-300'
+                    : 'bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300'
                 }`}
               >
                 {activeSession.status === 'FINALIZED' ? <Lock className="w-3 h-3" /> : <Unlock className="w-3 h-3" />}
@@ -426,7 +426,7 @@ export default function AttendanceMarker({ team }) {
               )}
             </div>
 
-            <label className="flex items-center gap-2 cursor-pointer font-semibold text-navy-900">
+            <label className="flex items-center gap-2 cursor-pointer font-semibold text-navy-900 dark:text-white">
               <input
                 type="checkbox"
                 checked={finalizeOnSave}
@@ -447,7 +447,7 @@ export default function AttendanceMarker({ team }) {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-slate-100 bg-slate-50/70 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+              <tr className="border-b border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/60 text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                 <th className="py-3.5 px-4 w-16">Jersey</th>
                 <th className="py-3.5 px-4">Athlete</th>
                 <th className="py-3.5 px-4">Role</th>
@@ -455,7 +455,7 @@ export default function AttendanceMarker({ team }) {
                 <th className="py-3.5 px-4">Coaching Remarks / Reason</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-xs text-navy-800">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-xs text-navy-800 dark:text-slate-200">
               {loading ? (
                 <tr>
                   <td colSpan={5} className="py-12 text-center text-slate-400">
@@ -472,18 +472,18 @@ export default function AttendanceMarker({ team }) {
                 playerRows.map((row) => {
                   const { player, status, notes } = row;
                   return (
-                    <tr key={player._id} className="hover:bg-slate-50/60 transition-colors">
-                      <td className="py-3.5 px-4 font-editorial font-black text-sm text-saffron-600">
+                    <tr key={player._id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/50 transition-colors">
+                      <td className="py-3.5 px-4 font-editorial font-black text-sm text-saffron-600 dark:text-saffron-400">
                         #{player.jerseyNumber}
                       </td>
 
                       <td className="py-3.5 px-4">
-                        <p className="font-bold text-navy-900">{player.name}</p>
+                        <p className="font-bold text-navy-900 dark:text-white">{player.name}</p>
                         <p className="text-[11px] font-mono text-slate-400">{player.playerId}</p>
                       </td>
 
                       <td className="py-3.5 px-4">
-                        <span className="badge-tag bg-slate-100 text-slate-600">
+                        <span className="badge-tag bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
                           {player.position}
                         </span>
                       </td>
@@ -498,7 +498,7 @@ export default function AttendanceMarker({ team }) {
                             className={`px-2.5 py-1.5 rounded-xl font-bold text-[11px] transition-all cursor-pointer ${
                               status === 'PRESENT'
                                 ? 'bg-sportsGreen-dark text-white shadow-sm'
-                                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
                             }`}
                             title="Mark as Present on Ground"
                           >
@@ -512,7 +512,7 @@ export default function AttendanceMarker({ team }) {
                             className={`px-2.5 py-1.5 rounded-xl font-bold text-[11px] transition-all flex items-center gap-1 cursor-pointer ${
                               status === 'OD'
                                 ? 'bg-sky-600 text-white shadow-sm ring-1 ring-sky-700'
-                                : 'bg-sky-50 text-sky-800 hover:bg-sky-100 border border-sky-200/90'
+                                : 'bg-sky-50 dark:bg-sky-950/60 text-sky-800 dark:text-sky-300 hover:bg-sky-100 dark:hover:bg-sky-900/60 border border-sky-200/90 dark:border-sky-800'
                             }`}
                             title="On Duty (OD) - Noted as Present for official sports representation"
                           >
@@ -527,7 +527,7 @@ export default function AttendanceMarker({ team }) {
                             className={`px-2.5 py-1.5 rounded-xl font-bold text-[11px] transition-all cursor-pointer ${
                               status === 'LEAVE'
                                 ? 'bg-purple-600 text-white shadow-sm ring-1 ring-purple-700'
-                                : 'bg-purple-50 text-purple-800 hover:bg-purple-100 border border-purple-200/90'
+                                : 'bg-purple-50 dark:bg-purple-950/60 text-purple-800 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-900/60 border border-purple-200/90 dark:border-purple-800'
                             }`}
                             title="Authorized Leave (Medical / Exam / Personal)"
                           >
@@ -541,7 +541,7 @@ export default function AttendanceMarker({ team }) {
                             className={`px-2.5 py-1.5 rounded-xl font-bold text-[11px] transition-all cursor-pointer ${
                               status === 'ABSENT'
                                 ? 'bg-rose-600 text-white shadow-sm'
-                                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
                             }`}
                             title="Mark as Absent"
                           >
@@ -555,7 +555,7 @@ export default function AttendanceMarker({ team }) {
                             className={`px-2.5 py-1.5 rounded-xl font-bold text-[11px] transition-all cursor-pointer ${
                               status === 'LATE'
                                 ? 'bg-amber-500 text-white shadow-sm'
-                                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
                             }`}
                             title="Mark as Late Arrival"
                           >
@@ -568,8 +568,8 @@ export default function AttendanceMarker({ team }) {
                             onClick={() => handleStatusChange(player._id, 'EXCUSED')}
                             className={`px-2.5 py-1.5 rounded-xl font-bold text-[11px] transition-all cursor-pointer ${
                               status === 'EXCUSED'
-                                ? 'bg-slate-700 text-white shadow-sm'
-                                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                ? 'bg-slate-700 dark:bg-slate-600 text-white shadow-sm'
+                                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
                             }`}
                             title="Mark as Excused"
                           >
@@ -585,7 +585,7 @@ export default function AttendanceMarker({ team }) {
                           value={notes}
                           onChange={(e) => handleNotesChange(player._id, e.target.value)}
                           placeholder="Optional remarks (e.g. academic leave, minor ankle strain)..."
-                          className="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-200 focus:border-saffron-500 outline-none text-navy-800"
+                          className="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-navy-800 dark:text-white focus:border-saffron-500 outline-none"
                         />
                       </td>
                     </tr>
@@ -597,8 +597,8 @@ export default function AttendanceMarker({ team }) {
         </div>
 
         {/* Bottom Action Footer */}
-        <div className="p-4 border-t border-slate-100 bg-slate-50/50 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-slate-500">
+        <div className="p-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             Configured Policy: <strong>OD (On Duty)</strong> is officially counted as <strong>PRESENT</strong> with 100% credit. <strong>Leave &amp; Excused</strong> sessions are excluded from penalty deductions.
           </p>
 
@@ -616,18 +616,18 @@ export default function AttendanceMarker({ team }) {
 
       {/* Confirmation Modal for Finalized Session Edits */}
       {confirmFinalizedModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/40 backdrop-blur-sm">
-          <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl border border-slate-200 p-6 space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/60 backdrop-blur-sm">
+          <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 p-6 space-y-4">
+            <div className="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 flex items-center justify-center">
               <AlertTriangle className="w-6 h-6" />
             </div>
-            <h3 className="font-editorial text-xl font-bold text-navy-900">
+            <h3 className="font-editorial text-xl font-bold text-navy-900 dark:text-white">
               Confirm Finalized Session Edit
             </h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
+            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
               This attendance session has already been marked <strong>FINALIZED</strong>. Any modifications made now will be explicitly logged in the coaching security audit trail.
             </p>
-            <p className="text-xs text-slate-600 font-semibold">
+            <p className="text-xs text-slate-600 dark:text-slate-300 font-semibold">
               Are you sure you want to overwrite finalized attendance?
             </p>
             <div className="flex items-center justify-end gap-2 pt-2">

@@ -192,11 +192,11 @@ export default function RosterManager({ team }) {
             >
               {team} Roster
             </span>
-            <h2 className="font-editorial text-2xl font-black text-navy-900 tracking-tight">
+            <h2 className="font-editorial text-2xl font-black text-navy-900 dark:text-white tracking-tight">
               Player Roster Management
             </h2>
           </div>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             {team === 'BOYS' ? 'Standard 23-player expected contingent' : 'Configurable athlete roster'} • Active Player Accounts & Biometrics
           </p>
         </div>
@@ -248,7 +248,7 @@ export default function RosterManager({ team }) {
       )}
 
       {/* Filter and Search Bar */}
-      <div className="card-premium p-4 flex flex-col md:flex-row items-center justify-between gap-3">
+      <div className="card-premium p-4 flex flex-col md:flex-row items-center justify-between gap-3 dark:bg-slate-900 dark:border-slate-800">
         {/* Search */}
         <div className="relative w-full md:w-80">
           <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -257,7 +257,7 @@ export default function RosterManager({ team }) {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search by name or Player ID (e.g. B-01)..."
-            className="w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-slate-200 focus:border-saffron-500 outline-none"
+            className="w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-navy-900 dark:text-white focus:border-saffron-500 outline-none"
           />
         </div>
 
@@ -266,7 +266,7 @@ export default function RosterManager({ team }) {
           <select
             value={positionFilter}
             onChange={(e) => setPositionFilter(e.target.value)}
-            className="px-3 py-2 text-xs rounded-xl border border-slate-200 bg-white font-medium text-slate-700 outline-none"
+            className="px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 font-medium text-slate-700 dark:text-slate-200 outline-none"
           >
             <option value="ALL">All Positions</option>
             <option value="Chaser">Chaser</option>
@@ -279,7 +279,7 @@ export default function RosterManager({ team }) {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3 py-2 text-xs rounded-xl border border-slate-200 bg-white font-medium text-slate-700 outline-none"
+            className="px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 font-medium text-slate-700 dark:text-slate-200 outline-none"
           >
             <option value="ALL">All Status</option>
             <option value="active">Active Athletes</option>
@@ -289,7 +289,7 @@ export default function RosterManager({ team }) {
           <button
             type="button"
             onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-            className="px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-xs font-semibold text-slate-700 flex items-center gap-1.5"
+            className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-xs font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-1.5"
             title="Toggle Sort Order"
           >
             <ArrowUpDown className="w-3.5 h-3.5 text-slate-400" />
@@ -299,11 +299,11 @@ export default function RosterManager({ team }) {
       </div>
 
       {/* Players Table */}
-      <div className="card-premium overflow-hidden">
+      <div className="card-premium overflow-hidden dark:bg-slate-900 dark:border-slate-800">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-slate-100 bg-slate-50/70 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+              <tr className="border-b border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                 <th className="py-3.5 px-4">Jersey</th>
                 <th className="py-3.5 px-4">Player ID</th>
                 <th className="py-3.5 px-4">Athlete Name</th>
@@ -314,48 +314,48 @@ export default function RosterManager({ team }) {
                 <th className="py-3.5 px-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-xs text-navy-800">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-xs text-navy-800 dark:text-slate-200">
               {loading ? (
                 <tr>
-                  <td colSpan={8} className="py-12 text-center text-slate-400">
+                  <td colSpan={8} className="py-12 text-center text-slate-400 dark:text-slate-500">
                     Loading team roster records...
                   </td>
                 </tr>
               ) : players.length === 0 ? (
                 <tr>
                   <td colSpan={8} className="py-12 text-center">
-                    <Users className="w-10 h-10 text-slate-300 mx-auto mb-2" />
-                    <p className="font-bold text-slate-600">No players found in this roster</p>
+                    <Users className="w-10 h-10 text-slate-300 dark:text-slate-600 mx-auto mb-2" />
+                    <p className="font-bold text-slate-600 dark:text-slate-300">No players found in this roster</p>
                     <p className="text-slate-400 text-[11px] mt-0.5">Use "Add Player" or import CSV to populate records.</p>
                   </td>
                 </tr>
               ) : (
                 players.map((p) => (
-                  <tr key={p._id} className="hover:bg-slate-50/80 transition-colors">
+                  <tr key={p._id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors">
                     <td className="py-3.5 px-4 font-editorial font-black text-sm text-saffron-600">
                       #{p.jerseyNumber}
                     </td>
-                    <td className="py-3.5 px-4 font-mono font-bold text-slate-600">
+                    <td className="py-3.5 px-4 font-mono font-bold text-slate-600 dark:text-slate-400">
                       {p.playerId}
                     </td>
-                    <td className="py-3.5 px-4 font-bold text-navy-900">
+                    <td className="py-3.5 px-4 font-bold text-navy-900 dark:text-white">
                       {p.name}
                     </td>
                     <td className="py-3.5 px-4">
-                      <span className="badge-tag bg-slate-100 text-slate-700">
+                      <span className="badge-tag bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300">
                         {p.position}
                       </span>
                     </td>
-                    <td className="py-3.5 px-4 font-mono text-[11px] text-slate-500">
+                    <td className="py-3.5 px-4 font-mono text-[11px] text-slate-500 dark:text-slate-400">
                       {p.userRef?.username || '—'}
                     </td>
-                    <td className="py-3.5 px-4 font-medium text-slate-600">
+                    <td className="py-3.5 px-4 font-medium text-slate-600 dark:text-slate-300">
                       {p.bloodGroup || '—'}
                     </td>
                     <td className="py-3.5 px-4">
                       <span
                         className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold ${
-                          p.active ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-500'
+                          p.active ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300' : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'
                         }`}
                       >
                         <span className={`w-1.5 h-1.5 rounded-full ${p.active ? 'bg-emerald-500' : 'bg-slate-400'}`} />
@@ -366,7 +366,7 @@ export default function RosterManager({ team }) {
                       <button
                         type="button"
                         onClick={() => handleViewProfile(p)}
-                        className="p-1.5 rounded-lg text-slate-500 hover:text-navy-900 hover:bg-slate-100 transition-colors"
+                        className="p-1.5 rounded-lg text-slate-500 hover:text-navy-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                         title="View Profile & Attendance"
                       >
                         <Eye className="w-4 h-4" />
@@ -377,8 +377,8 @@ export default function RosterManager({ team }) {
                         onClick={() => handleToggleStatus(p._id)}
                         className={`p-1.5 rounded-lg transition-colors ${
                           p.active
-                            ? 'text-slate-400 hover:text-amber-600 hover:bg-amber-50'
-                            : 'text-slate-400 hover:text-emerald-600 hover:bg-emerald-50'
+                            ? 'text-slate-400 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/40'
+                            : 'text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40'
                         }`}
                         title={p.active ? 'Deactivate Athlete' : 'Activate Athlete'}
                       >
@@ -388,7 +388,7 @@ export default function RosterManager({ team }) {
                       <button
                         type="button"
                         onClick={() => setDeleteConfirmPlayer(p)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
                         title={`Remove ${p.name} from Roster`}
                       >
                         <Trash2 className="w-4 h-4" />
@@ -402,7 +402,7 @@ export default function RosterManager({ team }) {
         </div>
 
         {/* Footer Summary */}
-        <div className="py-3 px-4 border-t border-slate-100 bg-slate-50/50 flex items-center justify-between text-xs text-slate-500">
+        <div className="py-3 px-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
           <span>Showing <strong>{players.length}</strong> roster records for {team} Team</span>
           <span>{players.filter((p) => p.active).length} Active Athletes</span>
         </div>
@@ -410,16 +410,16 @@ export default function RosterManager({ team }) {
 
       {/* Add Player Modal */}
       {addModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/40 backdrop-blur-sm">
-          <div className="w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden">
-            <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-              <h3 className="font-editorial text-xl font-bold text-navy-900">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/60 backdrop-blur-sm">
+          <div className="w-full max-w-lg bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+            <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+              <h3 className="font-editorial text-xl font-bold text-navy-900 dark:text-white">
                 Register New {team} Athlete
               </h3>
               <button
                 type="button"
                 onClick={() => setAddModalOpen(false)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-navy-900"
+                className="p-1.5 rounded-lg text-slate-400 hover:text-navy-900 dark:hover:text-white"
               >
                 ✕
               </button>
@@ -428,7 +428,7 @@ export default function RosterManager({ team }) {
             <form onSubmit={handleAddPlayer} className="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold uppercase text-slate-700 mb-1">
+                  <label className="block text-xs font-bold uppercase text-slate-700 dark:text-slate-300 mb-1">
                     Player ID *
                   </label>
                   <input
@@ -437,12 +437,12 @@ export default function RosterManager({ team }) {
                     value={newPlayer.playerId}
                     onChange={(e) => setNewPlayer({ ...newPlayer, playerId: e.target.value })}
                     placeholder={team === 'BOYS' ? 'e.g. B-24' : 'e.g. G-19'}
-                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:border-saffron-500 outline-none"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-navy-900 dark:text-white focus:border-saffron-500 outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase text-slate-700 mb-1">
+                  <label className="block text-xs font-bold uppercase text-slate-700 dark:text-slate-300 mb-1">
                     Jersey Number *
                   </label>
                   <input
@@ -453,13 +453,13 @@ export default function RosterManager({ team }) {
                     value={newPlayer.jerseyNumber}
                     onChange={(e) => setNewPlayer({ ...newPlayer, jerseyNumber: e.target.value })}
                     placeholder="e.g. 24"
-                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:border-saffron-500 outline-none"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-navy-900 dark:text-white focus:border-saffron-500 outline-none"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase text-slate-700 mb-1">
+                <label className="block text-xs font-bold uppercase text-slate-700 dark:text-slate-300 mb-1">
                   Full Name *
                 </label>
                 <input
@@ -468,19 +468,19 @@ export default function RosterManager({ team }) {
                   value={newPlayer.name}
                   onChange={(e) => setNewPlayer({ ...newPlayer, name: e.target.value })}
                   placeholder="e.g. Rohan Chavan"
-                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:border-saffron-500 outline-none"
+                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-navy-900 dark:text-white focus:border-saffron-500 outline-none"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold uppercase text-slate-700 mb-1">
+                  <label className="block text-xs font-bold uppercase text-slate-700 dark:text-slate-300 mb-1">
                     Playing Position *
                   </label>
                   <select
                     value={newPlayer.position}
                     onChange={(e) => setNewPlayer({ ...newPlayer, position: e.target.value })}
-                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 bg-white outline-none"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 outline-none"
                   >
                     <option value="Chaser">Chaser</option>
                     <option value="Defender">Defender</option>
@@ -491,13 +491,13 @@ export default function RosterManager({ team }) {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase text-slate-700 mb-1">
+                  <label className="block text-xs font-bold uppercase text-slate-700 dark:text-slate-300 mb-1">
                     Blood Group
                   </label>
                   <select
                     value={newPlayer.bloodGroup}
                     onChange={(e) => setNewPlayer({ ...newPlayer, bloodGroup: e.target.value })}
-                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 bg-white outline-none"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 outline-none"
                   >
                     <option value="Unknown">Unknown</option>
                     <option value="A+">A+</option>
@@ -579,12 +579,12 @@ export default function RosterManager({ team }) {
 
       {/* CSV Import Modal */}
       {importModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/40 backdrop-blur-sm">
-          <div className="w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-200 p-6 space-y-4">
-            <h3 className="font-editorial text-xl font-bold text-navy-900">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/60 backdrop-blur-sm">
+          <div className="w-full max-w-lg bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 p-6 space-y-4">
+            <h3 className="font-editorial text-xl font-bold text-navy-900 dark:text-white">
               Bulk CSV Import ({team} Roster)
             </h3>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               Paste standard comma-separated values. Header format: <code>Player ID, Name, Team, Jersey Number, Position, Status, Phone, Email, Blood Group</code>
             </p>
 
@@ -594,7 +594,7 @@ export default function RosterManager({ team }) {
               onChange={(e) => setCsvInput(e.target.value)}
               placeholder="Player ID,Name,Team,Jersey Number,Position,Status,Phone,Email,Blood Group
 B-24,Suresh Patil,BOYS,24,Chaser,Active,+91 98200 10024,b24@arena.org,O+"
-              className="w-full p-3 font-mono text-xs rounded-xl border border-slate-200 outline-none resize-none"
+              className="w-full p-3 font-mono text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-navy-900 dark:text-white outline-none resize-none"
             />
 
             <div className="flex items-center justify-end gap-2">
@@ -619,23 +619,23 @@ B-24,Suresh Patil,BOYS,24,Chaser,Active,+91 98200 10024,b24@arena.org,O+"
 
       {/* Player Profile Drawer */}
       {selectedPlayer && (
-        <div className="fixed inset-0 z-50 flex items-center justify-end bg-navy-950/40 backdrop-blur-sm">
-          <div className="w-full max-w-md h-full bg-white shadow-2xl border-l border-slate-200 p-6 flex flex-col justify-between overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-end bg-navy-950/60 backdrop-blur-sm">
+          <div className="w-full max-w-md h-full bg-white dark:bg-slate-900 shadow-2xl border-l border-slate-200 dark:border-slate-800 p-6 flex flex-col justify-between overflow-y-auto">
             <div>
-              <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+              <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-saffron-100 text-saffron-700 font-editorial font-black text-xl flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-2xl bg-saffron-100 dark:bg-saffron-950/60 text-saffron-700 dark:text-saffron-400 font-editorial font-black text-xl flex items-center justify-center">
                     #{selectedPlayer.jerseyNumber}
                   </div>
                   <div>
-                    <h3 className="font-editorial text-lg font-bold text-navy-900">{selectedPlayer.name}</h3>
-                    <p className="text-xs font-mono text-slate-500">{selectedPlayer.playerId} • {selectedPlayer.team}</p>
+                    <h3 className="font-editorial text-lg font-bold text-navy-900 dark:text-white">{selectedPlayer.name}</h3>
+                    <p className="text-xs font-mono text-slate-500 dark:text-slate-400">{selectedPlayer.playerId} • {selectedPlayer.team}</p>
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={() => setSelectedPlayer(null)}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-navy-900"
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-navy-900 dark:hover:text-white"
                 >
                   ✕
                 </button>
@@ -643,50 +643,50 @@ B-24,Suresh Patil,BOYS,24,Chaser,Active,+91 98200 10024,b24@arena.org,O+"
 
               {/* Attendance Stats Cards */}
               <div className="mt-6">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3">
                   Attendance Metrics (Real Database)
                 </h4>
                 {playerStats ? (
                   <div className="space-y-3">
-                    <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200">
+                    <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/40 dark:to-orange-950/40 border border-amber-200 dark:border-amber-800/60">
                       <div className="flex items-center justify-between">
-                        <span className="text-[11px] font-bold uppercase tracking-wider text-amber-900 flex items-center gap-1.5">
-                          <Trophy className="w-3.5 h-3.5 text-amber-600" />
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-amber-900 dark:text-amber-300 flex items-center gap-1.5">
+                          <Trophy className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
                           <span>Match Attendance Standing</span>
                         </span>
                         <span className={`font-editorial font-black text-2xl ${
                           (playerStats.matchAttendancePercentage ?? Math.max(0, 100 - (playerStats.absentCount * 2) - (playerStats.excusedCount * 1))) >= 75
-                            ? 'text-sportsGreen-dark'
-                            : 'text-amber-600'
+                            ? 'text-sportsGreen-dark dark:text-emerald-400'
+                            : 'text-amber-600 dark:text-amber-400'
                         }`}>
                           {playerStats.matchAttendancePercentage ?? Math.max(0, 100 - (playerStats.absentCount * 2) - (playerStats.excusedCount * 1))}%
                         </span>
                       </div>
-                      <p className="text-[11px] text-slate-600 mt-1">
+                      <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-1">
                         Base 100% • Absent: -{playerStats.absentDeduction ?? (playerStats.absentCount * 2)}% ({playerStats.absentCount} × -2%) • Excused: -{playerStats.excusedDeduction ?? (playerStats.excusedCount * 1)}% ({playerStats.excusedCount} × -1%)
                       </p>
                     </div>
 
                     <div className="grid grid-cols-2 gap-3">
-                      <div className="p-4 rounded-2xl bg-saffron-50 border border-saffron-200 text-center">
-                        <p className="font-editorial text-3xl font-black text-saffron-600">
+                      <div className="p-4 rounded-2xl bg-saffron-50 dark:bg-saffron-950/40 border border-saffron-200 dark:border-saffron-800/60 text-center">
+                        <p className="font-editorial text-3xl font-black text-saffron-600 dark:text-saffron-400">
                           {playerStats.attendancePercentage}%
                         </p>
-                        <p className="text-xs font-bold text-navy-900 mt-1">Attendance Rate</p>
-                        <p className="text-[10px] text-slate-500">{playerStats.presentCount} of {playerStats.eligibleSessions} Eligible</p>
+                        <p className="text-xs font-bold text-navy-900 dark:text-white mt-1">Attendance Rate</p>
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400">{playerStats.presentCount} of {playerStats.eligibleSessions} Eligible</p>
                       </div>
 
-                      <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-center">
-                        <p className="font-editorial text-3xl font-black text-navy-800">
+                      <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-center">
+                        <p className="font-editorial text-3xl font-black text-navy-800 dark:text-white">
                           {playerStats.totalRecorded}
                         </p>
-                        <p className="text-xs font-bold text-navy-900 mt-1">Total Sessions</p>
-                        <p className="text-[10px] text-slate-500">{playerStats.absentCount} Abs • {playerStats.lateCount} Late</p>
+                        <p className="text-xs font-bold text-navy-900 dark:text-white mt-1">Total Sessions</p>
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400">{playerStats.absentCount} Abs • {playerStats.lateCount} Late</p>
                       </div>
                     </div>
                   </div>
                 ) : (
-                  <div className="p-4 rounded-xl bg-slate-50 text-center text-xs text-slate-400 animate-pulse">
+                  <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 text-center text-xs text-slate-400 animate-pulse">
                     Loading attendance calculations...
                   </div>
                 )}
@@ -694,29 +694,29 @@ B-24,Suresh Patil,BOYS,24,Chaser,Active,+91 98200 10024,b24@arena.org,O+"
 
               {/* Detailed Specs */}
               <div className="mt-6 space-y-3">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
                   Athlete Metadata
                 </h4>
-                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-2.5 text-xs">
+                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 space-y-2.5 text-xs">
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Position</span>
-                    <strong className="text-navy-900">{selectedPlayer.position}</strong>
+                    <span className="text-slate-500 dark:text-slate-400">Position</span>
+                    <strong className="text-navy-900 dark:text-white">{selectedPlayer.position}</strong>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Blood Group</span>
-                    <strong className="text-navy-900">{selectedPlayer.bloodGroup || 'Not Recorded'}</strong>
+                    <span className="text-slate-500 dark:text-slate-400">Blood Group</span>
+                    <strong className="text-navy-900 dark:text-white">{selectedPlayer.bloodGroup || 'Not Recorded'}</strong>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Phone</span>
-                    <strong className="text-navy-900">{selectedPlayer.contactInfo?.phone || '—'}</strong>
+                    <span className="text-slate-500 dark:text-slate-400">Phone</span>
+                    <strong className="text-navy-900 dark:text-white">{selectedPlayer.contactInfo?.phone || '—'}</strong>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Email</span>
-                    <strong className="text-navy-900">{selectedPlayer.contactInfo?.email || '—'}</strong>
+                    <span className="text-slate-500 dark:text-slate-400">Email</span>
+                    <strong className="text-navy-900 dark:text-white">{selectedPlayer.contactInfo?.email || '—'}</strong>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Status</span>
-                    <strong className={selectedPlayer.active ? 'text-sportsGreen-dark' : 'text-slate-400'}>
+                    <span className="text-slate-500 dark:text-slate-400">Status</span>
+                    <strong className={selectedPlayer.active ? 'text-sportsGreen-dark dark:text-emerald-400' : 'text-slate-400'}>
                       {selectedPlayer.active ? 'Active on Roster' : 'Inactive'}
                     </strong>
                   </div>
@@ -724,11 +724,11 @@ B-24,Suresh Patil,BOYS,24,Chaser,Active,+91 98200 10024,b24@arena.org,O+"
               </div>
             </div>
 
-            <div className="pt-4 border-t border-slate-100 space-y-2 mt-6">
+            <div className="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-2 mt-6">
               <button
                 type="button"
                 onClick={() => setDeleteConfirmPlayer(selectedPlayer)}
-                className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 transition-colors"
+                className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs font-bold text-rose-600 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 transition-colors"
               >
                 <Trash2 className="w-4 h-4" />
                 <span>Remove Athlete from Roster</span>
@@ -748,27 +748,27 @@ B-24,Suresh Patil,BOYS,24,Chaser,Active,+91 98200 10024,b24@arena.org,O+"
 
       {/* Delete Confirmation Modal */}
       {deleteConfirmPlayer && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/40 backdrop-blur-sm animate-fade-in">
-          <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl border border-slate-200 p-6 space-y-5">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/60 backdrop-blur-sm animate-fade-in">
+          <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 p-6 space-y-5">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center shrink-0">
+              <div className="w-12 h-12 rounded-2xl bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0">
                 <Trash2 className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="font-editorial text-lg font-black text-navy-900 leading-tight">
+                <h3 className="font-editorial text-lg font-black text-navy-900 dark:text-white leading-tight">
                   Remove Team Member
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-500 dark:text-slate-400">
                   Permanent roster removal confirmation
                 </p>
               </div>
             </div>
 
-            <div className="p-3.5 rounded-2xl bg-rose-50/70 border border-rose-200 text-xs text-rose-800 space-y-1.5">
+            <div className="p-3.5 rounded-2xl bg-rose-50/70 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-xs text-rose-800 dark:text-rose-300 space-y-1.5">
               <p className="font-bold">
                 Are you sure you want to remove {deleteConfirmPlayer.name} (#{deleteConfirmPlayer.jerseyNumber})?
               </p>
-              <p className="text-[11px] text-rose-700 leading-relaxed">
+              <p className="text-[11px] text-rose-700 dark:text-rose-400 leading-relaxed">
                 This will permanently remove athlete <strong>{deleteConfirmPlayer.playerId}</strong> from the <strong>{team}</strong> roster, delete their portal login account, and clear their attendance records. This action cannot be undone.
               </p>
             </div>

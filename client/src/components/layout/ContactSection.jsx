@@ -53,53 +53,53 @@ export default function ContactSection() {
           {/* Left Column: Contact Information */}
           <div className="lg:col-span-5 space-y-8">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-200 text-navy-800 text-xs font-bold uppercase tracking-wider mb-3">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-200 dark:bg-slate-800 text-navy-800 dark:text-slate-200 text-xs font-bold uppercase tracking-wider mb-3">
                 Communications & Recruitment
               </div>
-              <h2 className="font-editorial text-3xl sm:text-5xl font-black text-navy-900 tracking-tight">
+              <h2 className="font-editorial text-3xl sm:text-5xl font-black text-navy-900 dark:text-white tracking-tight">
                 Connect With the Coaching Staff
               </h2>
-              <p className="mt-4 text-base text-slate-600 leading-relaxed">
+              <p className="mt-4 text-base text-slate-600 dark:text-slate-300 leading-relaxed">
                 Have questions regarding team trials, student-athlete recruitment, tournament fixtures, or facility scheduling? Reach out directly to our athletics directorate.
               </p>
             </div>
 
             <div className="space-y-4">
-              <div className="flex items-start gap-4 p-4 rounded-2xl bg-white border border-slate-200 shadow-sm">
-                <div className="w-10 h-10 rounded-xl bg-saffron-100 text-saffron-700 flex items-center justify-center shrink-0">
+              <div className="flex items-start gap-4 p-4 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-sm">
+                <div className="w-10 h-10 rounded-xl bg-saffron-100 dark:bg-saffron-950/60 text-saffron-700 dark:text-saffron-300 flex items-center justify-center shrink-0">
                   <MapPin className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Arena Location</h4>
-                  <p className="text-sm font-bold text-navy-900">KIT-KalaignarKarunanidhi Institute of Technology</p>
-                  <p className="text-xs text-slate-600 font-medium mt-0.5">Kannampalayam Post, Coimbatore - 641402</p>
-                  <p className="text-xs font-bold text-saffron-600 uppercase tracking-wider mt-0.5">Tamil Nadu, India</p>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400">Arena Location</h4>
+                  <p className="text-sm font-bold text-navy-900 dark:text-white">KIT-KalaignarKarunanidhi Institute of Technology</p>
+                  <p className="text-xs text-slate-600 dark:text-slate-300 font-medium mt-0.5">Kannampalayam Post, Coimbatore - 641402</p>
+                  <p className="text-xs font-bold text-saffron-600 dark:text-saffron-400 uppercase tracking-wider mt-0.5">Tamil Nadu, India</p>
                 </div>
               </div>
 
-              <div className="flex items-start gap-4 p-4 rounded-2xl bg-white border border-slate-200 shadow-sm">
-                <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
+              <div className="flex items-start gap-4 p-4 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-sm">
+                <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 flex items-center justify-center shrink-0">
                   <Mail className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Electronic Mail</h4>
-                  <a href="mailto:dhyaneshdhyanesh739@gmail.com" className="text-sm font-bold text-navy-900 hover:text-saffron-600 transition-colors break-all">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400">Electronic Mail</h4>
+                  <a href="mailto:dhyaneshdhyanesh739@gmail.com" className="text-sm font-bold text-navy-900 dark:text-white hover:text-saffron-600 dark:hover:text-saffron-400 transition-colors break-all">
                     dhyaneshdhyanesh739@gmail.com
                   </a>
-                  <p className="text-xs text-slate-500">Official Inquiries & Direct Dispatch</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Official Inquiries & Direct Dispatch</p>
                 </div>
               </div>
 
-              <div className="flex items-start gap-4 p-4 rounded-2xl bg-white border border-slate-200 shadow-sm">
-                <div className="w-10 h-10 rounded-xl bg-sportsGreen-light text-sportsGreen-dark flex items-center justify-center shrink-0">
+              <div className="flex items-start gap-4 p-4 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-sm">
+                <div className="w-10 h-10 rounded-xl bg-sportsGreen-light dark:bg-emerald-950/60 text-sportsGreen-dark dark:text-emerald-300 flex items-center justify-center shrink-0">
                   <Phone className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Direct Contact Line</h4>
-                  <a href="tel:+917550317811" className="text-sm font-bold text-navy-900 hover:text-saffron-600 transition-colors">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400">Direct Contact Line</h4>
+                  <a href="tel:+917550317811" className="text-sm font-bold text-navy-900 dark:text-white hover:text-saffron-600 dark:hover:text-saffron-400 transition-colors">
                     +91-7550317811
                   </a>
-                  <p className="text-xs text-slate-500">All Days • Immediate Assistance</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">All Days • Immediate Assistance</p>
                 </div>
               </div>
             </div>
@@ -107,17 +107,17 @@ export default function ContactSection() {
 
           {/* Right Column: Functional Contact Form */}
           <div className="lg:col-span-7">
-            <div className="card-premium p-8 shadow-card">
-              <h3 className="font-editorial text-2xl font-bold text-navy-900 mb-2">
+            <div className="card-premium p-8 shadow-card bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800">
+              <h3 className="font-editorial text-2xl font-bold text-navy-900 dark:text-white mb-2">
                 Send an Official Message
               </h3>
-              <p className="text-xs text-slate-500 mb-6">
+              <p className="text-xs text-slate-500 dark:text-slate-400 mb-6">
                 All inquiries are logged directly in our database and forwarded to the head coaches.
               </p>
 
               {/* Success Notification */}
               {submitSuccess && (
-                <div className="p-4 rounded-2xl bg-sportsGreen-light border border-emerald-300 text-sportsGreen-dark mb-6 flex items-start gap-3">
+                <div className="p-4 rounded-2xl bg-sportsGreen-light dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-sportsGreen-dark dark:text-emerald-300 mb-6 flex items-start gap-3">
                   <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5" />
                   <div>
                     <h5 className="font-bold text-sm">Message Delivered Successfully!</h5>
@@ -130,7 +130,7 @@ export default function ContactSection() {
 
               {/* Error Notification */}
               {errorMessage && (
-                <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 mb-6 flex items-start gap-3">
+                <div className="p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 mb-6 flex items-start gap-3">
                   <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
                   <div>
                     <h5 className="font-bold text-sm">Transmission Error</h5>
@@ -142,7 +142,7 @@ export default function ContactSection() {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">
                       Full Name *
                     </label>
                     <input
@@ -152,12 +152,12 @@ export default function ContactSection() {
                       value={formData.name}
                       onChange={handleChange}
                       placeholder="e.g. Ramesh Kulkarni"
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-saffron-500 focus:ring-2 focus:ring-saffron-500/20 text-sm outline-none transition-all"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/90 text-navy-900 dark:text-white focus:border-saffron-500 focus:ring-2 focus:ring-saffron-500/20 text-sm outline-none transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">
                       Email Address *
                     </label>
                     <input
@@ -167,14 +167,14 @@ export default function ContactSection() {
                       value={formData.email}
                       onChange={handleChange}
                       placeholder="e.g. ramesh@example.com"
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-saffron-500 focus:ring-2 focus:ring-saffron-500/20 text-sm outline-none transition-all"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/90 text-navy-900 dark:text-white focus:border-saffron-500 focus:ring-2 focus:ring-saffron-500/20 text-sm outline-none transition-all"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">
                       Phone Number (Optional)
                     </label>
                     <input
@@ -183,12 +183,12 @@ export default function ContactSection() {
                       value={formData.phone}
                       onChange={handleChange}
                       placeholder="+91 98765 43210"
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-saffron-500 focus:ring-2 focus:ring-saffron-500/20 text-sm outline-none transition-all"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/90 text-navy-900 dark:text-white focus:border-saffron-500 focus:ring-2 focus:ring-saffron-500/20 text-sm outline-none transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">
                       Subject *
                     </label>
                     <input
@@ -198,13 +198,13 @@ export default function ContactSection() {
                       value={formData.subject}
                       onChange={handleChange}
                       placeholder="e.g. Team Trial Eligibility"
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-saffron-500 focus:ring-2 focus:ring-saffron-500/20 text-sm outline-none transition-all"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/90 text-navy-900 dark:text-white focus:border-saffron-500 focus:ring-2 focus:ring-saffron-500/20 text-sm outline-none transition-all"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">
                     Message *
                   </label>
                   <textarea
@@ -214,7 +214,7 @@ export default function ContactSection() {
                     value={formData.message}
                     onChange={handleChange}
                     placeholder="Enter your detailed query or athlete profile details..."
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-saffron-500 focus:ring-2 focus:ring-saffron-500/20 text-sm outline-none transition-all resize-none"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/90 text-navy-900 dark:text-white focus:border-saffron-500 focus:ring-2 focus:ring-saffron-500/20 text-sm outline-none transition-all resize-none"
                   />
                 </div>
 

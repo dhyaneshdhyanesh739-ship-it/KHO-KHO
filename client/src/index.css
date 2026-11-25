@@ -90,12 +90,51 @@ html.dark .bg-court-ivory {
 html.dark .bg-court-clay {
   background-color: #141f36 !important;
 }
+
+/* Surface backgrounds: convert white cards/containers to deep navy */
+html.dark .bg-white:not([data-keep-white]) {
+  background-color: #0f172a !important;
+  color: #f8fafc;
+}
+html.dark .bg-white\/95,
+html.dark .bg-white\/90,
+html.dark .bg-white\/85,
+html.dark .bg-white\/80 {
+  background-color: rgba(15, 23, 42, 0.92) !important;
+}
+html.dark .bg-white\/70,
+html.dark .bg-white\/60,
+html.dark .bg-white\/50 {
+  background-color: rgba(15, 23, 42, 0.75) !important;
+}
+html.dark .bg-slate-50 {
+  background-color: #141f32 !important;
+}
+html.dark .bg-slate-100 {
+  background-color: #1e293b !important;
+  color: #f1f5f9;
+}
+
+/* Gradients that fade to or from white */
+html.dark .to-white {
+  --tw-gradient-to: #0f172a var(--tw-gradient-to-position, 100%) !important;
+}
+html.dark .via-white {
+  --tw-gradient-stops: var(--tw-gradient-from), #0f172a var(--tw-gradient-via-position, 50%), var(--tw-gradient-to) !important;
+}
+html.dark .from-white {
+  --tw-gradient-from: #1e293b var(--tw-gradient-from-position, 0%) !important;
+  --tw-gradient-to: rgb(30 41 59 / 0) var(--tw-gradient-to-position, 100%) !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+}
+
+/* Navigation & Sticky Elements */
 html.dark nav.fixed {
-  background-color: rgba(11, 17, 32, 0.92) !important;
+  background-color: rgba(11, 17, 32, 0.94) !important;
   border-color: rgba(30, 41, 59, 0.8) !important;
 }
 html.dark header.sticky {
-  background-color: rgba(15, 23, 42, 0.92) !important;
+  background-color: rgba(15, 23, 42, 0.94) !important;
   border-color: rgba(30, 41, 59, 0.8) !important;
 }
 html.dark aside {
@@ -109,6 +148,8 @@ html.dark section.bg-white {
 html.dark section.bg-court-sand {
   background-color: #0b1120 !important;
 }
+
+/* Text Colors */
 html.dark .text-navy-900 {
   color: #f8fafc !important;
 }
@@ -124,21 +165,21 @@ html.dark .text-slate-600 {
 html.dark .text-slate-500 {
   color: #8392a5 !important;
 }
-html.dark .border-slate-200 {
+html.dark .text-slate-400 {
+  color: #94a3b8 !important;
+}
+
+/* Borders */
+html.dark .border-slate-100,
+html.dark .border-slate-200,
+html.dark .border-slate-300,
+html.dark .border-slate-200\/80,
+html.dark .border-slate-200\/90,
+html.dark .border-slate-100\/80 {
   border-color: #1e293b !important;
 }
-html.dark .border-slate-100 {
-  border-color: #1e293b !important;
-}
-html.dark .border-slate-200\/80 {
-  border-color: rgba(30, 41, 59, 0.8) !important;
-}
-html.dark .bg-slate-50 {
-  background-color: #0f172a !important;
-}
-html.dark .bg-slate-100 {
-  background-color: #1e293b !important;
-}
+
+/* Form inputs & controls */
 html.dark input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
 html.dark select,
 html.dark textarea {
@@ -149,6 +190,72 @@ html.dark textarea {
 html.dark input::placeholder,
 html.dark textarea::placeholder {
   color: #64748b !important;
+}
+
+/* Badge & Tag Color Balance */
+html.dark .bg-saffron-100 {
+  background-color: rgba(124, 45, 18, 0.45) !important;
+  color: #fdba74 !important;
+}
+html.dark .bg-rose-100 {
+  background-color: rgba(159, 18, 57, 0.45) !important;
+  color: #fda4af !important;
+}
+html.dark .bg-amber-100 {
+  background-color: rgba(120, 53, 15, 0.45) !important;
+  color: #fcd34d !important;
+}
+html.dark .bg-purple-100 {
+  background-color: rgba(88, 28, 135, 0.45) !important;
+  color: #d8b4fe !important;
+}
+html.dark .bg-blue-100 {
+  background-color: rgba(30, 58, 138, 0.45) !important;
+  color: #93c5fd !important;
+}
+html.dark .bg-emerald-100 {
+  background-color: rgba(6, 78, 59, 0.45) !important;
+  color: #6ee7b7 !important;
+}
+html.dark .bg-indigo-100 {
+  background-color: rgba(49, 46, 129, 0.45) !important;
+  color: #a5b4fc !important;
+}
+html.dark .bg-amber-50 {
+  background-color: rgba(120, 53, 15, 0.28) !important;
+  color: #fde68a !important;
+}
+html.dark .bg-rose-50 {
+  background-color: rgba(159, 18, 57, 0.28) !important;
+  color: #fecdd3 !important;
+}
+html.dark .bg-emerald-50 {
+  background-color: rgba(6, 78, 59, 0.28) !important;
+  color: #a7f3d0 !important;
+}
+html.dark .bg-saffron-50 {
+  background-color: rgba(124, 45, 18, 0.28) !important;
+  color: #fed7aa !important;
+}
+
+/* Modals & Dialogs */
+html.dark .shadow-card,
+html.dark .shadow-modal,
+html.dark .shadow-2xl {
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Table Enhancements */
+html.dark table th {
+  background-color: #141f32 !important;
+  color: #94a3b8 !important;
+  border-color: #1e293b !important;
+}
+html.dark table td {
+  border-color: #1e293b !important;
+}
+html.dark table tr:hover {
+  background-color: rgba(30, 41, 59, 0.4) !important;
 }
 
 /* Three.js Canvas Container */

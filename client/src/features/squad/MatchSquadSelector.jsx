@@ -280,11 +280,11 @@ export default function MatchSquadSelector({ team }) {
             >
               {team} Match Selection
             </span>
-            <h2 className="font-editorial text-2xl font-black text-navy-900 tracking-tight">
+            <h2 className="font-editorial text-2xl font-black text-navy-900 dark:text-white tracking-tight">
               Attendance-Based Match Squad Selection
             </h2>
           </div>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             Data-backed merit ranking • Enforces strict {team === 'BOYS' ? '15' : 'configured'}-player maximum limit • Transparent coach exception audit
           </p>
         </div>
@@ -316,7 +316,7 @@ export default function MatchSquadSelector({ team }) {
 
       {/* Match Selector Strip */}
       <div className="card-premium p-4 flex items-center gap-3 overflow-x-auto">
-        <span className="text-xs font-bold text-slate-500 uppercase tracking-wider shrink-0">
+        <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider shrink-0">
           Fixtures:
         </span>
         {matches.map((m) => {
@@ -328,8 +328,8 @@ export default function MatchSquadSelector({ team }) {
               onClick={() => handleSelectMatch(m)}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shrink-0 text-left border ${
                 isSelected
-                  ? 'bg-navy-900 text-white border-navy-900 shadow-sm'
-                  : 'bg-white text-slate-700 border-slate-200 hover:border-slate-300'
+                  ? 'bg-navy-900 dark:bg-saffron-600 text-white border-navy-900 dark:border-saffron-600 shadow-sm'
+                  : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
               }`}
             >
               <p className="leading-tight">vs {m.opponent}</p>
@@ -344,21 +344,21 @@ export default function MatchSquadSelector({ team }) {
       {selectedMatch ? (
         <div className="space-y-6">
           {/* Match Info & Squad Limit Counter Card */}
-          <div className="card-premium p-6 bg-gradient-to-r from-white via-court-sand to-white border-slate-200">
+          <div className="card-premium p-6 bg-gradient-to-r from-white via-court-sand to-white dark:from-slate-900 dark:via-slate-900 dark:to-slate-900 border-slate-200 dark:border-slate-800">
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
               <div className="space-y-1.5">
                 <div className="flex items-center gap-2">
-                  <span className="badge-tag bg-amber-100 text-amber-800">
+                  <span className="badge-tag bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300">
                     {selectedMatch.competition}
                   </span>
                   <span className="text-xs font-bold text-slate-400">
                     {new Date(selectedMatch.matchDate).toLocaleString()}
                   </span>
                 </div>
-                <h3 className="font-editorial text-2xl font-black text-navy-900">
+                <h3 className="font-editorial text-2xl font-black text-navy-900 dark:text-white">
                   vs {selectedMatch.opponent}
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-500 dark:text-slate-400">
                   Venue: <strong>{selectedMatch.venue}</strong> • Eligibility Threshold: <strong>{selectedMatch.eligibilityMinAttendancePct}%</strong> Attendance
                 </p>
               </div>
@@ -369,8 +369,8 @@ export default function MatchSquadSelector({ team }) {
                   <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
                     Squad Limit
                   </p>
-                  <p className="font-editorial text-3xl font-black text-navy-900">
-                    <span className={selectedPlayers.length === selectedMatch.squadSize ? 'text-sportsGreen-dark' : 'text-saffron-600'}>
+                  <p className="font-editorial text-3xl font-black text-navy-900 dark:text-white">
+                    <span className={selectedPlayers.length === selectedMatch.squadSize ? 'text-sportsGreen-dark' : 'text-saffron-600 dark:text-saffron-400'}>
                       {selectedPlayers.length}
                     </span>
                     <span className="text-slate-400 text-xl font-medium"> / {selectedMatch.squadSize}</span>
@@ -411,16 +411,16 @@ export default function MatchSquadSelector({ team }) {
             {/* Left: Selected Match Squad (Up to Max Limit) */}
             <div className="lg:col-span-7 space-y-4">
               <div className="flex items-center justify-between">
-                <h4 className="font-editorial text-base font-bold text-navy-900 flex items-center gap-2">
-                  <Shield className="w-4 h-4 text-saffron-600" />
+                <h4 className="font-editorial text-base font-bold text-navy-900 dark:text-white flex items-center gap-2">
+                  <Shield className="w-4 h-4 text-saffron-600 dark:text-saffron-400" />
                   Official Match Squad ({selectedPlayers.length} of {selectedMatch.squadSize})
                 </h4>
-                <span className="text-[11px] font-semibold text-slate-500">
+                <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
                   Playing 9 + Subs
                 </span>
               </div>
 
-              <div className="card-premium overflow-hidden divide-y divide-slate-100">
+              <div className="card-premium overflow-hidden divide-y divide-slate-100 dark:divide-slate-800">
                 {selectedPlayers.length === 0 ? (
                   <div className="p-8 text-center text-slate-400 text-xs">
                     No players currently selected. Add athletes from the candidate list below.
@@ -429,14 +429,14 @@ export default function MatchSquadSelector({ team }) {
                   selectedPlayers.map((p, idx) => {
                     const isBelowThreshold = (p.attendancePercentage || 0) < selectedMatch.eligibilityMinAttendancePct;
                     return (
-                      <div key={p.player} className="p-4 hover:bg-slate-50/70 transition-colors space-y-2">
+                      <div key={p.player} className="p-4 hover:bg-slate-50/70 dark:hover:bg-slate-800/50 transition-colors space-y-2">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
-                            <span className="w-7 h-7 rounded-lg bg-saffron-100 text-saffron-700 font-editorial font-black text-xs flex items-center justify-center">
+                            <span className="w-7 h-7 rounded-lg bg-saffron-100 dark:bg-saffron-950/80 text-saffron-700 dark:text-saffron-400 font-editorial font-black text-xs flex items-center justify-center">
                               #{p.jerseyNumber}
                             </span>
                             <div>
-                              <p className="font-bold text-navy-900 text-xs">{p.name}</p>
+                              <p className="font-bold text-navy-900 dark:text-white text-xs">{p.name}</p>
                               <span className="text-[10px] text-slate-400 font-medium">
                                 {p.position} • {p.matchAttendancePercentage !== undefined ? `${p.matchAttendancePercentage}% Match Quota (Base 75%)` : `${p.attendancePercentage}% Attendance`}
                               </span>
@@ -444,13 +444,13 @@ export default function MatchSquadSelector({ team }) {
                           </div>
 
                           <div className="flex items-center gap-2">
-                            <span className="badge-tag bg-slate-100 text-slate-700 text-[10px]">
+                            <span className="badge-tag bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px]">
                               Slot #{idx + 1}
                             </span>
                             <button
                               type="button"
                               onClick={() => handleDemoteToReserve(p)}
-                              className="p-1 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50"
+                              className="p-1 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50"
                               title="Move to Reserves"
                             >
                               <X className="w-4 h-4" />
@@ -460,15 +460,15 @@ export default function MatchSquadSelector({ team }) {
 
                         {/* Explainable ranking indicator */}
                         {p.rankingFactor && (
-                          <p className="text-[11px] text-slate-500 italic pl-10">
+                          <p className="text-[11px] text-slate-500 dark:text-slate-400 italic pl-10">
                             Reason: {p.rankingFactor}
                           </p>
                         )}
 
                         {/* Coach Exception Warning & Input if below threshold */}
                         {isBelowThreshold && (
-                          <div className="p-2.5 rounded-xl bg-amber-50 border border-amber-200 space-y-1">
-                            <div className="flex items-center gap-1.5 text-[11px] font-bold text-amber-800">
+                          <div className="p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 space-y-1">
+                            <div className="flex items-center gap-1.5 text-[11px] font-bold text-amber-800 dark:text-amber-300">
                               <AlertTriangle className="w-3.5 h-3.5" />
                               <span>Below {selectedMatch.eligibilityMinAttendancePct}% threshold ({p.attendancePercentage}%) — Coach Exception Mandatory</span>
                             </div>
@@ -477,7 +477,7 @@ export default function MatchSquadSelector({ team }) {
                               value={p.exceptionReason || ''}
                               onChange={(e) => handleExceptionReasonChange(p.player, e.target.value)}
                               placeholder="Reason (e.g. key pole diver tactical need, verified medical leave)..."
-                              className="w-full px-2.5 py-1 text-xs rounded-lg border border-amber-300 bg-white outline-none"
+                              className="w-full px-2.5 py-1 text-xs rounded-lg border border-amber-300 dark:border-amber-700 bg-white dark:bg-slate-800 text-navy-900 dark:text-white outline-none"
                             />
                           </div>
                         )}
@@ -491,7 +491,7 @@ export default function MatchSquadSelector({ team }) {
             {/* Right: Available Reserves & Recommendation Rankings */}
             <div className="lg:col-span-5 space-y-4">
               <div className="flex items-center justify-between">
-                <h4 className="font-editorial text-base font-bold text-navy-900 flex items-center gap-2">
+                <h4 className="font-editorial text-base font-bold text-navy-900 dark:text-white flex items-center gap-2">
                   <Star className="w-4 h-4 text-amber-500" />
                   Reserve Pool & Rankings
                 </h4>
@@ -499,26 +499,26 @@ export default function MatchSquadSelector({ team }) {
                   type="button"
                   onClick={() => generateRecommendations(selectedMatch._id, selectedMatch.squadSize)}
                   disabled={loadingRecs}
-                  className="text-xs text-saffron-600 hover:text-saffron-700 font-bold"
+                  className="text-xs text-saffron-600 dark:text-saffron-400 hover:text-saffron-700 font-bold"
                 >
                   {loadingRecs ? 'Recalculating...' : 'Refresh AI Rankings'}
                 </button>
               </div>
 
-              <div className="card-premium overflow-hidden divide-y divide-slate-100 max-h-[580px] overflow-y-auto">
+              <div className="card-premium overflow-hidden divide-y divide-slate-100 dark:divide-slate-800 max-h-[580px] overflow-y-auto">
                 {reservePlayers.length === 0 ? (
                   <div className="p-8 text-center text-slate-400 text-xs">
                     All available athletes are currently assigned to the main squad.
                   </div>
                 ) : (
                   reservePlayers.map((p) => (
-                    <div key={p.player || p._id} className="p-3.5 flex items-center justify-between hover:bg-slate-50/70 text-xs">
+                    <div key={p.player || p._id} className="p-3.5 flex items-center justify-between hover:bg-slate-50/70 dark:hover:bg-slate-800/50 text-xs">
                       <div className="flex items-center gap-2.5">
-                        <span className="w-6 h-6 rounded-md bg-slate-100 text-slate-700 font-editorial font-bold text-xs flex items-center justify-center">
+                        <span className="w-6 h-6 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-editorial font-bold text-xs flex items-center justify-center">
                           #{p.jerseyNumber}
                         </span>
                         <div>
-                          <p className="font-bold text-navy-900">{p.name}</p>
+                          <p className="font-bold text-navy-900 dark:text-white">{p.name}</p>
                           <p className="text-[10px] text-slate-400">
                             {p.position} • {p.matchAttendancePercentage !== undefined ? `${p.matchAttendancePercentage}% Match Quota (Base 75%)` : `${p.attendancePercentage}% Attendance`}
                           </p>
@@ -549,15 +549,15 @@ export default function MatchSquadSelector({ team }) {
 
       {/* Schedule Match Modal */}
       {createMatchModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/40 backdrop-blur-sm">
-          <div className="w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-200 p-6 space-y-4">
-            <h3 className="font-editorial text-xl font-bold text-navy-900">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/60 backdrop-blur-sm">
+          <div className="w-full max-w-lg bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 p-6 space-y-4">
+            <h3 className="font-editorial text-xl font-bold text-navy-900 dark:text-white">
               Schedule New {team} Fixture
             </h3>
 
             <form onSubmit={handleCreateMatch} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold uppercase text-slate-700 mb-1">
+                <label className="block text-xs font-bold uppercase text-slate-700 dark:text-slate-300 mb-1">
                   Opponent Team *
                 </label>
                 <input
@@ -566,12 +566,12 @@ export default function MatchSquadSelector({ team }) {
                   value={newMatch.opponent}
                   onChange={(e) => setNewMatch({ ...newMatch, opponent: e.target.value })}
                   placeholder="e.g. Maharashtra Warriors Kho-Kho Club"
-                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:border-saffron-500 outline-none"
+                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-navy-900 dark:text-white focus:border-saffron-500 outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase text-slate-700 mb-1">
+                <label className="block text-xs font-bold uppercase text-slate-700 dark:text-slate-300 mb-1">
                   Tournament / Competition *
                 </label>
                 <input
@@ -580,13 +580,13 @@ export default function MatchSquadSelector({ team }) {
                   value={newMatch.competition}
                   onChange={(e) => setNewMatch({ ...newMatch, competition: e.target.value })}
                   placeholder="e.g. Inter-University West Zone Championship 2026"
-                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:border-saffron-500 outline-none"
+                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-navy-900 dark:text-white focus:border-saffron-500 outline-none"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold uppercase text-slate-700 mb-1">
+                  <label className="block text-xs font-bold uppercase text-slate-700 dark:text-slate-300 mb-1">
                     Match Date & Time *
                   </label>
                   <input
@@ -594,12 +594,12 @@ export default function MatchSquadSelector({ team }) {
                     required
                     value={newMatch.matchDate}
                     onChange={(e) => setNewMatch({ ...newMatch, matchDate: e.target.value })}
-                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 outline-none"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-navy-900 dark:text-white outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase text-slate-700 mb-1">
+                  <label className="block text-xs font-bold uppercase text-slate-700 dark:text-slate-300 mb-1">
                     Venue *
                   </label>
                   <input
@@ -608,14 +608,14 @@ export default function MatchSquadSelector({ team }) {
                     value={newMatch.venue}
                     onChange={(e) => setNewMatch({ ...newMatch, venue: e.target.value })}
                     placeholder="e.g. Shivaji Park Court 1"
-                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 outline-none"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-navy-900 dark:text-white outline-none"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold uppercase text-slate-700 mb-1">
+                  <label className="block text-xs font-bold uppercase text-slate-700 dark:text-slate-300 mb-1">
                     Max Squad Limit (Rules: 9-18) *
                   </label>
                   <input
@@ -625,7 +625,7 @@ export default function MatchSquadSelector({ team }) {
                     required
                     value={newMatch.squadSize}
                     onChange={(e) => setNewMatch({ ...newMatch, squadSize: e.target.value })}
-                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 outline-none"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-navy-900 dark:text-white outline-none"
                   />
                   <p className="text-[10px] text-slate-400 mt-0.5">
                     {team === 'BOYS' ? 'Default 15 players for Boys' : 'Configurable limit for Girls'}
@@ -633,7 +633,7 @@ export default function MatchSquadSelector({ team }) {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase text-slate-700 mb-1">
+                  <label className="block text-xs font-bold uppercase text-slate-700 dark:text-slate-300 mb-1">
                     Min Attendance % *
                   </label>
                   <input
@@ -643,7 +643,7 @@ export default function MatchSquadSelector({ team }) {
                     required
                     value={newMatch.eligibilityMinAttendancePct}
                     onChange={(e) => setNewMatch({ ...newMatch, eligibilityMinAttendancePct: e.target.value })}
-                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 outline-none"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-navy-900 dark:text-white outline-none"
                   />
                 </div>
               </div>

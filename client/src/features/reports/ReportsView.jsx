@@ -84,17 +84,17 @@ export default function ReportsView({ team }) {
             >
               {team} Analytics
             </span>
-            <h2 className="font-editorial text-2xl font-black text-navy-900 tracking-tight">
+            <h2 className="font-editorial text-2xl font-black text-navy-900 dark:text-white tracking-tight">
               Reports & Attendance Analytics
             </h2>
           </div>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             Deterministic attendance calculation • Formula: Present Sessions ÷ (Total Recorded − Excused) × 100
           </p>
         </div>
 
         {/* Report Type Selector Tabs */}
-        <div className="flex items-center gap-1.5 p-1.5 bg-slate-100 rounded-2xl">
+        <div className="flex items-center gap-1.5 p-1.5 bg-slate-100 dark:bg-slate-800 rounded-2xl">
           {['daily', 'weekly', 'monthly', 'custom'].map((type) => (
             <button
               key={type}
@@ -102,8 +102,8 @@ export default function ReportsView({ team }) {
               onClick={() => setReportType(type)}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all capitalize ${
                 reportType === type
-                  ? 'bg-white text-saffron-600 shadow-sm'
-                  : 'text-slate-600 hover:text-navy-900'
+                  ? 'bg-white dark:bg-slate-900 text-saffron-600 dark:text-saffron-400 shadow-sm'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-navy-900 dark:hover:text-white'
               }`}
             >
               {type} Report
@@ -116,35 +116,35 @@ export default function ReportsView({ team }) {
       {reportType === 'daily' && (
         <div className="space-y-6">
           {/* Date Selector */}
-          <div className="card-premium p-4 flex items-center justify-between">
+          <div className="card-premium p-4 flex items-center justify-between dark:bg-slate-900 dark:border-slate-800">
             <div className="flex items-center gap-3 text-xs">
-              <label className="font-bold text-slate-700">Select Date:</label>
+              <label className="font-bold text-slate-700 dark:text-slate-300">Select Date:</label>
               <input
                 type="date"
                 value={dailyDate}
                 onChange={(e) => setDailyDate(e.target.value)}
-                className="px-3 py-1.5 rounded-xl border border-slate-200 bg-white font-medium"
+                className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-navy-900 dark:text-white font-medium"
               />
             </div>
             {dailyData?.session && (
-              <span className="text-xs font-bold text-navy-800">
-                Session: <strong className="text-saffron-600">{dailyData.session.sessionLabel}</strong> ({dailyData.session.status})
+              <span className="text-xs font-bold text-navy-800 dark:text-slate-200">
+                Session: <strong className="text-saffron-600 dark:text-saffron-400">{dailyData.session.sessionLabel}</strong> ({dailyData.session.status})
               </span>
             )}
           </div>
 
           {loading ? (
-            <div className="p-12 text-center text-xs text-slate-400">Loading daily report...</div>
+            <div className="p-12 text-center text-xs text-slate-400 dark:text-slate-500">Loading daily report...</div>
           ) : !dailyData?.session ? (
-            <div className="card-premium p-12 text-center text-slate-500 text-xs">
+            <div className="card-premium p-12 text-center text-slate-500 dark:text-slate-400 text-xs dark:bg-slate-900 dark:border-slate-800">
               No recorded practice sessions found for {team} on {dailyDate}.
             </div>
           ) : (
-            <div className="card-premium overflow-hidden">
+            <div className="card-premium overflow-hidden dark:bg-slate-900 dark:border-slate-800">
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse text-xs">
                   <thead>
-                    <tr className="border-b border-slate-100 bg-slate-50/70 text-[11px] font-bold text-slate-500 uppercase">
+                    <tr className="border-b border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase">
                       <th className="py-3 px-4">Jersey</th>
                       <th className="py-3 px-4">Player</th>
                       <th className="py-3 px-4">Position</th>
@@ -152,34 +152,34 @@ export default function ReportsView({ team }) {
                       <th className="py-3 px-4">Coaching Remarks</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-navy-900 dark:text-slate-200">
                     {dailyData.records.map((r) => (
-                      <tr key={r._id} className="hover:bg-slate-50/60">
-                        <td className="py-3 px-4 font-editorial font-black text-saffron-600">
+                      <tr key={r._id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40">
+                        <td className="py-3 px-4 font-editorial font-black text-saffron-600 dark:text-saffron-400">
                           #{r.player?.jerseyNumber}
                         </td>
-                        <td className="py-3 px-4 font-bold text-navy-900">
+                        <td className="py-3 px-4 font-bold text-navy-900 dark:text-white">
                           {r.player?.name}
                         </td>
-                        <td className="py-3 px-4 text-slate-500">
+                        <td className="py-3 px-4 text-slate-500 dark:text-slate-400">
                           {r.player?.position}
                         </td>
                         <td className="py-3 px-4 text-center">
                           <span
                             className={`badge-tag ${
                               r.status === 'PRESENT'
-                                ? 'bg-emerald-100 text-emerald-800'
+                                ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300'
                                 : r.status === 'ABSENT'
-                                ? 'bg-rose-100 text-rose-800'
+                                ? 'bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300'
                                 : r.status === 'LATE'
-                                ? 'bg-amber-100 text-amber-800'
-                                : 'bg-purple-100 text-purple-800'
+                                ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300'
+                                : 'bg-purple-100 text-purple-800 dark:bg-purple-950/60 dark:text-purple-300'
                             }`}
                           >
                             {r.status}
                           </span>
                         </td>
-                        <td className="py-3 px-4 text-slate-500">
+                        <td className="py-3 px-4 text-slate-500 dark:text-slate-400">
                           {r.notes || '—'}
                         </td>
                       </tr>
@@ -195,25 +195,25 @@ export default function ReportsView({ team }) {
       {/* ==================== 2. WEEKLY REPORT ==================== */}
       {reportType === 'weekly' && (
         <div className="space-y-6">
-          <div className="card-premium p-4 flex items-center justify-between text-xs text-slate-600">
+          <div className="card-premium p-4 flex items-center justify-between text-xs text-slate-600 dark:text-slate-300 dark:bg-slate-900 dark:border-slate-800">
             <span>
-              Week Period: <strong>{weeklyData?.startDate}</strong> to <strong>{weeklyData?.endDate}</strong>
+              Week Period: <strong className="text-navy-900 dark:text-white">{weeklyData?.startDate}</strong> to <strong className="text-navy-900 dark:text-white">{weeklyData?.endDate}</strong>
             </span>
-            <span>Total Sessions in Week: <strong>{weeklyData?.sessions?.length || 0}</strong></span>
+            <span>Total Sessions in Week: <strong className="text-saffron-600 dark:text-saffron-400">{weeklyData?.sessions?.length || 0}</strong></span>
           </div>
 
           {loading ? (
-            <div className="p-12 text-center text-xs text-slate-400">Loading weekly breakdown...</div>
+            <div className="p-12 text-center text-xs text-slate-400 dark:text-slate-500">Loading weekly breakdown...</div>
           ) : !weeklyData?.playerMatrix || weeklyData.playerMatrix.length === 0 ? (
-            <div className="card-premium p-12 text-center text-slate-500 text-xs">
+            <div className="card-premium p-12 text-center text-slate-500 dark:text-slate-400 text-xs dark:bg-slate-900 dark:border-slate-800">
               No weekly session data available for this range.
             </div>
           ) : (
-            <div className="card-premium overflow-hidden">
+            <div className="card-premium overflow-hidden dark:bg-slate-900 dark:border-slate-800">
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse text-xs">
                   <thead>
-                    <tr className="border-b border-slate-100 bg-slate-50/70 text-[11px] font-bold text-slate-500 uppercase">
+                    <tr className="border-b border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase">
                       <th className="py-3 px-4">Jersey</th>
                       <th className="py-3 px-4">Athlete</th>
                       <th className="py-3 px-4 text-center">Present</th>
@@ -224,36 +224,36 @@ export default function ReportsView({ team }) {
                       <th className="py-3 px-4 text-center">Match Quota (75% Base)</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-navy-900 dark:text-slate-200">
                     {weeklyData.playerMatrix.map((item) => {
                       const matchPct = item.matchAttendancePercentage ?? Math.max(0, 75 - (item.absentCount * 2) - (item.excusedCount * 1));
                       const totalDed = item.totalDeduction ?? ((item.absentCount * 2) + (item.excusedCount * 1));
                       return (
-                        <tr key={item.player._id} className="hover:bg-slate-50/60">
-                          <td className="py-3 px-4 font-editorial font-black text-saffron-600">
+                        <tr key={item.player._id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40">
+                          <td className="py-3 px-4 font-editorial font-black text-saffron-600 dark:text-saffron-400">
                             #{item.player.jerseyNumber}
                           </td>
-                          <td className="py-3 px-4 font-bold text-navy-900">
+                          <td className="py-3 px-4 font-bold text-navy-900 dark:text-white">
                             {item.player.name}
                           </td>
-                          <td className="py-3 px-4 text-center font-bold text-sportsGreen-dark">
+                          <td className="py-3 px-4 text-center font-bold text-sportsGreen-dark dark:text-emerald-400">
                             {item.presentCount}
                           </td>
-                          <td className="py-3 px-4 text-center font-bold text-rose-600">
+                          <td className="py-3 px-4 text-center font-bold text-rose-600 dark:text-rose-400">
                             {item.absentCount}
                           </td>
-                          <td className="py-3 px-4 text-center text-amber-600 font-medium">
+                          <td className="py-3 px-4 text-center text-amber-600 dark:text-amber-400 font-medium">
                             {item.lateCount}
                           </td>
-                          <td className="py-3 px-4 text-center text-purple-600 font-medium">
+                          <td className="py-3 px-4 text-center text-purple-600 dark:text-purple-400 font-medium">
                             {item.excusedCount}
                           </td>
-                          <td className="py-3 px-4 text-center font-editorial font-black text-sm text-saffron-600">
+                          <td className="py-3 px-4 text-center font-editorial font-black text-sm text-saffron-600 dark:text-saffron-400">
                             {item.percentage}%
                           </td>
                           <td className="py-3 px-4 text-center">
                             <span className={`font-editorial font-black text-sm ${
-                              matchPct >= 75 ? 'text-sportsGreen-dark' : 'text-amber-600'
+                              matchPct >= 75 ? 'text-sportsGreen-dark dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'
                             }`}>
                               {matchPct}%
                             </span>
@@ -280,13 +280,13 @@ export default function ReportsView({ team }) {
       {reportType === 'monthly' && (
         <div className="space-y-6">
           {/* Controls */}
-          <div className="card-premium p-4 flex items-center justify-between">
+          <div className="card-premium p-4 flex items-center justify-between dark:bg-slate-900 dark:border-slate-800">
             <div className="flex items-center gap-3 text-xs">
-              <label className="font-bold text-slate-700">Month / Year:</label>
+              <label className="font-bold text-slate-700 dark:text-slate-300">Month / Year:</label>
               <select
                 value={selectedMonth}
                 onChange={(e) => setSelectedMonth(Number(e.target.value))}
-                className="px-3 py-1.5 rounded-xl border border-slate-200 bg-white font-medium"
+                className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-navy-900 dark:text-white font-medium"
               >
                 {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
                   <option key={m} value={m}>
@@ -298,7 +298,7 @@ export default function ReportsView({ team }) {
               <select
                 value={selectedYear}
                 onChange={(e) => setSelectedYear(Number(e.target.value))}
-                className="px-3 py-1.5 rounded-xl border border-slate-200 bg-white font-medium"
+                className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-navy-900 dark:text-white font-medium"
               >
                 {[2024, 2025, 2026, 2027].map((y) => (
                   <option key={y} value={y}>{y}</option>
@@ -306,26 +306,26 @@ export default function ReportsView({ team }) {
               </select>
             </div>
 
-            <div className="text-xs font-bold text-navy-800">
-              Total Sessions Recorded: <span className="text-saffron-600">{monthlyData?.sessionsCount || 0}</span>
+            <div className="text-xs font-bold text-navy-800 dark:text-slate-200">
+              Total Sessions Recorded: <span className="text-saffron-600 dark:text-saffron-400">{monthlyData?.sessionsCount || 0}</span>
             </div>
           </div>
 
           {/* Recharts Monthly Attendance Trend */}
           {monthlyData?.dailyChart && monthlyData.dailyChart.length > 0 && (
-            <div className="card-premium p-6">
-              <h3 className="font-editorial text-base font-bold text-navy-900 mb-4 flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-saffron-600" />
+            <div className="card-premium p-6 dark:bg-slate-900 dark:border-slate-800">
+              <h3 className="font-editorial text-base font-bold text-navy-900 dark:text-white mb-4 flex items-center gap-2">
+                <TrendingUp className="w-4 h-4 text-saffron-600 dark:text-saffron-400" />
                 Daily Attendance Trend (%)
               </h3>
               <div className="w-full h-64">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={monthlyData.dailyChart} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                    <XAxis dataKey="fullDate" tickLine={false} tick={{ fontSize: 10, fill: '#64748b' }} />
-                    <YAxis domain={[0, 100]} tickLine={false} tick={{ fontSize: 10, fill: '#64748b' }} />
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#334155" opacity={0.3} />
+                    <XAxis dataKey="fullDate" tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8' }} />
+                    <YAxis domain={[0, 100]} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8' }} />
                     <Tooltip
-                      contentStyle={{ backgroundColor: '#ffffff', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}
+                      contentStyle={{ backgroundColor: '#1e293b', color: '#f8fafc', borderRadius: '12px', border: '1px solid #334155', boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}
                       formatter={(val) => [`${val}%`, 'Attendance Rate']}
                     />
                     <Bar dataKey="percentage" fill="#ea580c" radius={[6, 6, 0, 0]} />
@@ -337,16 +337,16 @@ export default function ReportsView({ team }) {
 
           {/* Player Breakdown Table */}
           {monthlyData?.playerStats && (
-            <div className="card-premium overflow-hidden">
-              <div className="p-4 border-b border-slate-100 flex items-center justify-between">
-                <h4 className="font-editorial text-sm font-bold text-navy-900">
+            <div className="card-premium overflow-hidden dark:bg-slate-900 dark:border-slate-800">
+              <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                <h4 className="font-editorial text-sm font-bold text-navy-900 dark:text-white">
                   Athlete Monthly Standing & Percentages
                 </h4>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse text-xs">
                   <thead>
-                    <tr className="border-b border-slate-100 bg-slate-50/70 text-[11px] font-bold text-slate-500 uppercase">
+                    <tr className="border-b border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase">
                       <th className="py-3 px-4">Jersey</th>
                       <th className="py-3 px-4">Athlete</th>
                       <th className="py-3 px-4">Position</th>
@@ -357,36 +357,36 @@ export default function ReportsView({ team }) {
                       <th className="py-3 px-4 text-center">Match Quota (75% Base)</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-navy-900 dark:text-slate-200">
                     {monthlyData.playerStats.map((item) => {
                       const matchPct = item.matchAttendancePercentage ?? Math.max(0, 75 - (item.absent * 2) - (item.excused * 1));
                       const totalDed = item.totalDeduction ?? ((item.absent * 2) + (item.excused * 1));
                       return (
-                        <tr key={item.playerId} className="hover:bg-slate-50/60">
-                          <td className="py-3 px-4 font-editorial font-black text-saffron-600">
+                        <tr key={item.playerId} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40">
+                          <td className="py-3 px-4 font-editorial font-black text-saffron-600 dark:text-saffron-400">
                             #{item.jerseyNumber}
                           </td>
-                          <td className="py-3 px-4 font-bold text-navy-900">
+                          <td className="py-3 px-4 font-bold text-navy-900 dark:text-white">
                             {item.name}
                           </td>
-                          <td className="py-3 px-4 text-slate-500">
+                          <td className="py-3 px-4 text-slate-500 dark:text-slate-400">
                             {item.position}
                           </td>
-                          <td className="py-3 px-4 text-center font-bold text-sportsGreen-dark">
+                          <td className="py-3 px-4 text-center font-bold text-sportsGreen-dark dark:text-emerald-400">
                             {item.present}
                           </td>
-                          <td className="py-3 px-4 text-center font-bold text-rose-600">
+                          <td className="py-3 px-4 text-center font-bold text-rose-600 dark:text-rose-400">
                             {item.absent}
                           </td>
-                          <td className="py-3 px-4 text-center text-purple-600">
+                          <td className="py-3 px-4 text-center text-purple-600 dark:text-purple-400">
                             {item.excused}
                           </td>
-                          <td className="py-3 px-4 text-center font-editorial font-black text-sm text-saffron-600">
+                          <td className="py-3 px-4 text-center font-editorial font-black text-sm text-saffron-600 dark:text-saffron-400">
                             {item.percentage}%
                           </td>
                           <td className="py-3 px-4 text-center">
                             <span className={`font-editorial font-black text-sm ${
-                              matchPct >= 75 ? 'text-sportsGreen-dark' : 'text-amber-600'
+                              matchPct >= 75 ? 'text-sportsGreen-dark dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'
                             }`}>
                               {matchPct}%
                             </span>
@@ -412,27 +412,27 @@ export default function ReportsView({ team }) {
       {/* ==================== 4. CUSTOM REPORT & CSV EXPORT ==================== */}
       {reportType === 'custom' && (
         <div className="space-y-6">
-          <div className="card-premium p-4 flex flex-wrap items-center justify-between gap-3">
+          <div className="card-premium p-4 flex flex-wrap items-center justify-between gap-3 dark:bg-slate-900 dark:border-slate-800">
             <div className="flex items-center gap-3 text-xs flex-wrap">
-              <span className="font-bold text-slate-700">Date Range:</span>
+              <span className="font-bold text-slate-700 dark:text-slate-300">Date Range:</span>
               <input
                 type="date"
                 value={customStart}
                 onChange={(e) => setCustomStart(e.target.value)}
-                className="px-3 py-1.5 rounded-xl border border-slate-200 bg-white font-medium"
+                className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-navy-900 dark:text-white font-medium"
               />
               <span className="text-slate-400">to</span>
               <input
                 type="date"
                 value={customEnd}
                 onChange={(e) => setCustomEnd(e.target.value)}
-                className="px-3 py-1.5 rounded-xl border border-slate-200 bg-white font-medium"
+                className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-navy-900 dark:text-white font-medium"
               />
 
               <select
                 value={customStatus}
                 onChange={(e) => setCustomStatus(e.target.value)}
-                className="px-3 py-1.5 rounded-xl border border-slate-200 bg-white font-medium text-xs"
+                className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-navy-900 dark:text-white font-medium text-xs"
               >
                 <option value="ALL">All Statuses</option>
                 <option value="PRESENT">Present Only</option>
@@ -455,21 +455,21 @@ export default function ReportsView({ team }) {
           </div>
 
           {loading ? (
-            <div className="p-12 text-center text-xs text-slate-400">Filtering records...</div>
+            <div className="p-12 text-center text-xs text-slate-400 dark:text-slate-500">Filtering records...</div>
           ) : !customData?.records || customData.records.length === 0 ? (
-            <div className="card-premium p-12 text-center text-slate-500 text-xs">
+            <div className="card-premium p-12 text-center text-slate-500 dark:text-slate-400 text-xs dark:bg-slate-900 dark:border-slate-800">
               No matching attendance records found.
             </div>
           ) : (
-            <div className="card-premium overflow-hidden">
-              <div className="p-3.5 bg-slate-50 border-b border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <div className="card-premium overflow-hidden dark:bg-slate-900 dark:border-slate-800">
+              <div className="p-3.5 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                 <span>Matching Records: <strong>{customData.totalRecords}</strong></span>
                 <span>Sessions Covered: <strong>{customData.sessionsCount}</strong></span>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse text-xs">
                   <thead>
-                    <tr className="border-b border-slate-100 bg-slate-50/70 text-[11px] font-bold text-slate-500 uppercase">
+                    <tr className="border-b border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase">
                       <th className="py-3 px-4">Date</th>
                       <th className="py-3 px-4">Session</th>
                       <th className="py-3 px-4">Jersey</th>
@@ -479,44 +479,44 @@ export default function ReportsView({ team }) {
                       <th className="py-3 px-4">Notes</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-navy-900 dark:text-slate-200">
                     {customData.records.slice(0, 100).map((r) => (
-                      <tr key={r._id} className="hover:bg-slate-50/60">
-                        <td className="py-3 px-4 font-mono font-medium text-slate-600">
+                      <tr key={r._id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40">
+                        <td className="py-3 px-4 font-mono font-medium text-slate-600 dark:text-slate-400">
                           {r.session?.date || r.date}
                         </td>
-                        <td className="py-3 px-4 text-slate-700">
+                        <td className="py-3 px-4 text-slate-700 dark:text-slate-300">
                           {r.session?.sessionLabel}
                         </td>
-                        <td className="py-3 px-4 font-editorial font-black text-saffron-600">
+                        <td className="py-3 px-4 font-editorial font-black text-saffron-600 dark:text-saffron-400">
                           #{r.player?.jerseyNumber}
                         </td>
-                        <td className="py-3 px-4 font-bold text-navy-900">
+                        <td className="py-3 px-4 font-bold text-navy-900 dark:text-white">
                           {r.player?.name}
                         </td>
-                        <td className="py-3 px-4 text-slate-500">
+                        <td className="py-3 px-4 text-slate-500 dark:text-slate-400">
                           {r.player?.position}
                         </td>
                         <td className="py-3 px-4 text-center">
                           <span
                             className={`badge-tag ${
                               r.status === 'PRESENT'
-                                ? 'bg-emerald-100 text-emerald-800'
+                                ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300'
                                 : r.status === 'OD'
-                                ? 'bg-sky-100 text-sky-800 border border-sky-300 font-bold'
+                                ? 'bg-sky-100 text-sky-800 border border-sky-300 dark:bg-sky-950/60 dark:text-sky-300 dark:border-sky-700 font-bold'
                                 : r.status === 'LEAVE'
-                                ? 'bg-purple-100 text-purple-800 font-bold'
+                                ? 'bg-purple-100 text-purple-800 dark:bg-purple-950/60 dark:text-purple-300 font-bold'
                                 : r.status === 'ABSENT'
-                                ? 'bg-rose-100 text-rose-800'
+                                ? 'bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300'
                                 : r.status === 'LATE'
-                                ? 'bg-amber-100 text-amber-800'
-                                : 'bg-slate-100 text-slate-800'
+                                ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300'
+                                : 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300'
                             }`}
                           >
                             {r.status === 'OD' ? 'OD (Present)' : r.status}
                           </span>
                         </td>
-                        <td className="py-3 px-4 text-slate-500">
+                        <td className="py-3 px-4 text-slate-500 dark:text-slate-400">
                           {r.notes || '—'}
                         </td>
                       </tr>

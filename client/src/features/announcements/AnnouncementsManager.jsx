@@ -82,11 +82,11 @@ export default function AnnouncementsManager({ team }) {
             >
               {team} Notices
             </span>
-            <h2 className="font-editorial text-2xl font-black text-navy-900 tracking-tight">
+            <h2 className="font-editorial text-2xl font-black text-navy-900 dark:text-white tracking-tight">
               Team Announcements & Schedule
             </h2>
           </div>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             Publish official practice timings, tournament notices, and squad briefings directly to player portals.
           </p>
         </div>
@@ -118,21 +118,21 @@ export default function AnnouncementsManager({ team }) {
       {/* Announcements List */}
       <div className="space-y-4">
         {loading ? (
-          <div className="card-premium p-12 text-center text-slate-400 text-xs">
+          <div className="card-premium p-12 text-center text-slate-400 dark:text-slate-500 text-xs dark:bg-slate-900 dark:border-slate-800">
             Loading team announcements...
           </div>
         ) : announcements.length === 0 ? (
-          <div className="card-premium p-12 text-center text-slate-400 text-xs">
-            <Megaphone className="w-10 h-10 text-slate-300 mx-auto mb-2" />
-            <p className="font-bold text-slate-600">No active announcements</p>
+          <div className="card-premium p-12 text-center text-slate-400 dark:text-slate-500 text-xs dark:bg-slate-900 dark:border-slate-800">
+            <Megaphone className="w-10 h-10 text-slate-300 dark:text-slate-600 mx-auto mb-2" />
+            <p className="font-bold text-slate-600 dark:text-slate-300">No active announcements</p>
             <p className="text-[11px] mt-0.5">Click "New Notice" to publish a schedule or briefing.</p>
           </div>
         ) : (
           announcements.map((item) => (
             <div
               key={item._id}
-              className={`card-premium p-6 transition-all ${
-                item.isUrgent ? 'border-l-4 border-l-rose-500 bg-rose-50/20' : 'border-slate-200'
+              className={`card-premium p-6 transition-all dark:bg-slate-900 ${
+                item.isUrgent ? 'border-l-4 border-l-rose-500 bg-rose-50/20 dark:bg-rose-950/20 dark:border-slate-800' : 'border-slate-200 dark:border-slate-800'
               }`}
             >
               <div className="flex items-start justify-between gap-4">
@@ -141,46 +141,46 @@ export default function AnnouncementsManager({ team }) {
                     <span
                       className={`badge-tag ${
                         item.category === 'MATCH'
-                          ? 'bg-amber-100 text-amber-800'
+                          ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300'
                           : item.category === 'PRACTICE'
-                          ? 'bg-blue-100 text-blue-800'
+                          ? 'bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300'
                           : item.category === 'SQUAD'
-                          ? 'bg-purple-100 text-purple-800'
-                          : 'bg-slate-100 text-slate-700'
+                          ? 'bg-purple-100 text-purple-800 dark:bg-purple-950/60 dark:text-purple-300'
+                          : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
                       }`}
                     >
                       {item.category}
                     </span>
 
                     {item.isUrgent && (
-                      <span className="badge-tag bg-rose-100 text-rose-800 font-bold">
+                      <span className="badge-tag bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300 font-bold">
                         Urgent Action
                       </span>
                     )}
 
-                    <span className="text-[11px] font-semibold text-slate-400 flex items-center gap-1">
+                    <span className="text-[11px] font-semibold text-slate-400 dark:text-slate-500 flex items-center gap-1">
                       <Calendar className="w-3.5 h-3.5" />
                       {new Date(item.createdAt).toLocaleDateString()}
                     </span>
                   </div>
 
-                  <h3 className="font-editorial text-lg font-bold text-navy-900">
+                  <h3 className="font-editorial text-lg font-bold text-navy-900 dark:text-white">
                     {item.title}
                   </h3>
 
-                  <p className="text-sm text-slate-600 whitespace-pre-line leading-relaxed">
+                  <p className="text-sm text-slate-600 dark:text-slate-300 whitespace-pre-line leading-relaxed">
                     {item.message}
                   </p>
 
-                  <div className="pt-2 text-[11px] text-slate-400">
-                    Issued by: <strong className="text-navy-900">{item.authorName}</strong>
+                  <div className="pt-2 text-[11px] text-slate-400 dark:text-slate-500">
+                    Issued by: <strong className="text-navy-900 dark:text-white">{item.authorName}</strong>
                   </div>
                 </div>
 
                 <button
                   type="button"
                   onClick={() => handleDelete(item._id)}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
                   title="Delete Notice"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -193,15 +193,15 @@ export default function AnnouncementsManager({ team }) {
 
       {/* Create Modal */}
       {createModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/40 backdrop-blur-sm">
-          <div className="w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-200 p-6 space-y-4">
-            <h3 className="font-editorial text-xl font-bold text-navy-900">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/60 backdrop-blur-sm">
+          <div className="w-full max-w-lg bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 p-6 space-y-4">
+            <h3 className="font-editorial text-xl font-bold text-navy-900 dark:text-white">
               Publish Team Notice
             </h3>
 
             <form onSubmit={handleCreate} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold uppercase text-slate-700 mb-1">
+                <label className="block text-xs font-bold uppercase text-slate-700 dark:text-slate-300 mb-1">
                   Title *
                 </label>
                 <input
@@ -210,19 +210,19 @@ export default function AnnouncementsManager({ team }) {
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   placeholder="e.g. Schedule Change: Tomorrow Morning Speed Drills"
-                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:border-saffron-500 outline-none"
+                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-navy-900 dark:text-white focus:border-saffron-500 outline-none"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold uppercase text-slate-700 mb-1">
+                  <label className="block text-xs font-bold uppercase text-slate-700 dark:text-slate-300 mb-1">
                     Category *
                   </label>
                   <select
                     value={formData.category}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 bg-white outline-none"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 outline-none"
                   >
                     <option value="GENERAL">General Notice</option>
                     <option value="PRACTICE">Practice Schedule</option>
@@ -233,7 +233,7 @@ export default function AnnouncementsManager({ team }) {
                 </div>
 
                 <div className="flex items-center pt-6">
-                  <label className="flex items-center gap-2 text-xs font-bold text-slate-700 cursor-pointer">
+                  <label className="flex items-center gap-2 text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={formData.isUrgent}
@@ -246,7 +246,7 @@ export default function AnnouncementsManager({ team }) {
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase text-slate-700 mb-1">
+                <label className="block text-xs font-bold uppercase text-slate-700 dark:text-slate-300 mb-1">
                   Message Content *
                 </label>
                 <textarea
@@ -255,7 +255,7 @@ export default function AnnouncementsManager({ team }) {
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   placeholder="Enter notice details, instructions, required gear, reporting time..."
-                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:border-saffron-500 outline-none resize-none"
+                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-navy-900 dark:text-white focus:border-saffron-500 outline-none resize-none"
                 />
               </div>
 

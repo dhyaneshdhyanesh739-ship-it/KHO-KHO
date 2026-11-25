@@ -29,7 +29,7 @@ export default function Navbar({ onOpenLogin, onOpenTeamLogin, onOpenAdminLogin,
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-subtle transition-all duration-300">
+    <nav className="fixed top-0 left-0 right-0 z-40 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 shadow-subtle transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo & Brand Identity */}
@@ -39,7 +39,7 @@ export default function Navbar({ onOpenLogin, onOpenTeamLogin, onOpenAdminLogin,
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="font-editorial font-black text-xl text-navy-900 tracking-tight">KHO-KHO</span>
+                <span className="font-editorial font-black text-xl text-navy-900 dark:text-white tracking-tight">KHO-KHO</span>
                 <span className="font-editorial font-black text-xl text-saffron-600 tracking-tight">ARENA</span>
               </div>
               <p className="text-[10px] font-bold tracking-widest text-slate-400 uppercase">
@@ -58,7 +58,7 @@ export default function Navbar({ onOpenLogin, onOpenTeamLogin, onOpenAdminLogin,
                   e.preventDefault();
                   handleNavClick(link.href);
                 }}
-                className="px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-700 hover:text-saffron-600 hover:bg-saffron-50/50 transition-colors"
+                className="px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-saffron-600 dark:hover:text-saffron-400 hover:bg-saffron-50/50 dark:hover:bg-saffron-950/50 transition-colors"
               >
                 {link.label}
               </a>
@@ -173,7 +173,7 @@ export default function Navbar({ onOpenLogin, onOpenTeamLogin, onOpenAdminLogin,
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-2 shadow-xl">
+        <div className="lg:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 pt-3 pb-6 space-y-2 shadow-xl">
           {navLinks.map((link) => (
             <a
               key={link.label}
@@ -182,18 +182,18 @@ export default function Navbar({ onOpenLogin, onOpenTeamLogin, onOpenAdminLogin,
                 e.preventDefault();
                 handleNavClick(link.href);
               }}
-              className="block px-3 py-2.5 rounded-xl text-base font-semibold text-slate-700 hover:bg-saffron-50 hover:text-saffron-600"
+              className="block px-3 py-2.5 rounded-xl text-base font-semibold text-slate-700 dark:text-slate-200 hover:bg-saffron-50 dark:hover:bg-slate-800 hover:text-saffron-600 dark:hover:text-saffron-400"
             >
               {link.label}
             </a>
           ))}
 
-          <div className="pt-4 border-t border-slate-100">
+          <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
             {isAuthenticated ? (
               <div className="space-y-3">
-                <div className="px-3 py-2 bg-slate-50 rounded-xl">
-                  <p className="text-sm font-bold text-navy-900">{user.name}</p>
-                  <p className="text-xs text-slate-500">{user.role}</p>
+                <div className="px-3 py-2 bg-slate-50 dark:bg-slate-800 rounded-xl">
+                  <p className="text-sm font-bold text-navy-900 dark:text-white">{user.name}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">{user.role}</p>
                 </div>
                 {onGoToDashboard && (
                   <button

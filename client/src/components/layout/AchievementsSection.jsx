@@ -92,18 +92,18 @@ export default function AchievementsSection() {
       : DEFAULT_ACHIEVEMENTS.filter((item) => categoryFilter === 'ALL' || item.category === categoryFilter);
 
   return (
-    <section id="achievements" className="py-20 md:py-28 bg-white border-b border-slate-200">
+    <section id="achievements" className="py-20 md:py-28 bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-800 text-xs font-bold uppercase tracking-wider mb-3">
-            <Trophy className="w-3.5 h-3.5 text-amber-600" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-400 text-xs font-bold uppercase tracking-wider mb-3">
+            <Trophy className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
             Competitive Honors & Medals
           </div>
-          <h2 className="font-editorial text-3xl sm:text-5xl font-black text-navy-900 tracking-tight">
+          <h2 className="font-editorial text-3xl sm:text-5xl font-black text-navy-900 dark:text-white tracking-tight">
             Hall of Championship Glory
           </h2>
-          <p className="mt-4 text-base sm:text-lg text-slate-600">
+          <p className="mt-4 text-base sm:text-lg text-slate-600 dark:text-slate-400">
             A testament to unwavering speed, relentless defense, and collegiate sportsmanship across zonal, university, and state stages.
           </p>
 
@@ -116,8 +116,8 @@ export default function AchievementsSection() {
                 onClick={() => setCategoryFilter(cat)}
                 className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                   categoryFilter === cat
-                    ? 'bg-navy-900 text-white shadow-md'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-navy-900'
+                    ? 'bg-navy-900 dark:bg-saffron-600 text-white shadow-md'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-navy-900 dark:hover:text-white'
                 }`}
               >
                 {cat === 'ALL' ? 'All Honors' : cat === 'BOYS' ? 'Boys Team' : cat === 'GIRLS' ? 'Girls Team' : 'Combined Squad'}
@@ -130,21 +130,21 @@ export default function AchievementsSection() {
         {loading && displayAchievements.length === 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-80 rounded-3xl bg-slate-100 animate-pulse" />
+              <div key={i} className="h-80 rounded-3xl bg-slate-100 dark:bg-slate-800 animate-pulse" />
             ))}
           </div>
         ) : displayAchievements.length === 0 ? (
-          <div className="text-center py-16 px-4 rounded-3xl bg-slate-50 border-2 border-dashed border-slate-200 max-w-md mx-auto">
-            <Trophy className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-            <h3 className="font-bold text-navy-900 text-base">No achievements found</h3>
-            <p className="text-xs text-slate-500 mt-1">Honors will appear here as tournaments conclude.</p>
+          <div className="text-center py-16 px-4 rounded-3xl bg-slate-50 dark:bg-slate-900/60 border-2 border-dashed border-slate-200 dark:border-slate-800 max-w-md mx-auto">
+            <Trophy className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto mb-3" />
+            <h3 className="font-bold text-navy-900 dark:text-white text-base">No achievements found</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Honors will appear here as tournaments conclude.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
             {displayAchievements.map((item) => (
               <div
                 key={item._id}
-                className="card-premium flex flex-col justify-between overflow-hidden group hover:border-amber-300 hover:shadow-xl transition-all duration-300 bg-white border border-slate-200 rounded-3xl"
+                className="card-premium flex flex-col justify-between overflow-hidden group hover:border-amber-300 dark:hover:border-amber-500/50 hover:shadow-xl transition-all duration-300 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl"
               >
                 <div>
                   {/* Real Tournament Image */}
@@ -193,37 +193,37 @@ export default function AchievementsSection() {
                       >
                         {item.category}
                       </span>
-                      <span className="flex items-center gap-1 text-xs font-bold text-slate-400">
+                      <span className="flex items-center gap-1 text-xs font-bold text-slate-400 dark:text-slate-500">
                         <Calendar className="w-3.5 h-3.5" />
                         {item.year}
                       </span>
                     </div>
 
                     <div className="flex items-start gap-3 mb-2.5">
-                      <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 mt-0.5 border border-amber-200">
+                      <div className="w-9 h-9 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 mt-0.5 border border-amber-200 dark:border-amber-800/80">
                         <Medal className="w-4 h-4" />
                       </div>
                       <div>
-                        <h3 className="font-editorial text-lg font-bold text-navy-900 leading-snug">
+                        <h3 className="font-editorial text-lg font-bold text-navy-900 dark:text-white leading-snug">
                           {item.title}
                         </h3>
                       </div>
                     </div>
 
-                    <p className="text-xs font-medium text-slate-500 mb-2 flex items-start gap-1">
-                      <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
+                    <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-2 flex items-start gap-1">
+                      <MapPin className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0 mt-0.5" />
                       <span>{item.event}</span>
                     </p>
 
                     {item.description && (
-                      <p className="text-sm text-slate-600 leading-relaxed mt-2 pt-2 border-t border-slate-100 font-normal">
+                      <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mt-2 pt-2 border-t border-slate-100 dark:border-slate-800 font-normal">
                         {item.description}
                       </p>
                     )}
                   </div>
                 </div>
 
-                <div className="px-6 pb-5 pt-1 flex items-center justify-between text-[11px] text-slate-400 font-medium border-t border-slate-50">
+                <div className="px-6 pb-5 pt-1 flex items-center justify-between text-[11px] text-slate-400 dark:text-slate-500 font-medium border-t border-slate-50 dark:border-slate-800/60">
                   <span>Verified Sports Directorate Record</span>
                   <Sparkles className="w-3.5 h-3.5 text-amber-500" />
                 </div>
