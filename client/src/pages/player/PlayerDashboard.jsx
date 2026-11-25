@@ -10,7 +10,6 @@ import { api } from '../../services/api';
 import EditProfileModal from '../../components/forms/EditProfileModal';
 import DigitalIdCardModal from '../../components/player/DigitalIdCardModal';
 import TopRightProfilePhoto from '../../components/player/TopRightProfilePhoto';
-import ThemeToggle from '../../components/ui/ThemeToggle';
 
 export default function PlayerDashboard() {
   const { user, logout } = useAuth();
@@ -136,9 +135,6 @@ export default function PlayerDashboard() {
 
         {/* Top Navbar Actions */}
         <div className="flex items-center gap-2">
-          {/* Dark / Light Mode Toggle Button */}
-          <ThemeToggle variant="icon" />
-
           {/* Top Edit Profile Button */}
           <button
             type="button"

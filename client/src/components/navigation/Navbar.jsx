@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Menu, X, Shield, ShieldCheck, Crown, LogIn, User, LogOut, ChevronRight, Activity, Trophy, LayoutDashboard } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import ThemeToggle from '../ui/ThemeToggle';
 
 export default function Navbar({ onOpenLogin, onOpenTeamLogin, onOpenAdminLogin, onNavigateSection, onGoToDashboard }) {
   const { user, isAuthenticated, logout, isAdmin, isPlayer } = useAuth();
@@ -67,9 +66,6 @@ export default function Navbar({ onOpenLogin, onOpenTeamLogin, onOpenAdminLogin,
 
           {/* User Status / Portal Actions */}
           <div className="hidden sm:flex items-center gap-3">
-            {/* Theme Toggle Button */}
-            <ThemeToggle variant="icon" />
-
             {isAuthenticated ? (
               <div className="flex items-center gap-3">
                 <div className="text-right">
@@ -137,9 +133,6 @@ export default function Navbar({ onOpenLogin, onOpenTeamLogin, onOpenAdminLogin,
 
           {/* Mobile Menu Actions */}
           <div className="flex lg:hidden items-center gap-1.5">
-            {/* Mobile Theme Toggle */}
-            <ThemeToggle variant="icon" size="sm" />
-
             {!isAuthenticated && (
               <>
                 <button
@@ -245,12 +238,6 @@ export default function Navbar({ onOpenLogin, onOpenTeamLogin, onOpenAdminLogin,
                 </button>
               </div>
             )}
-
-            {/* Display Theme Preference */}
-            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Theme Appearance</span>
-              <ThemeToggle variant="pill" size="sm" />
-            </div>
           </div>
         </div>
       )}

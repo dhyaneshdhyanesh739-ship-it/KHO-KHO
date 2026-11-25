@@ -20,7 +20,6 @@ import AnnouncementsManager from '../../features/announcements/AnnouncementsMana
 import AdminProfileView from '../../features/admin/AdminProfileView';
 import SuperAdminDirectory from '../../features/admin/SuperAdminDirectory';
 import DailyGroundLogManager from '../../features/ground/DailyGroundLogManager';
-import ThemeToggle from '../../components/ui/ThemeToggle';
 
 export default function AdminDashboard({ onLogout }) {
   const { user, logout } = useAuth();
@@ -326,12 +325,6 @@ export default function AdminDashboard({ onLogout }) {
             </div>
           </div>
 
-          {/* Theme Switcher Row in Sidebar */}
-          <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
-            <span className="text-xs font-bold text-slate-600 dark:text-slate-300">Appearance</span>
-            <ThemeToggle variant="pill" size="sm" />
-          </div>
-
           <button
             type="button"
             onClick={logout}
@@ -371,9 +364,6 @@ export default function AdminDashboard({ onLogout }) {
           </div>
 
           <div className="flex items-center gap-2.5">
-            {/* Header Theme Toggle */}
-            <ThemeToggle variant="icon" />
-
             <button
               type="button"
               onClick={() => setActiveTab('mark-attendance')}
