@@ -627,28 +627,8 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, initialMod
                   </>
                 )}
 
-                {/* Portal Switcher Link */}
+                {/* Password Change Link */}
                 <div className="pt-2 text-center border-t border-slate-100 dark:border-slate-800 space-y-2">
-                  {isAdminPortal ? (
-                    <button
-                      type="button"
-                      onClick={() => handleSwitchMode('TEAM')}
-                      className="text-xs font-semibold text-slate-500 hover:text-saffron-600 transition-colors inline-flex items-center gap-1 cursor-pointer"
-                    >
-                      <span>Are you a team athlete? Switch to Team Portal Login</span>
-                      <ArrowRight className="w-3 h-3" />
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => handleSwitchMode('ADMIN')}
-                      className="text-xs font-semibold text-slate-500 hover:text-purple-700 transition-colors inline-flex items-center gap-1 cursor-pointer"
-                    >
-                      <span>Are you a Coach or Super Admin? Switch to Admin Login</span>
-                      <ArrowRight className="w-3 h-3" />
-                    </button>
-                  )}
-
                   <div className="pt-1">
                     <button
                       type="button"

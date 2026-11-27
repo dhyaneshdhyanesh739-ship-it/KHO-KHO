@@ -1,17 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import HomePage from './pages/public/HomePage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import PlayerDashboard from './pages/player/PlayerDashboard';
+import AdminPortalGate from './pages/admin/AdminPortalGate';
 import ViniVidiViciIntro from './components/ui/ViniVidiViciIntro';
 import FierySwordScreen from './components/ui/FierySwordScreen';
+
 function AppShell() {
   const { user, isAuthenticated, isLoading, logout, isImpersonated, exitImpersonation } = useAuth();
   const [viewingPublic, setViewingPublic] = useState(false);
-  // Intro Phases: 'CREED' -> 'SWORD' -> 'DONE'
-  const [introStep, setIntroStep] = useState('CREED');
+
+  // URL Path Routing: detect direct portal access (/superadmin, /boysadmin, /girlsadmin, /admin)
+  const [currentPath, setCurrentPath] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.location.pathname.toLowerCase().replace(/\/+$/, '') || '/';
+    }
+    return '/';
+  });
+
+  useEffect(() => {
+    const handlePopState = () => {
+      const p = window.location.pathname.toLowerCase().replace(/\/+$/, '') || '/';
+      setCurrentPath(p);
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const navigateTo = (path) => {
+    window.history.pushState({}, '', path);
+    setCurrentPath(path.toLowerCase().replace(/\/+$/, '') || '/');
+  };
+
+  const isAdminPortal = ['/superadmin', '/boysadmin', '/girlsadmin', '/admin'].includes(currentPath);
+
+  // Intro Phases: Only execute cinematic creed on public homepage ('/') for unauthenticated visitors!
+  const [introStep, setIntroStep] = useState(isAdminPortal ? 'DONE' : 'CREED');
 
   if (isLoading) {
     return (
@@ -27,6 +54,45 @@ function AppShell() {
     );
   }
 
+  // =========================================================================
+  // ROUTE 1: /superadmin (or /admin) -> DEDICATED SUPER ADMIN PORTAL
+  // =========================================================================
+  if (currentPath === '/superadmin' || currentPath === '/admin') {
+    return (
+      <AdminPortalGate
+        portalType="SUPER_ADMIN"
+        onNavigateHome={() => navigateTo('/')}
+      />
+    );
+  }
+
+  // =========================================================================
+  // ROUTE 2: /boysadmin -> DEDICATED BOYS TEAM ADMIN PORTAL
+  // =========================================================================
+  if (currentPath === '/boysadmin') {
+    return (
+      <AdminPortalGate
+        portalType="BOYS_ADMIN"
+        onNavigateHome={() => navigateTo('/')}
+      />
+    );
+  }
+
+  // =========================================================================
+  // ROUTE 3: /girlsadmin -> DEDICATED GIRLS TEAM ADMIN PORTAL
+  // =========================================================================
+  if (currentPath === '/girlsadmin') {
+    return (
+      <AdminPortalGate
+        portalType="GIRLS_ADMIN"
+        onNavigateHome={() => navigateTo('/')}
+      />
+    );
+  }
+
+  // =========================================================================
+  // ROUTE 4: / (PUBLIC WEBSITE & ATHLETE DASHBOARD)
+  // =========================================================================
   return (
     <div className="relative min-h-screen bg-court-sand dark:bg-[#0b1120] text-navy-900 dark:text-slate-100 transition-colors duration-200">
       {/* Super Admin Impersonation Persistent Banner */}
@@ -51,7 +117,7 @@ function AppShell() {
         </div>
       )}
 
-      {/* 2-Step Cinematic Intro: VINI VIDI VICI -> Flaming Sword Tattoo -> Home (Only for unauthenticated guests) */}
+      {/* 2-Step Cinematic Intro: Only for unauthenticated guests on public homepage */}
       <AnimatePresence mode="wait">
         {!isAuthenticated && introStep === 'CREED' && (
           <ViniVidiViciIntro
@@ -72,7 +138,10 @@ function AppShell() {
         user.role === 'PLAYER' ? (
           <PlayerDashboard />
         ) : (
-          <AdminDashboard onLogout={logout} />
+          <AdminDashboard
+            onLogout={logout}
+            initialDivision={user.team === 'GIRLS' ? 'GIRLS' : 'BOYS'}
+          />
         )
       ) : (
         <div>

@@ -53,17 +53,17 @@ async function testPlayerFlow() {
     assert(boysUpdate.body.user?.username === 'sed.speed', `Username updated to 'sed.speed'`);
     assert(boysUpdate.body.user?.name === 'S.E.D - Lightning Chaser', `Name updated`);
 
-    // 3. Girls Player Login (ananya)
+    // 3. Girls Player Login (sabiksha)
     const girlsLogin = await request(app)
       .post('/api/auth/login')
       .send({
-        username: 'ananya',
-        password: 'ananya@khokho',
+        username: 'sabiksha',
+        password: 'sabiksha@khokho',
         selectedTeam: 'GIRLS',
         portalMode: 'TEAM',
       });
 
-    assert(girlsLogin.status === 200, `Girls Player ananya logged in successfully (status ${girlsLogin.status})`);
+    assert(girlsLogin.status === 200, `Girls Player sabiksha logged in successfully (status ${girlsLogin.status})`);
     assert(girlsLogin.body.user?.role === 'PLAYER', 'Girls user role is PLAYER');
     assert(girlsLogin.body.user?.team === 'GIRLS', 'Girls user team is GIRLS');
     const girlsToken = girlsLogin.body.token;
@@ -73,19 +73,19 @@ async function testPlayerFlow() {
       .put('/api/auth/profile')
       .set('Authorization', `Bearer ${girlsToken}`)
       .send({
-        username: 'ananya.defense',
-        name: 'Ananya (Defender)',
-        aboutMe: 'Chain running specialist and defensive backbone of the Girls Kho-Kho team.',
-        signatureMove: 'Chain Running',
+        username: 'sabiksha.speed',
+        name: 'Sabiksha (Running Chaser)',
+        aboutMe: 'Chain running specialist and agile runner of the Girls Kho-Kho team.',
+        signatureMove: 'Running Chaser',
         personalGoal: 'Achieve zero fouls across state tournament.',
         favoriteQuote: 'Defense wins championships.',
-        bloodGroup: 'O+',
+        bloodGroup: 'A+',
         heightCm: 165,
         weightKg: 55,
       });
 
     assert(girlsUpdate.status === 200, `Girls profile updated (status ${girlsUpdate.status})`);
-    assert(girlsUpdate.body.user?.username === 'ananya.defense', `Girls username updated to 'ananya.defense'`);
+    assert(girlsUpdate.body.user?.username === 'sabiksha.speed', `Girls username updated to 'sabiksha.speed'`);
 
     // 5. Verify /api/auth/me returns new profile with new token
     const meRes = await request(app)
@@ -93,7 +93,7 @@ async function testPlayerFlow() {
       .set('Authorization', `Bearer ${girlsUpdate.body.token}`);
 
     assert(meRes.status === 200, `/api/auth/me succeeded`);
-    assert(meRes.body.user?.username === 'ananya.defense', 'Username persisted in session');
+    assert(meRes.body.user?.username === 'sabiksha.speed', 'Username persisted in session');
   } catch (err) {
     console.error('Test error:', err.message);
     failed++;

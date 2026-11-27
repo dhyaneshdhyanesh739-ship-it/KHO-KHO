@@ -18,6 +18,8 @@ export default function PlayerDashboard() {
   const [announcements, setAnnouncements] = useState([]);
   const [upcomingMatches, setUpcomingMatches] = useState([]);
   const [groundActivities, setGroundActivities] = useState([]);
+  const [practiceTasks, setPracticeTasks] = useState([]);
+  const [practiceProgress, setPracticeProgress] = useState(null);
   const [loading, setLoading] = useState(true);
 
   // Profile Edit & Digital Pass modals
@@ -59,6 +61,14 @@ export default function PlayerDashboard() {
         if (groundRes && groundRes.data) {
           setGroundActivities(groundRes.data);
         }
+
+        // 5. Fetch daily practice drills & athlete conditioning
+        const [taskRes, progRes] = await Promise.all([
+          api.practice.getTasks(),
+          api.practice.getProgress(user?.username || user?.id),
+        ]);
+        if (taskRes && taskRes.data) setPracticeTasks(taskRes.data);
+        if (progRes && progRes.data) setPracticeProgress(progRes.data);
       } catch (err) {
         console.error('Error fetching player dashboard data:', err);
       } finally {
@@ -76,6 +86,18 @@ export default function PlayerDashboard() {
     }
     setProfileUpdateBanner('Your username, bio, and profile details have been saved successfully!');
     setTimeout(() => setProfileUpdateBanner(''), 4500);
+  };
+
+  const handleTogglePractice = async (taskId) => {
+    try {
+      const res = await api.practice.toggleComplete(taskId, user?.username || user?.id);
+      if (res && res.success) {
+        const progRes = await api.practice.getProgress(user?.username || user?.id);
+        if (progRes && progRes.data) setPracticeProgress(progRes.data);
+      }
+    } catch (err) {
+      console.error('Failed to toggle drill completion:', err);
+    }
   };
 
   const currentPlayer = playerData || attendanceData?.player || user?.player || {};
@@ -754,6 +776,82 @@ export default function PlayerDashboard() {
               ))}
             </div>
           )}
+        </div>
+
+        {/* Daily Kho-Kho Practice & Training Routines Card */}
+        <div className="card-premium p-6 sm:p-8 space-y-6 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-card">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
+            <div>
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-saffron-500 to-amber-400 text-white flex items-center justify-center font-bold shadow-xs">
+                  <Flame className="w-4 h-4 fill-current" />
+                </div>
+                <h3 className="font-editorial text-lg font-black text-navy-900 dark:text-white tracking-tight">
+                  Daily Practice Drills &amp; Training Routines
+                </h3>
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                Log completed agility exercises, speed footwork, and 3-to-3 chain running drills
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="px-3 py-1 rounded-full bg-saffron-50 dark:bg-saffron-950/60 border border-saffron-200 dark:border-saffron-800 text-saffron-800 dark:text-saffron-300 text-xs font-bold flex items-center gap-1.5">
+                <Flame className="w-3.5 h-3.5 fill-current text-saffron-600" />
+                <span>{practiceProgress?.streakDays || 5} Day Streak!</span>
+              </span>
+              <span className="text-xs font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-1 rounded-full">
+                {practiceProgress?.todayCompleted?.length || 0} / {practiceTasks.length} Done Today
+              </span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {practiceTasks.slice(0, 4).map((task) => {
+              const isDone = practiceProgress?.todayCompleted?.includes(task.id);
+              return (
+                <div
+                  key={task.id}
+                  onClick={() => handleTogglePractice(task.id)}
+                  className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between space-y-3 ${
+                    isDone
+                      ? 'bg-emerald-50/70 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800'
+                      : 'bg-slate-50/80 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700 hover:border-saffron-400'
+                  }`}
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[10px] font-black uppercase text-saffron-600">
+                        {task.difficulty}
+                      </span>
+                      <span className="text-[10px] text-slate-400 font-bold">
+                        {task.durationMinutes} mins
+                      </span>
+                    </div>
+                    <h5 className={`font-editorial font-bold text-xs ${isDone ? 'line-through text-slate-400' : 'text-navy-900 dark:text-white'}`}>
+                      {task.name}
+                    </h5>
+                    <p className="text-[11px] text-slate-500 line-clamp-2 mt-1">
+                      {task.description}
+                    </p>
+                  </div>
+
+                  <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
+                    <span className="text-[10px] text-slate-400 font-bold">{task.targetReps}</span>
+                    <button
+                      type="button"
+                      className={`flex items-center gap-1 font-bold text-xs ${
+                        isDone ? 'text-emerald-600' : 'text-slate-500 hover:text-navy-900 dark:hover:text-white'
+                      }`}
+                    >
+                      <CheckCircle2 className={`w-4 h-4 ${isDone ? 'fill-emerald-600 text-white' : ''}`} />
+                      <span>{isDone ? 'Done' : 'Mark Done'}</span>
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         {/* Dual Panels: Published Match Squads & Announcements */}

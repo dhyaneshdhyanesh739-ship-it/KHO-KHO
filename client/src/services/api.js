@@ -193,6 +193,65 @@ export const api = {
         body: JSON.stringify({ image: imageData }),
       }),
   },
+
+  // Learn Kho-Kho Tutorials
+  tutorials: {
+    getAll: (params = {}) => {
+      const qs = new URLSearchParams(params).toString();
+      return apiRequest(`/tutorials${qs ? `?${qs}` : ''}`);
+    },
+    getById: (id) => apiRequest(`/tutorials/${id}`),
+    create: (data) => apiRequest('/tutorials', { method: 'POST', body: JSON.stringify(data) }),
+    update: (id, data) => apiRequest(`/tutorials/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    delete: (id) => apiRequest(`/tutorials/${id}`, { method: 'DELETE' }),
+    toggleProgress: (id, userIdentifier) => apiRequest(`/tutorials/${id}/progress`, { method: 'POST', body: JSON.stringify({ userIdentifier }) }),
+    getMyProgress: (userIdentifier) => apiRequest(`/tutorials/progress/me${userIdentifier ? `?userIdentifier=${userIdentifier}` : ''}`),
+  },
+
+  // Match Highlights
+  matchHighlights: {
+    getAll: (params = {}) => {
+      const qs = new URLSearchParams(params).toString();
+      return apiRequest(`/match-highlights${qs ? `?${qs}` : ''}`);
+    },
+    getById: (id) => apiRequest(`/match-highlights/${id}`),
+    create: (data) => apiRequest('/match-highlights', { method: 'POST', body: JSON.stringify(data) }),
+    update: (id, data) => apiRequest(`/match-highlights/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    delete: (id) => apiRequest(`/match-highlights/${id}`, { method: 'DELETE' }),
+  },
+
+  // Player & Team Performance
+  performance: {
+    getPlayers: (params = {}) => {
+      const qs = new URLSearchParams(params).toString();
+      return apiRequest(`/performance/players${qs ? `?${qs}` : ''}`);
+    },
+    getPlayerById: (id) => apiRequest(`/performance/players/${id}`),
+    createPlayer: (data) => apiRequest('/performance/players', { method: 'POST', body: JSON.stringify(data) }),
+    updatePlayer: (id, data) => apiRequest(`/performance/players/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    deletePlayer: (id) => apiRequest(`/performance/players/${id}`, { method: 'DELETE' }),
+    getTeams: () => apiRequest('/performance/teams'),
+    updateTeam: (team, data) => apiRequest(`/performance/teams/${team}`, { method: 'PUT', body: JSON.stringify(data) }),
+  },
+
+  // Daily Kho-Kho Practice & Training
+  practice: {
+    getTasks: (params = {}) => {
+      const qs = new URLSearchParams(params).toString();
+      return apiRequest(`/practice/tasks${qs ? `?${qs}` : ''}`);
+    },
+    getTaskById: (id) => apiRequest(`/practice/tasks/${id}`),
+    createTask: (data) => apiRequest('/practice/tasks', { method: 'POST', body: JSON.stringify(data) }),
+    updateTask: (id, data) => apiRequest(`/practice/tasks/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    deleteTask: (id) => apiRequest(`/practice/tasks/${id}`, { method: 'DELETE' }),
+    getProgress: (userIdentifier) => apiRequest(`/practice/progress${userIdentifier ? `?userIdentifier=${userIdentifier}` : ''}`),
+    toggleComplete: (taskId, userIdentifier) => apiRequest('/practice/toggle-complete', { method: 'POST', body: JSON.stringify({ taskId, userIdentifier }) }),
+  },
+
+  // Interactive Unified Dashboard
+  dashboard: {
+    getStats: (userIdentifier) => apiRequest(`/dashboard/stats${userIdentifier ? `?userIdentifier=${userIdentifier}` : ''}`),
+  },
 };
 
 export default api;

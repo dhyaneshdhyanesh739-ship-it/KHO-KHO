@@ -27,6 +27,11 @@ import announcementRoutes from './routes/announcementRoutes.js';
 import contentRoutes from './routes/contentRoutes.js';
 import groundActivityRoutes from './routes/groundActivityRoutes.js';
 import uploadRoutes from './routes/uploadRoutes.js';
+import tutorialRoutes from './routes/tutorialRoutes.js';
+import matchHighlightRoutes from './routes/matchHighlightRoutes.js';
+import performanceRoutes from './routes/performanceRoutes.js';
+import practiceRoutes from './routes/practiceRoutes.js';
+import dashboardRoutes from './routes/dashboardRoutes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { generalLimiter } from './middleware/rateLimiter.js';
 
@@ -110,6 +115,11 @@ app.use('/api/matches', matchRoutes);
 app.use('/api/announcements', announcementRoutes);
 app.use('/api/ground-activities', groundActivityRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/tutorials', tutorialRoutes);
+app.use('/api/match-highlights', matchHighlightRoutes);
+app.use('/api/performance', performanceRoutes);
+app.use('/api/practice', practiceRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 app.use('/api', contentRoutes);
 
 // Serve static client assets in production (or whenever client/dist exists)

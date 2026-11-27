@@ -73,3 +73,32 @@ export const protect = async (req, res, next) => {
     });
   }
 };
+
+export const optionalAuth = async (req, res, next) => {
+  try {
+    let token = null;
+    if (req.cookies && req.cookies.token) {
+      token = req.cookies.token;
+    } else if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+      token = req.headers.authorization.split(' ')[1];
+    }
+
+    if (token) {
+      const secret = process.env.JWT_SECRET || 'super_secure_kho_kho_arena_jwt_secret_key_2026_dev_random_salt_99';
+      const decoded = jwt.verify(token, secret);
+      req.user = {
+        _id: decoded.id,
+        id: decoded.id,
+        username: decoded.username,
+        name: decoded.name || decoded.username,
+        role: decoded.role,
+        team: decoded.team,
+        playerRef: decoded.playerRef,
+        isActive: true,
+      };
+    }
+  } catch (e) {
+    // Ignore invalid token in optionalAuth
+  }
+  next();
+};

@@ -2,6 +2,7 @@ import AttendanceSession from '../models/AttendanceSession.js';
 import AttendanceRecord from '../models/AttendanceRecord.js';
 import Player from '../models/Player.js';
 import { logAuditEvent } from '../utils/auditLogger.js';
+import { findOfficialPlayer } from '../config/roster.js';
 
 // In-memory fallback caches for resilience if database connection drops
 const fallbackSessions = new Map();
@@ -428,17 +429,7 @@ export const getPlayerAttendance = async (req, res, next) => {
       player = req.user.player;
     }
     if (!player) {
-      const knownRosterFallbacks = [
-        { id: 'B-01', username: 'mohan', name: 'MOHAN', team: 'BOYS', jersey: 1, pos: 'Pole Diver', blood: 'O+' },
-        { id: 'B-02', username: 'jelphin', name: 'JELPHIN', team: 'BOYS', jersey: 2, pos: 'Running Chaser', blood: 'B+' },
-        { id: 'B-03', username: 'vicky.v', name: 'VICKY.V', team: 'BOYS', jersey: 3, pos: 'Defender', blood: 'A+' },
-        { id: 'B-04', username: 'kishor', name: 'KISHOR', team: 'BOYS', jersey: 4, pos: 'All-Rounder', blood: 'AB+' },
-        { id: 'B-10', username: 's.e.d', name: 'S.E.D', team: 'BOYS', jersey: 10, pos: 'All-Rounder', blood: 'B+' },
-        { id: 'G-01', username: 'ananya', name: 'ANANYA', team: 'GIRLS', jersey: 1, pos: 'Defender', blood: 'O+' },
-      ];
-      const found = knownRosterFallbacks.find(
-        (r) => r.id === playerId.toUpperCase() || r.username === playerId.toLowerCase()
-      );
+      const found = findOfficialPlayer(playerId);
       if (found) {
         player = {
           _id: found.id,

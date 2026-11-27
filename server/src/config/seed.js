@@ -10,6 +10,7 @@ import Announcement from '../models/Announcement.js';
 import Achievement from '../models/Achievement.js';
 import GalleryItem from '../models/GalleryItem.js';
 import AuditLog from '../models/AuditLog.js';
+import { OFFICIAL_BOYS_ROSTER, OFFICIAL_GIRLS_ROSTER } from './roster.js';
 
 dotenv.config();
 
@@ -76,10 +77,10 @@ export const seedDatabase = async () => {
     isActive: true,
   });
 
-  // Extra Girls Admin: Keerthana
+  // Extra Girls Admin: Coach Keerthana
   const keerthanaAdminPassword = await User.hashPassword('keerthama@1234');
   const keerthanaAdmin = await User.create({
-    username: 'keerthana',
+    username: 'coach.keerthana',
     passwordHash: keerthanaAdminPassword,
     name: 'Coach Keerthana',
     email: 'coach.keerthana@khokhoarena.org',
@@ -88,32 +89,10 @@ export const seedDatabase = async () => {
     isActive: true,
   });
 
-  console.log('[Seed] Created Super Admin Dhyanesh, Boys Admin, Girls Admin, Vimal (Boys Admin), and Keerthana (Girls Admin).');
+  console.log('[Seed] Created Super Admin Dhyanesh, Boys Admin, Girls Admin, Vimal (Boys Admin), and Coach Keerthana (Girls Admin).');
 
   // 3. Create Boys Roster (21 Real Players from Sheet)
-  const boysRosterData = [
-    { id: 'B-01', username: 'mohan', name: 'MOHAN', jersey: 1, pos: 'Pole Diver', blood: 'O+' },
-    { id: 'B-02', username: 'jelphin', name: 'JELPHIN', jersey: 2, pos: 'Running Chaser', blood: 'B+' },
-    { id: 'B-03', username: 'vicky.v', name: 'VICKY.V', jersey: 3, pos: 'Defender', blood: 'A+' },
-    { id: 'B-04', username: 'kishor', name: 'KISHOR', jersey: 4, pos: 'All-Rounder', blood: 'AB+' },
-    { id: 'B-05', username: 'harshad', name: 'HARSHAD', jersey: 5, pos: 'Chaser', blood: 'O+' },
-    { id: 'B-06', username: 'elan', name: 'ELAN', jersey: 6, pos: 'Defender', blood: 'B+' },
-    { id: 'B-07', username: 'vimal.s', name: 'VIMAL.S', jersey: 7, pos: 'Pole Diver', blood: 'A-' },
-    { id: 'B-08', username: 'karan', name: 'KARAN', jersey: 8, pos: 'Running Chaser', blood: 'O-' },
-    { id: 'B-09', username: 'harish', name: 'HARISH', jersey: 9, pos: 'Defender', blood: 'A+' },
-    { id: 'B-10', username: 's.e.d', name: 'S.E.D', jersey: 10, pos: 'All-Rounder', blood: 'B+' },
-    { id: 'B-11', username: 'akash', name: 'AKASH', jersey: 11, pos: 'Chaser', blood: 'O+' },
-    { id: 'B-12', username: 'sriram', name: 'SRIRAM', jersey: 12, pos: 'All-Rounder', blood: 'O+' },
-    { id: 'B-13', username: 'mega', name: 'MEGA', jersey: 13, pos: 'Running Chaser', blood: 'B+' },
-    { id: 'B-14', username: 'abhinav', name: 'ABHINAV', jersey: 14, pos: 'Defender', blood: 'O+' },
-    { id: 'B-15', username: 'sanjay', name: 'SANJAY', jersey: 15, pos: 'All-Rounder', blood: 'A+' },
-    { id: 'B-16', username: 'chithranjan', name: 'CHITHRANJAN', jersey: 16, pos: 'Chaser', blood: 'B-' },
-    { id: 'B-17', username: 'dharshan', name: 'DHARSHAN', jersey: 17, pos: 'Pole Diver', blood: 'A+' },
-    { id: 'B-18', username: 'sivaguru', name: 'SIVAGURU', jersey: 18, pos: 'Running Chaser', blood: 'AB+' },
-    { id: 'B-19', username: 'subu', name: 'SUBU', jersey: 19, pos: 'All-Rounder', blood: 'B+' },
-    { id: 'B-20', username: 'thangadurai', name: 'THANGADURAI', jersey: 20, pos: 'Defender', blood: 'A-' },
-    { id: 'B-21', username: 'jeeva', name: 'JEEVA', jersey: 21, pos: 'Chaser', blood: 'B+' },
-  ];
+  const boysRosterData = OFFICIAL_BOYS_ROSTER;
 
   const createdBoysPlayers = [];
   for (const p of boysRosterData) {
@@ -153,21 +132,7 @@ export const seedDatabase = async () => {
   console.log(`[Seed] Created ${createdBoysPlayers.length} Boys Players with username@khokho credentials.`);
 
   // 4. Create Girls Roster (13 Real Players from Sheet)
-  const girlsRosterData = [
-    { id: 'G-01', username: 'keerthana.player', name: 'KEERTHANA', jersey: 1, pos: 'Pole Diver', blood: 'O+' },
-    { id: 'G-02', username: 'sabiksha', name: 'SABIKSHA', jersey: 2, pos: 'Running Chaser', blood: 'A+' },
-    { id: 'G-03', username: 'atshaya', name: 'ATSHAYA', jersey: 3, pos: 'Defender', blood: 'B+' },
-    { id: 'G-04', username: 'nisha', name: 'NISHA', jersey: 4, pos: 'All-Rounder', blood: 'AB+' },
-    { id: 'G-05', username: 'juna', name: 'JUNA', jersey: 5, pos: 'Chaser', blood: 'O+' },
-    { id: 'G-06', username: 'sharmitha', name: 'SHARMITHA', jersey: 6, pos: 'Defender', blood: 'A-' },
-    { id: 'G-07', username: 'lohii', name: 'LOHII', jersey: 7, pos: 'Pole Diver', blood: 'B+' },
-    { id: 'G-08', username: 'subitha', name: 'SUBITHA', jersey: 8, pos: 'Running Chaser', blood: 'O-' },
-    { id: 'G-09', username: 'shana', name: 'SHANA', jersey: 9, pos: 'Defender', blood: 'B+' },
-    { id: 'G-10', username: 'madhu', name: 'MADHU', jersey: 10, pos: 'All-Rounder', blood: 'A+' },
-    { id: 'G-11', username: 'pooja', name: 'POOJA', jersey: 11, pos: 'Chaser', blood: 'O+' },
-    { id: 'G-12', username: 'vidhya', name: 'VIDHYA', jersey: 12, pos: 'Defender', blood: 'AB-' },
-    { id: 'G-13', username: 'reeta', name: 'REETA', jersey: 13, pos: 'Pole Diver', blood: 'B+' },
-  ];
+  const girlsRosterData = OFFICIAL_GIRLS_ROSTER;
 
   const createdGirlsPlayers = [];
   for (const p of girlsRosterData) {

@@ -30,10 +30,11 @@ class ThreeErrorBoundary extends Component {
   }
 }
 
-// Interactive Vector 2D Fallback Court with 3-to-3 Running Structure
+// Interactive Vector 2D Fallback Court with 3-to-3 Running Structure & Batch 3 Chain & Round Pin Format
 export function StaticFallback({ isGirls = false, activeBatch = 1 }) {
   const startNum = (activeBatch - 1) * 3 + 1;
   const runnerLabels = [`R${startNum}`, `R${startNum + 1}`, `R${startNum + 2}`];
+  const isBatch3 = activeBatch === 3;
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-between p-3 sm:p-5 select-none overflow-y-auto">
@@ -41,12 +42,14 @@ export function StaticFallback({ isGirls = false, activeBatch = 1 }) {
         
         {/* Top Header inside Court */}
         <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-bold text-saffron-800 dark:text-saffron-400 uppercase tracking-wider mb-1">
-          <span>Pole Free Zone</span>
-          <span>Center Line (27m)</span>
-          <span>Pole Free Zone</span>
+          <span>{isBatch3 ? 'Pole 1 (Round Pin)' : 'Pole Free Zone'}</span>
+          <span>
+            {isBatch3 ? 'Batch 3: Chain & Round Pin Format' : `Batch ${activeBatch}: 3-to-3 Format`} (27m Court)
+          </span>
+          <span>{isBatch3 ? 'Pole 2 (Round Pin)' : 'Pole Free Zone'}</span>
         </div>
 
-        {/* SVG Representation with 3-to-3 Running Structure */}
+        {/* SVG Representation with Tactical Defensive Formats */}
         <svg viewBox="0 0 400 210" className="w-full h-auto my-1">
           <defs>
             <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
@@ -93,33 +96,76 @@ export function StaticFallback({ isGirls = false, activeBatch = 1 }) {
             <line x1="150" y1="74" x2="115" y2="58" stroke={isGirls ? '#be123c' : '#ea580c'} strokeWidth="1.6" strokeDasharray="2 2" markerEnd="url(#arrow)" />
           </g>
 
-          {/* 3 RUNNERS IN 3-TO-3 RUNNING FORMAT */}
-          {/* Runner 1: Ring Evasion near Pole 1 */}
-          <g>
-            <ellipse cx="85" cy="65" rx="30" ry="22" fill="none" stroke="#10b981" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.7" />
-            <circle cx="95" cy="55" r="10.5" fill="#059669" stroke="#ffffff" strokeWidth="2" />
-            <text x="95" y="58.5" fontSize="8.5" fontWeight="black" fill="white" textAnchor="middle">
-              {runnerLabels[0]}
-            </text>
-          </g>
+          {/* DEFENDERS: BATCH 3 (CHAIN & ROUND PIN) vs BATCH 1 & 2 (3-TO-3) */}
+          {isBatch3 ? (
+            <>
+              {/* Runner 1 (R7): Round Pin Rotation around Pole 1 */}
+              <g>
+                <circle cx="55" cy="105" r="28" fill="none" stroke="#2563eb" strokeWidth="2" strokeDasharray="4 3" opacity="0.85" />
+                <circle cx="65" cy="80" r="10.5" fill="#1d4ed8" stroke="#ffffff" strokeWidth="2" />
+                <text x="65" y="83.5" fontSize="8.5" fontWeight="black" fill="white" textAnchor="middle">
+                  {runnerLabels[0]}
+                </text>
+                <text x="60" y="50" fontSize="7.5" fontWeight="bold" fill="#1d4ed8" textAnchor="middle">
+                  Round Pin 1
+                </text>
+              </g>
 
-          {/* Runner 2: Center Zigzag Dodger */}
-          <g>
-            <path d="M 185 145 Q 200 115 215 150" fill="none" stroke="#10b981" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.7" />
-            <circle cx="200" cy="150" r="10.5" fill="#059669" stroke="#ffffff" strokeWidth="2" />
-            <text x="200" y="153.5" fontSize="8.5" fontWeight="black" fill="white" textAnchor="middle">
-              {runnerLabels[1]}
-            </text>
-          </g>
+              {/* Runner 2 (R8): Center Chain Link (S-curve weave through squares) */}
+              <g>
+                <path d="M 130 145 C 170 80, 230 160, 270 95" fill="none" stroke="#2563eb" strokeWidth="2" strokeDasharray="4 3" opacity="0.85" />
+                <circle cx="200" cy="120" r="10.5" fill="#1d4ed8" stroke="#ffffff" strokeWidth="2" />
+                <text x="200" y="123.5" fontSize="8.5" fontWeight="black" fill="white" textAnchor="middle">
+                  {runnerLabels[1]}
+                </text>
+                <text x="200" y="142" fontSize="7.5" fontWeight="bold" fill="#1d4ed8" textAnchor="middle">
+                  Chain Link
+                </text>
+              </g>
 
-          {/* Runner 3: Deep Anchor near Pole 2 */}
-          <g>
-            <ellipse cx="310" cy="62" rx="30" ry="22" fill="none" stroke="#10b981" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.7" />
-            <circle cx="300" cy="62" r="10.5" fill="#059669" stroke="#ffffff" strokeWidth="2" />
-            <text x="300" y="65.5" fontSize="8.5" fontWeight="black" fill="white" textAnchor="middle">
-              {runnerLabels[2]}
-            </text>
-          </g>
+              {/* Runner 3 (R9): Round Pin Rotation around Pole 2 */}
+              <g>
+                <circle cx="345" cy="105" r="28" fill="none" stroke="#2563eb" strokeWidth="2" strokeDasharray="4 3" opacity="0.85" />
+                <circle cx="335" cy="80" r="10.5" fill="#1d4ed8" stroke="#ffffff" strokeWidth="2" />
+                <text x="335" y="83.5" fontSize="8.5" fontWeight="black" fill="white" textAnchor="middle">
+                  {runnerLabels[2]}
+                </text>
+                <text x="340" y="50" fontSize="7.5" fontWeight="bold" fill="#1d4ed8" textAnchor="middle">
+                  Round Pin 2
+                </text>
+              </g>
+            </>
+          ) : (
+            <>
+              {/* Batch 1 & 2: 3-to-3 Synchronized Trio Format */}
+              {/* Runner 1: Left Flank Cross-Lane */}
+              <g>
+                <ellipse cx="110" cy="65" rx="26" ry="18" fill="none" stroke="#10b981" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.7" />
+                <circle cx="110" cy="65" r="10.5" fill="#059669" stroke="#ffffff" strokeWidth="2" />
+                <text x="110" y="68.5" fontSize="8.5" fontWeight="black" fill="white" textAnchor="middle">
+                  {runnerLabels[0]}
+                </text>
+              </g>
+
+              {/* Runner 2: Center Pivot Cross-Lane */}
+              <g>
+                <path d="M 185 145 Q 200 115 215 150" fill="none" stroke="#10b981" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.7" />
+                <circle cx="200" cy="150" r="10.5" fill="#059669" stroke="#ffffff" strokeWidth="2" />
+                <text x="200" y="153.5" fontSize="8.5" fontWeight="black" fill="white" textAnchor="middle">
+                  {runnerLabels[1]}
+                </text>
+              </g>
+
+              {/* Runner 3: Right Flank Cross-Lane */}
+              <g>
+                <ellipse cx="290" cy="65" rx="26" ry="18" fill="none" stroke="#10b981" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.7" />
+                <circle cx="290" cy="65" r="10.5" fill="#059669" stroke="#ffffff" strokeWidth="2" />
+                <text x="290" y="68.5" fontSize="8.5" fontWeight="black" fill="white" textAnchor="middle">
+                  {runnerLabels[2]}
+                </text>
+              </g>
+            </>
+          )}
         </svg>
 
         {/* Legend */}
@@ -133,8 +179,8 @@ export function StaticFallback({ isGirls = false, activeBatch = 1 }) {
             1 Active Chaser
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 inline-block" />
-            3 Defenders ({runnerLabels.join(', ')})
+            <span className={`w-2.5 h-2.5 rounded-full ${isBatch3 ? 'bg-blue-600' : 'bg-emerald-600'} inline-block`} />
+            3 Defenders ({runnerLabels.join(', ')}) • {isBatch3 ? 'Chain & Round Pin' : '3-to-3 Format'}
           </span>
           <span className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-amber-600 inline-block" />
@@ -176,12 +222,16 @@ export default function KhoKhoCourt3D({ isGirls = false, className = '' }) {
       {/* Top Header Bar: Clean, Unified, Perfectly Aligned & Never Colliding */}
       <div className="px-3 py-2.5 sm:px-4 sm:py-3 border-b border-slate-100 dark:border-slate-800/80 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md flex flex-wrap items-center justify-between gap-2.5 z-20 shrink-0">
         
-        {/* Left: 3-to-3 Tag & Batch Switcher */}
+        {/* Left: Tactical Format Tag & Batch Switcher */}
         <div className="flex items-center gap-2 flex-wrap">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200/80 dark:border-emerald-800/60 text-emerald-800 dark:text-emerald-300">
-            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl border ${
+            activeBatch === 3
+              ? 'bg-blue-50 dark:bg-blue-950/60 border-blue-200/80 dark:border-blue-800/60 text-blue-800 dark:text-blue-300'
+              : 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-200/80 dark:border-emerald-800/60 text-emerald-800 dark:text-emerald-300'
+          }`}>
+            <div className={`w-2 h-2 rounded-full animate-pulse ${activeBatch === 3 ? 'bg-blue-500' : 'bg-emerald-500'}`} />
             <span className="text-[11px] font-black uppercase tracking-wider">
-              3-to-3 Running Format • 30-50s
+              {activeBatch === 3 ? 'Chain & Round Pin Format • 30-50s' : `3-to-3 Format (Batch ${activeBatch}) • 30-50s`}
             </span>
           </div>
 
@@ -194,12 +244,17 @@ export default function KhoKhoCourt3D({ isGirls = false, className = '' }) {
                 onClick={() => setActiveBatch(b)}
                 className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all ${
                   activeBatch === b
-                    ? 'bg-emerald-600 text-white shadow-xs'
+                    ? b === 3
+                      ? 'bg-blue-600 text-white shadow-xs'
+                      : 'bg-emerald-600 text-white shadow-xs'
                     : 'text-slate-600 dark:text-slate-400 hover:text-navy-900 dark:hover:text-white'
                 }`}
-                title={`Defending Batch ${b} (Runners ${b === 1 ? '1, 2, 3' : b === 2 ? '4, 5, 6' : '7, 8, 9'})`}
+                title={`Defending Batch ${b} (${b === 3 ? 'Chain & Round Pin Format' : '3-to-3 Format'})`}
               >
-                Batch {b} <span className="text-[10px] opacity-75 font-mono">({b === 1 ? 'R1-3' : b === 2 ? 'R4-6' : 'R7-9'})</span>
+                Batch {b}{' '}
+                <span className="text-[10px] opacity-75 font-mono">
+                  ({b === 3 ? 'Chain & Pin' : '3-to-3'})
+                </span>
               </button>
             ))}
           </div>

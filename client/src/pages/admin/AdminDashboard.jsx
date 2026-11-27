@@ -3,7 +3,7 @@ import {
   LayoutDashboard, Users, CheckSquare, History, BarChart3, Trophy,
   Megaphone, UserCheck, LogOut, ChevronRight, Menu, X, Calendar, ArrowRight,
   TrendingUp, Clock, CheckCircle2, Shield, Crown, Dumbbell, Search, AlertTriangle,
-  UserPlus, Trash2, Plus, AlertCircle
+  UserPlus, Trash2, Plus, AlertCircle, Sparkles
 } from 'lucide-react';
 import {
   BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid
@@ -20,12 +20,20 @@ import AnnouncementsManager from '../../features/announcements/AnnouncementsMana
 import AdminProfileView from '../../features/admin/AdminProfileView';
 import SuperAdminDirectory from '../../features/admin/SuperAdminDirectory';
 import DailyGroundLogManager from '../../features/ground/DailyGroundLogManager';
+import EnhancedContentManager from '../../features/admin/EnhancedContentManager';
 
-export default function AdminDashboard({ onLogout }) {
+export default function AdminDashboard({ onLogout, initialDivision, portalMode }) {
   const { user, logout } = useAuth();
   const isSuperAdmin = user?.role === 'SUPER_ADMIN';
-  const [activeDivision, setActiveDivision] = useState(user?.team === 'GIRLS' ? 'GIRLS' : 'BOYS');
-  const team = isSuperAdmin ? activeDivision : (user?.team || 'BOYS');
+  const defaultDiv = initialDivision || (user?.team === 'GIRLS' ? 'GIRLS' : 'BOYS');
+  const [activeDivision, setActiveDivision] = useState(defaultDiv);
+  const team = isSuperAdmin
+    ? portalMode === 'BOYS_ADMIN'
+      ? 'BOYS'
+      : portalMode === 'GIRLS_ADMIN'
+        ? 'GIRLS'
+        : activeDivision
+    : (user?.team || defaultDiv);
 
   const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'directory' | 'roster' | 'mark-attendance' | 'history' | 'reports' | 'squad' | 'announcements' | 'profile'
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -176,6 +184,7 @@ export default function AdminDashboard({ onLogout }) {
     ...(isSuperAdmin ? [{ id: 'directory', label: 'Access Anyone (Users)', icon: Crown }] : []),
     { id: 'roster', label: 'Players / Roster', icon: Users },
     { id: 'ground-log', label: 'Daily Ground Log', icon: Dumbbell },
+    { id: 'academy-practice', label: 'Academy & Practice', icon: Sparkles },
     { id: 'mark-attendance', label: 'Mark Attendance', icon: CheckSquare },
     { id: 'history', label: 'Attendance History', icon: History },
     { id: 'reports', label: 'Reports & Analytics', icon: BarChart3 },
@@ -824,6 +833,9 @@ export default function AdminDashboard({ onLogout }) {
 
           {/* ==================== 2.5 DAILY GROUND LOG TAB ==================== */}
           {activeTab === 'ground-log' && <DailyGroundLogManager team={team} />}
+
+          {/* ==================== 2.8 ACADEMY & PRACTICE MANAGEMENT TAB ==================== */}
+          {activeTab === 'academy-practice' && <EnhancedContentManager team={team} />}
 
           {/* ==================== 3. MARK ATTENDANCE TAB ==================== */}
           {activeTab === 'mark-attendance' && <AttendanceMarker team={team} />}

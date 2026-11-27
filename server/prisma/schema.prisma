@@ -213,3 +213,135 @@ model ContactMessage {
 
   @@map("contactmessages")
 }
+
+model TutorialVideo {
+  id           String   @id @default(uuid())
+  title        String
+  description  String
+  level        String   @default("BEGINNER") // BEGINNER | INTERMEDIATE | ADVANCED
+  category     String   @default("RULES") // RULES | CHASING | DEFENSE | RUNNING | POLE_DIVING | CHAIN_KHO
+  videoUrl     String
+  thumbnailUrl String   @default("")
+  duration     String   @default("5:00")
+  skills       Json     @default("[]")
+  order        Int      @default(0)
+  views        Int      @default(0)
+  likes        Int      @default(0)
+  author       String   @default("Coaching Staff")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("tutorialvideos")
+}
+
+model MatchHighlight {
+  id              String   @id @default(uuid())
+  title           String
+  description     String
+  tournament      String   @default("National Championship")
+  team1           String   @default("Boys Squad")
+  team2           String   @default("Opponent")
+  score1          Int      @default(0)
+  score2          Int      @default(0)
+  division        String   @default("BOYS") // BOYS | GIRLS | COMBINED
+  matchDate       DateTime @default(now())
+  venue           String   @default("National Sports Complex")
+  videoUrl        String
+  thumbnailUrl    String   @default("")
+  duration        String   @default("10:00")
+  mvpPlayer       String   @default("")
+  featuredPlayers Json     @default("[]")
+  keyMoments      Json     @default("[]")
+  views           Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("matchhighlights")
+}
+
+model PlayerPerformance {
+  id                  String   @id @default(uuid())
+  playerId            String   @unique
+  name                String
+  jerseyNumber        Int
+  team                String   @default("BOYS") // BOYS | GIRLS
+  position            String   @default("All-Rounder")
+  photoUrl            String?  @default("")
+  matchesPlayed       Int      @default(0)
+  matchesParticipated Int      @default(0)
+  defendersEliminated Int      @default(0) // outs taken as chaser
+  successfulDefenses  Int      @default(0) // turns successfully defended
+  defenseTimeSec      Int      @default(0) // total seconds of defense
+  diveSuccessPct      Float    @default(80.0)
+  turnAccuracyPct     Float    @default(85.0)
+  rating              Float    @default(8.5)
+  form                Json     @default("[\"W\",\"W\",\"W\",\"W\",\"W\"]")
+  recentMatchStats    Json     @default("[]")
+  isVerified          Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@unique([team, jerseyNumber])
+  @@map("playerperformances")
+}
+
+model TeamPerformance {
+  id                 String   @id @default(uuid())
+  team               String   @unique // BOYS | GIRLS
+  matchesPlayed      Int      @default(0)
+  won                Int      @default(0)
+  lost               Int      @default(0)
+  tied               Int      @default(0)
+  winPercentage      Float    @default(0.0)
+  ranking            Int      @default(1)
+  totalPointsScored  Int      @default(0)
+  pointsConceded     Int      @default(0)
+  history            Json     @default("[]")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@map("teamperformances")
+}
+
+model PracticeTask {
+  id              String   @id @default(uuid())
+  name            String
+  description     String
+  instructions    Json     @default("[]")
+  category        String   @default("SPEED_AGILITY") // RUNNING | SPEED_AGILITY | DEFENSIVE | CHASING | POLE_DIVING | CHAIN_KHO | REACTION_TIME | TEAM_COORDINATION
+  difficulty      String   @default("BEGINNER") // BEGINNER | INTERMEDIATE | ADVANCED
+  durationMinutes Int      @default(15)
+  skillsDeveloped Json     @default("[]")
+  targetReps      String   @default("3 sets x 10 reps")
+  restPeriodSec   Int      @default(45)
+  intensity       String   @default("HIGH") // LOW | MEDIUM | HIGH | EXTREME
+  order           Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("practicetasks")
+}
+
+model UserPracticeLog {
+  id              String   @id @default(uuid())
+  userIdentifier  String   // username, player id, or client token
+  taskId          String
+  date            String   // YYYY-MM-DD
+  completed       Boolean  @default(true)
+  durationMinutes Int      @default(15)
+  createdAt       DateTime @default(now())
+
+  @@unique([userIdentifier, taskId, date])
+  @@map("userpracticelogs")
+}
+
+model TutorialProgress {
+  id             String   @id @default(uuid())
+  userIdentifier String
+  tutorialId     String
+  completed      Boolean  @default(true)
+  completedAt    DateTime @default(now())
+
+  @@unique([userIdentifier, tutorialId])
+  @@map("tutorialprogresses")
+}

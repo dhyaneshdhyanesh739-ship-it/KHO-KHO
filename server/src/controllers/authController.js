@@ -3,6 +3,14 @@ import Player from '../models/Player.js';
 import { generateToken, setAuthCookie, clearAuthCookie } from '../utils/token.js';
 import { logAuditEvent } from '../utils/auditLogger.js';
 import { uploadToCloudinary, isCloudinaryConfigured } from '../utils/cloudinary.js';
+import {
+  OFFICIAL_BOYS_ROSTER,
+  OFFICIAL_GIRLS_ROSTER,
+  ALL_OFFICIAL_PLAYERS,
+  OFFICIAL_ADMINS,
+  findOfficialPlayer,
+  isApprovedUsername,
+} from '../config/roster.js';
 
 export const login = async (req, res, next) => {
   try {
@@ -24,9 +32,10 @@ export const login = async (req, res, next) => {
     const isKeerthanaAdmin =
       identifier === 'keerthana' &&
       (portalMode === 'ADMIN' ||
-        selectedTeam === 'GIRLS' ||
         cleanEnteredPass === 'keerthama@1234' ||
-        cleanEnteredPass === 'keerthana@1234');
+        cleanEnteredPass === 'keerthana@1234' ||
+        cleanEnteredPass === 'GirlsAdmin@KhoKho2026!' ||
+        cleanEnteredPass === 'kiddo@khokho');
 
     // 1. Vimal - Boys Coaching Admin Lookup
     if (isVimal) {
@@ -66,7 +75,7 @@ export const login = async (req, res, next) => {
       try {
         user = await User.findOne({
           $or: [
-            { username: 'keerthana', role: 'GIRLS_ADMIN' },
+            { username: 'coach.keerthana' },
             { username: 'girlsadmin' },
             { role: 'GIRLS_ADMIN' },
           ],
@@ -251,22 +260,7 @@ export const login = async (req, res, next) => {
     }
 
     if (!user) {
-      const knownRosterFallbacks = [
-        { username: 's.e.d', name: 'S.E.D', team: 'BOYS', jersey: 10, pos: 'All-Rounder', blood: 'B+' },
-        { username: 'mohan', name: 'MOHAN', team: 'BOYS', jersey: 1, pos: 'Pole Diver', blood: 'O+' },
-        { username: 'jelphin', name: 'JELPHIN', team: 'BOYS', jersey: 2, pos: 'Running Chaser', blood: 'B+' },
-        { username: 'ananya', name: 'ANANYA', team: 'GIRLS', jersey: 1, pos: 'Defender', blood: 'O+' },
-        { username: 'keerthana.player', name: 'KEERTHANA', team: 'GIRLS', jersey: 2, pos: 'Pole Diver', blood: 'B+' },
-        { username: 'priya', name: 'PRIYA', team: 'GIRLS', jersey: 3, pos: 'Running Chaser', blood: 'A+' },
-        { username: 'nisha', name: 'NISHA', team: 'GIRLS', jersey: 4, pos: 'All-Rounder', blood: 'AB+' },
-      ];
-
-      const matchFallback = knownRosterFallbacks.find(
-        (f) =>
-          f.username.toLowerCase() === identifier ||
-          f.username.replace(/\./g, '').toLowerCase() === identifier ||
-          f.name.toLowerCase() === identifier
-      );
+      const matchFallback = findOfficialPlayer(identifier);
 
       if (matchFallback) {
         user = {
@@ -600,7 +594,7 @@ export const directChangePassword = async (req, res, next) => {
       try {
         user = await User.findOne({
           $or: [
-            { username: 'keerthana', role: 'GIRLS_ADMIN' },
+            { username: 'coach.keerthana' },
             { username: 'girlsadmin' },
             { role: 'GIRLS_ADMIN' },
           ],
@@ -755,10 +749,56 @@ export const directChangePassword = async (req, res, next) => {
  */
 export const getAllUsers = async (req, res, next) => {
   try {
-    const users = await User.find({})
-      .select('-passwordHash')
-      .populate('playerRef')
-      .sort({ role: 1, team: 1, name: 1 });
+    let users = [];
+    try {
+      users = await User.find({})
+        .select('-passwordHash')
+        .populate('playerRef')
+        .sort({ role: 1, team: 1, name: 1 });
+
+      // Strict Filter: Only allow approved admins and roster players
+      users = users.filter((u) => isApprovedUsername(u.username));
+    } catch (dbErr) {
+      // Fallback handled below
+    }
+
+    // If database returned no users or errored, construct the official approved accounts list
+    if (!users || users.length === 0) {
+      const adminUsers = OFFICIAL_ADMINS.map((a) => ({
+        id: a.id,
+        _id: a.id,
+        username: a.username,
+        name: a.name,
+        email: a.email,
+        role: a.role,
+        team: a.team,
+        isActive: true,
+      }));
+
+      const playerUsers = ALL_OFFICIAL_PLAYERS.map((p) => ({
+        id: `player-${p.username.replace(/\./g, '-')}`,
+        _id: `player-${p.username.replace(/\./g, '-')}`,
+        username: p.username,
+        name: p.name,
+        email: `${p.username.replace(/\./g, '')}@khokhoarena.org`,
+        role: 'PLAYER',
+        team: p.team,
+        isActive: true,
+        playerRef: {
+          id: `player-doc-${p.username.replace(/\./g, '-')}`,
+          _id: `player-doc-${p.username.replace(/\./g, '-')}`,
+          playerId: p.id,
+          name: p.name,
+          team: p.team,
+          jerseyNumber: p.jersey,
+          position: p.pos,
+          bloodGroup: p.blood,
+          active: true,
+        },
+      }));
+
+      users = [...adminUsers, ...playerUsers];
+    }
 
     return res.status(200).json({
       success: true,
@@ -1051,11 +1091,14 @@ export const updateProfile = async (req, res, next) => {
 
     // If database connection is offline, provide resilient fallback player record
     if (!player && req.user.role === 'PLAYER') {
+      const off = findOfficialPlayer(req.user.username) || {};
       player = {
         name: user.name,
         team: user.team,
-        jerseyNumber: 1,
-        playerId: 'B-01',
+        jerseyNumber: off.jersey || 1,
+        playerId: off.id || (user.team === 'GIRLS' ? 'G-01' : 'B-01'),
+        position: off.pos || 'All-Rounder',
+        bloodGroup: off.blood || 'Unknown',
         photoUrl: processedPhotoUrl || '',
         contactInfo: {},
         save: async () => {},

@@ -20,7 +20,7 @@ const provisionAdmins = async () => {
   const vimalUser = process.env.EXTRA_BOYS_ADMIN_USER || 'Vimal';
   const vimalPass = process.env.EXTRA_BOYS_ADMIN_PASSWORD || 'Vimal@1234';
 
-  const keerthanaUser = process.env.EXTRA_GIRLS_ADMIN_USER || 'Keerthana';
+  const keerthanaUser = process.env.EXTRA_GIRLS_ADMIN_USER || 'coach.keerthana';
   const keerthanaPass = process.env.EXTRA_GIRLS_ADMIN_PASSWORD || 'keerthama@1234';
 
   // Provision Super Admin if not present

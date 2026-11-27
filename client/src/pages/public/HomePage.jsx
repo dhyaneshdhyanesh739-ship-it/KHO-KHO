@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import Navbar from '../../components/navigation/Navbar';
 import HeroSection from '../../components/layout/HeroSection';
+import InteractivePublicDashboard from '../../components/dashboard/InteractivePublicDashboard';
+import LearnKhoKhoSection from '../../components/learn/LearnKhoKhoSection';
+import PlayerPerformanceSection from '../../components/performance/PlayerPerformanceSection';
+import MatchHighlightsSection from '../../components/highlights/MatchHighlightsSection';
+import DailyPracticeSection from '../../components/practice/DailyPracticeSection';
 import AboutKhoKhoSection from '../../components/layout/AboutKhoKhoSection';
 import AboutUsSection from '../../components/layout/AboutUsSection';
 import AchievementsSection from '../../components/layout/AchievementsSection';
@@ -15,7 +20,6 @@ export default function HomePage({ onLoginSuccess, onViewDashboard }) {
   const [loginModalState, setLoginModalState] = useState({ isOpen: false, mode: 'TEAM' });
 
   const handleOpenTeamLogin = () => setLoginModalState({ isOpen: true, mode: 'TEAM' });
-  const handleOpenAdminLogin = () => setLoginModalState({ isOpen: true, mode: 'ADMIN' });
 
   const handleScrollToSection = (sectionId) => {
     const el = document.getElementById(sectionId);
@@ -30,7 +34,6 @@ export default function HomePage({ onLoginSuccess, onViewDashboard }) {
       <Navbar
         onOpenLogin={handleOpenTeamLogin}
         onOpenTeamLogin={handleOpenTeamLogin}
-        onOpenAdminLogin={handleOpenAdminLogin}
         onNavigateSection={handleScrollToSection}
         onGoToDashboard={onViewDashboard}
       />
@@ -42,20 +45,45 @@ export default function HomePage({ onLoginSuccess, onViewDashboard }) {
           onExploreTeams={() => handleScrollToSection('teams')}
         />
 
+        {/* 1. Interactive Unified Live Dashboard */}
+        <InteractivePublicDashboard
+          onNavigateSection={handleScrollToSection}
+          onOpenLogin={handleOpenTeamLogin}
+        />
+
+        {/* 2. Kho-Kho Learning & Video Tutorials Academy */}
+        <LearnKhoKhoSection />
+
+        {/* 3. Player & Team Performance Analytics */}
+        <PlayerPerformanceSection />
+
+        {/* 4. Match Highlights & Video Analysis */}
+        <MatchHighlightsSection />
+
+        {/* 5. Daily Kho-Kho Practice & Training Routines */}
+        <DailyPracticeSection />
+
+        {/* 6. Heritage & Court Dimensions */}
         <AboutKhoKhoSection />
 
+        {/* 7. About Organization & Coaches */}
         <AboutUsSection />
 
+        {/* 8. Championship Achievements */}
         <AchievementsSection />
 
+        {/* 9. Squad Roster Summary */}
         <TeamRosterSummarySection
           onOpenLogin={handleOpenTeamLogin}
         />
 
+        {/* 10. Photo Gallery */}
         <GallerySection />
 
+        {/* 11. Contact Inquiries */}
         <ContactSection />
 
+        {/* 12. Created By Credits */}
         <CreatedBySection />
       </main>
 

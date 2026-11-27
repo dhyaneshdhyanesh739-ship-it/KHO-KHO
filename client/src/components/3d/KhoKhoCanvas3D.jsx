@@ -10,10 +10,12 @@ export default function KhoKhoCanvas3D({ isGirls = false, activeBatch = 1, onBat
   const resetSimulationRef = useRef(null);
 
   // Match State
-  const [matchStatus, setMatchStatus] = useState('COUNTDOWN'); // 'COUNTDOWN' | 'PLAYING' | 'PAUSED' | 'ALL_OUT'
+  const [matchStatus, setMatchStatus] = useState('COUNTDOWN'); // 'COUNTDOWN' | 'PLAYING' | 'PAUSED' | 'BATCH_TRANSITION' | 'ALL_OUT'
   const [countdownValue, setCountdownValue] = useState(3);
   const [matchTime, setMatchTime] = useState(0);
   const [outsCount, setOutsCount] = useState(0);
+  const [currentTargetId, setCurrentTargetId] = useState(1);
+  const [transitionCountdown, setTransitionCountdown] = useState(3);
   const [defendersStatus, setDefendersStatus] = useState([
     { id: 1, active: true, name: 'R1' },
     { id: 2, active: true, name: 'R2' },
@@ -30,6 +32,8 @@ export default function KhoKhoCanvas3D({ isGirls = false, activeBatch = 1, onBat
     matchTime: 0,
     activeBatch: 1,
     outsCount: 0,
+    transitionTimer: 0,
+    currentTargetId: 1,
     actionAlert: 'Ready at poles...',
     activeChaserIndex: -1, // -1 means starting chaser from pole
     chaserPos: { x: -4.8, z: 0.85 },
@@ -560,25 +564,29 @@ export default function KhoKhoCanvas3D({ isGirls = false, activeBatch = 1, onBat
     activeChaser.setStandingReady();
     courtGroup.add(activeChaser.root);
 
-    // 11. Instantiate 3 Defenders in 3-to-3 Chain Running Format
+    // 11. Instantiate 3 Defenders in Match Format (Batch 1 & 2: 3-to-3 Format, Batch 3: Chain & Round Pin Format)
     const startNum = (activeBatch - 1) * 3 + 1;
-    const defender1 = createArticulatedPlayer('DEFENDER', `R${startNum}`); // Lead Ring Defender
-    const defender2 = createArticulatedPlayer('DEFENDER', `R${startNum + 1}`); // Center Chain Defender
-    const defender3 = createArticulatedPlayer('DEFENDER', `R${startNum + 2}`); // Anchor Defender
+    const defender1 = createArticulatedPlayer('DEFENDER', `R${startNum}`);
+    const defender2 = createArticulatedPlayer('DEFENDER', `R${startNum + 1}`);
+    const defender3 = createArticulatedPlayer('DEFENDER', `R${startNum + 2}`);
 
-    // Initial positions inside the court
-    defender1.root.position.set(-2.8, 0, -1.2);
-    defender2.root.position.set(0.2, 0, 1.4);
-    defender3.root.position.set(2.8, 0, -1.2);
+    // Initial positions inside court based on defensive format:
+    const initP1 = activeBatch === 3 ? { x: -3.6, z: -1.1 } : { x: -2.2, z: -1.3 };
+    const initP2 = activeBatch === 3 ? { x: -0.2, z: 1.2 } : { x: 0.0, z: 1.3 };
+    const initP3 = activeBatch === 3 ? { x: 3.6, z: -1.1 } : { x: 2.2, z: -1.3 };
+
+    defender1.root.position.set(initP1.x, 0, initP1.z);
+    defender2.root.position.set(initP2.x, 0, initP2.z);
+    defender3.root.position.set(initP3.x, 0, initP3.z);
 
     courtGroup.add(defender1.root);
     courtGroup.add(defender2.root);
     courtGroup.add(defender3.root);
 
     const defenders = [
-      { player: defender1, id: 1, pos: { x: -2.8, z: -1.2 }, vel: { x: 0, z: 0 }, isOut: false, label: `R${startNum}` },
-      { player: defender2, id: 2, pos: { x: 0.2, z: 1.4 }, vel: { x: 0, z: 0 }, isOut: false, label: `R${startNum + 1}` },
-      { player: defender3, id: 3, pos: { x: 2.8, z: -1.2 }, vel: { x: 0, z: 0 }, isOut: false, label: `R${startNum + 2}` },
+      { player: defender1, id: 1, pos: { ...initP1 }, vel: { x: 0, z: 0 }, isOut: false, label: `R${startNum}` },
+      { player: defender2, id: 2, pos: { ...initP2 }, vel: { x: 0, z: 0 }, isOut: false, label: `R${startNum + 1}` },
+      { player: defender3, id: 3, pos: { ...initP3 }, vel: { x: 0, z: 0 }, isOut: false, label: `R${startNum + 2}` },
     ];
 
     scene.add(courtGroup);
@@ -611,7 +619,14 @@ export default function KhoKhoCanvas3D({ isGirls = false, activeBatch = 1, onBat
         d.isOut = false;
         d.label = labels[idx];
         d.sidelineTarget = null;
-        const initialPos = idx === 0 ? { x: -2.8, z: -1.2 } : idx === 1 ? { x: 0.2, z: 1.4 } : { x: 2.8, z: -1.2 };
+        let initialPos;
+        if (b === 3) {
+          // Batch 3: Chain & Round Pin initial spread (R7 near Pole 1, R8 center chain, R9 near Pole 2)
+          initialPos = idx === 0 ? { x: -3.6, z: -1.1 } : idx === 1 ? { x: -0.2, z: 1.2 } : { x: 3.6, z: -1.1 };
+        } else {
+          // Batches 1 & 2: 3-to-3 format synchronized trio positions
+          initialPos = idx === 0 ? { x: -2.2, z: -1.3 } : idx === 1 ? { x: 0.0, z: 1.3 } : { x: 2.2, z: -1.3 };
+        }
         d.pos = { ...initialPos };
         d.vel = { x: 0, z: 0 };
         d.player.root.position.set(initialPos.x, 0, initialPos.z);
@@ -647,14 +662,21 @@ export default function KhoKhoCanvas3D({ isGirls = false, activeBatch = 1, onBat
       state.countdown = 3.5;
       state.matchTime = 0;
       state.outsCount = 0;
-      state.actionAlert = `Batch ${b} Ready (${labels.join(', ')}) • 30s-50s Regulation Defense`;
+      state.transitionTimer = 0;
+      state.currentTargetId = 1;
+      const formatDescription = b === 3
+        ? 'Chain & Round Pin Format (30s-50s Regulation)'
+        : `3-to-3 Format (30s-50s Regulation)`;
+      state.actionAlert = `Batch ${b} Ready (${labels.join(', ')}) • ${formatDescription}`;
 
       lastSecondInt = 3;
       setMatchStatus('COUNTDOWN');
       setCountdownValue(3);
       setOutsCount(0);
       setMatchTime(0);
-      setActionAlert(`Batch ${b} Ready (${labels.join(', ')}) • 30s-50s Regulation Defense`);
+      setCurrentTargetId(1);
+      setTransitionCountdown(3);
+      setActionAlert(`Batch ${b} Ready (${labels.join(', ')}) • ${formatDescription}`);
       setDefendersStatus([
         { id: 1, active: true, name: labels[0] },
         { id: 2, active: true, name: labels[1] },
@@ -689,10 +711,18 @@ export default function KhoKhoCanvas3D({ isGirls = false, activeBatch = 1, onBat
         activeChaser.root.rotation.y = Math.PI / 2; // Facing the court (+X)
         activeChaser.setStandingReady();
 
-        // 3 Defenders take positions in 3-to-3 chain ready stance
-        defender1.root.position.set(-2.6, 0, -1.3);
-        defender2.root.position.set(0.0, 0, 1.3);
-        defender3.root.position.set(2.6, 0, -1.3);
+        // 3 Defenders take positions based on batch format
+        if (state.activeBatch === 3) {
+          // Batch 3: Chain & Round Pin stance (R7 near Pole 1, R8 center chain, R9 near Pole 2)
+          defender1.root.position.set(-3.6, 0, -1.1);
+          defender2.root.position.set(-0.2, 0, 1.2);
+          defender3.root.position.set(3.6, 0, -1.1);
+        } else {
+          // Batches 1 & 2: 3-to-3 format synchronized stance
+          defender1.root.position.set(-2.2, 0, -1.3);
+          defender2.root.position.set(0.0, 0, 1.3);
+          defender3.root.position.set(2.2, 0, -1.3);
+        }
         defender1.setStandingReady();
         defender2.setStandingReady();
         defender3.setStandingReady();
@@ -700,7 +730,8 @@ export default function KhoKhoCanvas3D({ isGirls = false, activeBatch = 1, onBat
         if (state.countdown <= 0) {
           state.status = 'PLAYING';
           setMatchStatus('PLAYING');
-          setActionAlert('⚡ WHISTLE! Match Started — Chaser sprinting off Pole!');
+          const formatTag = state.activeBatch === 3 ? 'Chain & Round Pin' : '3-to-3';
+          setActionAlert(`⚡ WHISTLE! Match Started — Chaser sprinting off Pole! (${formatTag} Defense Active)`);
           playSound('whistle');
         }
       }
@@ -712,8 +743,10 @@ export default function KhoKhoCanvas3D({ isGirls = false, activeBatch = 1, onBat
 
         const currentTargetTime = (state.targetOutTimes && state.targetOutTimes[state.outsCount]) || 36.0;
         const canTriggerNextOut = state.matchTime >= currentTargetTime;
+        const isBatch3 = state.activeBatch === 3;
+        const isBatch2 = state.activeBatch === 2;
 
-        // --- A. DEFENDERS: 3-TO-3 CHAIN EVASION & SIDELINE LOBBY BEHAVIOR ---
+        // --- A. DEFENDERS: 3-TO-3 FORMAT (BATCH 1 & 2) vs CHAIN & ROUND PIN FORMAT (BATCH 3) ---
         defenders.forEach((d, idx) => {
           // If defender is OUT, smoothly jog to the sideline lobby bench outside the court
           if (d.isOut) {
@@ -751,36 +784,142 @@ export default function KhoKhoCanvas3D({ isGirls = false, activeBatch = 1, onBat
                                   (state.outsCount >= 2);
           const isInvincible = !canTriggerNextOut || (!isTargetDefender && state.outsCount < 2);
 
-          // Chain interaction (Defenders coordinate together in triangle chain)
+          let targetX = d.pos.x;
+          let targetZ = d.pos.z;
           let chainSeparationX = 0;
           let chainSeparationZ = 0;
-          defenders.forEach((other, oIdx) => {
-            if (oIdx !== idx && !other.isOut) {
-              const dx = d.pos.x - other.pos.x;
-              const dz = d.pos.z - other.pos.z;
-              const dist = Math.hypot(dx, dz);
-              if (dist < 2.0 && dist > 0.001) {
-                chainSeparationX += (dx / dist) * (2.0 - dist) * 0.8;
-                chainSeparationZ += (dz / dist) * (2.0 - dist) * 0.8;
+
+          if (isBatch3) {
+            // =========================================================================
+            // BATCH 3: CHAIN FORMAT & ROUND PIN FORMAT (RING GAME & POLE ROTATION)
+            // =========================================================================
+            const isSoloDefender = state.outsCount >= 2;
+
+            if (isSoloDefender) {
+              // Solo defender in Batch 3 executes iconic Round Pin ring game between poles!
+              const cycle = (state.matchTime * 0.42) % 2.0; // 0..1 towards Pole 1, 1..2 towards Pole 2
+              if (cycle < 0.38) {
+                // Round Pin rotation around Pole 1 (at X = -4.8)
+                const pinAngle = state.matchTime * 3.4;
+                targetX = -4.8 + Math.cos(pinAngle) * 0.88;
+                targetZ = Math.sin(pinAngle) * 0.88;
+              } else if (cycle < 1.0) {
+                // Sprinting East along cross lanes, weaving across center line
+                const tSprint = (cycle - 0.38) / 0.62;
+                targetX = -3.8 + tSprint * 7.6;
+                targetZ = Math.sin(state.matchTime * 3.2) * 1.5;
+              } else if (cycle < 1.38) {
+                // Round Pin rotation around Pole 2 (at X = +4.8)
+                const pinAngle = state.matchTime * 3.4 + Math.PI;
+                targetX = 4.8 + Math.cos(pinAngle) * 0.88;
+                targetZ = Math.sin(pinAngle) * 0.88;
+              } else {
+                // Sprinting West back towards Pole 1
+                const tSprint = (cycle - 1.38) / 0.62;
+                targetX = 3.8 - tSprint * 7.6;
+                targetZ = -Math.sin(state.matchTime * 3.2) * 1.5;
               }
+            } else {
+              // Trio / Pair in Batch 3:
+              // R7 (idx 0): Executes Round Pin rotation at Pole 1
+              // R9 (idx 2): Executes Round Pin rotation at Pole 2
+              // R8 (idx 1): Acts as connecting S-curve Chain Link between cross-lanes
+              if (idx === 0) {
+                // Defender R7: Pole 1 Round Pin & Left Wing Defense
+                const pinAngle = state.matchTime * 2.8;
+                const isNearPole1 = d.pos.x < -3.2 || (Math.floor(state.matchTime / 4) % 2 === 0);
+                if (isNearPole1) {
+                  targetX = -4.8 + Math.cos(pinAngle) * 0.88;
+                  targetZ = Math.sin(pinAngle) * 0.88;
+                } else {
+                  targetX = -2.5 + Math.sin(state.matchTime * 1.8) * 1.1;
+                  targetZ = Math.cos(state.matchTime * 2.2) * 1.4;
+                }
+              } else if (idx === 2) {
+                // Defender R9: Pole 2 Round Pin & Right Wing Defense
+                const pinAngle = state.matchTime * 2.8 + Math.PI;
+                const isNearPole2 = d.pos.x > 3.2 || (Math.floor(state.matchTime / 4) % 2 === 0);
+                if (isNearPole2) {
+                  targetX = 4.8 + Math.cos(pinAngle) * 0.88;
+                  targetZ = Math.sin(pinAngle) * 0.88;
+                } else {
+                  targetX = 2.5 + Math.sin(state.matchTime * 1.8) * 1.1;
+                  targetZ = Math.cos(state.matchTime * 2.2 + 1.0) * 1.4;
+                }
+              } else {
+                // Defender R8 (idx 1): Center Chain Link
+                // Forms connected S-curve Chain between R7 and R9
+                targetX = Math.sin(state.matchTime * 1.8) * 2.2;
+                targetZ = Math.cos(state.matchTime * 2.5) * 1.5;
+              }
+
+              // Connected Chain link spacing
+              defenders.forEach((other, oIdx) => {
+                if (oIdx !== idx && !other.isOut) {
+                  const dx = d.pos.x - other.pos.x;
+                  const dz = d.pos.z - other.pos.z;
+                  const dist = Math.hypot(dx, dz);
+                  if (dist < 1.5 && dist > 0.001) {
+                    chainSeparationX += (dx / dist) * (1.5 - dist) * 0.9;
+                    chainSeparationZ += (dz / dist) * (1.5 - dist) * 0.9;
+                  }
+                }
+              });
             }
-          });
 
-          // Tactical Kho-Kho Evasion Target (Crossing the central dividing line)
-          let targetZ = d.pos.z;
-          if (Math.sign(state.chaserPos.z) === Math.sign(d.pos.z) && distChaser < 2.3) {
-            // Cut across central line to opposite lane
-            targetZ = -Math.sign(d.pos.z) * (1.5 + (idx % 2) * 0.3);
+            // Cross central dividing line evasion if chaser approaches
+            if (Math.sign(state.chaserPos.z) === Math.sign(d.pos.z) && distChaser < 2.1) {
+              targetZ = -Math.sign(d.pos.z) * 1.5;
+            }
+
+          } else {
+            // =========================================================================
+            // BATCHES 1 & 2: 3-TO-3 DEFENSIVE FORMAT (SYNCHRONIZED TRIO)
+            // =========================================================================
+            // Synchronized 3-defender unit covering cross-lanes
+            const isSoloDefender = state.outsCount >= 2;
+
+            if (isSoloDefender) {
+              // Solo defender in 3-to-3 uses agile wide-court patrol
+              const orbitAngle = state.matchTime * 2.1;
+              targetX = Math.sin(orbitAngle) * 3.6;
+              if (Math.sign(state.chaserPos.z) === Math.sign(d.pos.z) && distChaser < 2.4) {
+                targetZ = -Math.sign(d.pos.z) * 1.6;
+              }
+            } else {
+              // 3-to-3 Synchronized Trio:
+              // Batch 1: Classic synchronized 3-to-3 (-2.2, 0.0, +2.2)
+              // Batch 2: 3-to-3 with wide flank coverage (-2.8, 0.0, +2.8)
+              const baseSpread = isBatch2 ? 2.8 : 2.2;
+              const baseAnchorX = idx === 0 ? -baseSpread : idx === 1 ? 0.0 : baseSpread;
+              const waveFreq = isBatch2 ? 1.6 : 1.4;
+              const wavePhase = idx * (isBatch2 ? 0.6 : 0.35);
+
+              targetX = baseAnchorX + Math.sin(state.matchTime * waveFreq + wavePhase) * (isBatch2 ? 1.1 : 0.85);
+
+              // Synchronized opposite-lane positioning
+              const oppositeLane = -state.chaserLane;
+              if (Math.sign(state.chaserPos.z) === Math.sign(d.pos.z) && distChaser < 2.4) {
+                // Trio cuts across central line together
+                targetZ = oppositeLane * (1.3 + (idx % 2) * 0.4);
+              } else {
+                targetZ = oppositeLane * (1.35 + (idx % 2) * 0.3);
+              }
+
+              // Mutual 3-to-3 triangular spacing
+              defenders.forEach((other, oIdx) => {
+                if (oIdx !== idx && !other.isOut) {
+                  const dx = d.pos.x - other.pos.x;
+                  const dz = d.pos.z - other.pos.z;
+                  const dist = Math.hypot(dx, dz);
+                  if (dist < 2.2 && dist > 0.001) {
+                    chainSeparationX += (dx / dist) * (2.2 - dist) * 0.85;
+                    chainSeparationZ += (dz / dist) * (2.2 - dist) * 0.85;
+                  }
+                }
+              });
+            }
           }
-
-          // Patrol zones: Left (-2.4), Center (0.0), Right (2.4)
-          // When 1 solo runner remains, patrol full court length
-          const baseAnchorX = state.outsCount >= 2
-            ? 0.0
-            : idx === 0 ? -2.4 : idx === 1 ? 0.0 : 2.4;
-          const patrolSpread = state.outsCount >= 2 ? 3.6 : 1.3;
-          const orbitAngle = state.matchTime * (state.outsCount >= 2 ? 2.1 : 1.8) + idx * 2.1;
-          const targetX = baseAnchorX + Math.sin(orbitAngle) * patrolSpread;
 
           // Agility burst: if not due for tag yet and chaser closes in, dodge with athletic burst
           let dodgeForceX = 0;
@@ -789,12 +928,18 @@ export default function KhoKhoCanvas3D({ isGirls = false, activeBatch = 1, onBat
             dodgeForceX = (dxChaser / (distChaser + 0.01)) * 3.4;
             dodgeForceZ = (dzChaser / (distChaser + 0.01)) * 3.6;
 
-            if (state.matchTime - (state.lastDodgeAlertTime || 0) > 3.2) {
+            if (state.matchTime - (state.lastDodgeAlertTime || 0) > 3.0) {
               state.lastDodgeAlertTime = state.matchTime;
               if (state.matchTime >= 30.0) {
                 setActionAlert(`⏱️ 30s Crossed! Solo runner ${d.label} surviving in regulation!`);
+              } else if (isBatch3) {
+                if (Math.abs(d.pos.x) > 3.4) {
+                  setActionAlert(`🔄 Round Pin! Defender ${d.label} circling Pole in evasive orbit!`);
+                } else {
+                  setActionAlert(`⛓️ Chain Weave! Defender ${d.label} slips past chaser via chain evasion!`);
+                }
               } else {
-                setActionAlert(`🛡️ Agile dodge! Defender ${d.label} feints and escapes the dive!`);
+                setActionAlert(`🛡️ 3-to-3 Shift! Defender ${d.label} feints and synchronizes lane crossing!`);
               }
             }
           }
@@ -817,18 +962,28 @@ export default function KhoKhoCanvas3D({ isGirls = false, activeBatch = 1, onBat
           d.player.setRunningPose(1.35, state.matchTime, idx * 0.35);
         });
 
-        // --- B. ACTIVE CHASER AI & STRATEGY (100% Anti-Stuck, Official Kho-Kho Rules) ---
+        // --- B. ACTIVE CHASER AI: ONE-BY-ONE DEFENDER CHASE ---
         state.khoCooldown -= delta;
 
-        let activeDefenders = defenders.filter((d) => !d.isOut);
-        let targetDefender = activeDefenders[0];
-        let closestDist = Infinity;
+        // In official Kho-Kho, the chaser targets active defenders strictly ONE BY ONE:
+        // Defender 1 is pursued until OUT -> then Defender 2 is pursued until OUT -> then Defender 3 is pursued until OUT
+        const activeDefenders = defenders.filter((d) => !d.isOut);
+        const targetDefender = activeDefenders.length > 0 ? activeDefenders[0] : null;
 
-        activeDefenders.forEach((d) => {
-          const dist = Math.hypot(d.pos.x - state.chaserPos.x, d.pos.z - state.chaserPos.z);
-          if (dist < closestDist) {
-            closestDist = dist;
-            targetDefender = d;
+        if (targetDefender && targetDefender.id !== currentTargetId) {
+          setCurrentTargetId(targetDefender.id);
+        }
+
+        // Highlight the currently pursued target defender with an amber gold aura
+        defenders.forEach((d) => {
+          if (!d.isOut) {
+            if (targetDefender && d.id === targetDefender.id) {
+              d.player.aura.material.color.setHex(0xf59e0b); // Amber gold target aura
+              d.player.aura.material.opacity = 0.95;
+            } else {
+              d.player.aura.material.color.setHex(state.activeBatch === 3 ? 0x2563eb : (isGirls ? 0x0284c7 : 0x10b981));
+              d.player.aura.material.opacity = 0.65;
+            }
           }
         });
 
@@ -973,17 +1128,64 @@ export default function KhoKhoCanvas3D({ isGirls = false, activeBatch = 1, onBat
             );
 
             // Commentary & ALL OUT check
+            const formatTag = state.activeBatch === 3 ? 'Chain & Round Pin' : '3-to-3';
             if (state.outsCount === 1) {
-              setActionAlert(`🎯 OUT! Defender ${dismissedDefender.label} tagged at ${state.matchTime.toFixed(1)}s! (1/3 Outs — 2 Defenders Surviving)`);
+              const remainingRunners = defenders.filter((d) => !d.isOut).map((d) => d.label).join(' & ');
+              setActionAlert(`🎯 OUT! Defender ${dismissedDefender.label} caught at ${state.matchTime.toFixed(1)}s! Remaining 2 defenders (${remainingRunners}) continue running!`);
             } else if (state.outsCount === 2) {
-              setActionAlert(`🎯 OUT! Defender ${dismissedDefender.label} tagged at ${state.matchTime.toFixed(1)}s! (2/3 Outs — Final Solo Runner on Court!)`);
+              const soloRunner = defenders.find((d) => !d.isOut)?.label || 'R3';
+              setActionAlert(`🎯 OUT! Defender ${dismissedDefender.label} caught at ${state.matchTime.toFixed(1)}s! Solo runner ${soloRunner} running & avoiding capture!`);
             } else if (state.outsCount >= 3) {
-              // ALL OUT TRIGGERED!
-              state.status = 'ALL_OUT';
-              setMatchStatus('ALL_OUT');
-              setActionAlert(`🏆 ALL OUT! All 3 defenders dismissed in ${state.matchTime.toFixed(1)}s (Regulation 30s–50s)!`);
+              // ALL 3 DEFENDERS IN BATCH OUT! AUTOMATIC TRANSITION TO NEXT BATCH!
+              state.status = 'BATCH_TRANSITION';
+              state.transitionTimer = 3.5;
+              setMatchStatus('BATCH_TRANSITION');
+              setTransitionCountdown(3);
+              const nextBatchNumber = (state.activeBatch % 3) + 1;
+              const nextLabels = nextBatchNumber === 1 ? ['R1', 'R2', 'R3'] : nextBatchNumber === 2 ? ['R4', 'R5', 'R6'] : ['R7', 'R8', 'R9'];
+              setActionAlert(`🏆 ALL OUT! Batch ${state.activeBatch} dismissed in ${state.matchTime.toFixed(1)}s! Batch ${nextBatchNumber} (${nextLabels.join(', ')}) entering court...`);
               playSound('whistle');
             }
+          }
+        }
+      }
+
+      // ==================== STATE 3: BATCH TRANSITION (NEXT BATCH ENTERS COURT) ====================
+      else if (state.status === 'BATCH_TRANSITION') {
+        state.transitionTimer -= delta;
+        const remainingSec = Math.max(1, Math.ceil(state.transitionTimer));
+        setTransitionCountdown(remainingSec);
+
+        // All 3 defenders in current batch complete jogging to sideline bench
+        defenders.forEach((d) => {
+          if (d.sidelineTarget) {
+            const dx = d.sidelineTarget.x - d.pos.x;
+            const dz = d.sidelineTarget.z - d.pos.z;
+            const dist = Math.hypot(dx, dz);
+            if (dist > 0.08) {
+              d.pos.x += (dx / dist) * 2.4 * delta;
+              d.pos.z += (dz / dist) * 2.4 * delta;
+              d.player.root.position.set(d.pos.x, 0, d.pos.z);
+              d.player.setRunningPose(0.85, state.matchTime);
+            } else {
+              d.pos.x = d.sidelineTarget.x;
+              d.pos.z = d.sidelineTarget.z;
+              d.player.root.position.set(d.pos.x, 0, d.pos.z);
+              d.player.root.rotation.y = 0;
+              d.player.setSidelineSittingPose();
+            }
+          }
+        });
+
+        // When transition timer reaches 0, AUTOMATICALLY ENTER NEXT BATCH!
+        if (state.transitionTimer <= 0) {
+          const nextBatch = (state.activeBatch % 3) + 1;
+          state.activeBatch = nextBatch;
+          if (onBatchChange) {
+            onBatchChange(nextBatch);
+          }
+          if (resetSimulationRef.current) {
+            resetSimulationRef.current(nextBatch);
           }
         }
       }
@@ -1101,48 +1303,58 @@ export default function KhoKhoCanvas3D({ isGirls = false, activeBatch = 1, onBat
             </span>
           </div>
           <p className="mt-3 text-xs font-black uppercase tracking-widest text-white drop-shadow-md">
-            Match Starting • Chain Defense Ready
+            {activeBatch === 3
+              ? 'Match Starting • Chain & Round Pin Defense Ready'
+              : 'Match Starting • 3-to-3 Defense Ready'}
           </p>
         </div>
       )}
 
-      {/* ALL OUT OVERLAY */}
-      {matchStatus === 'ALL_OUT' && (
+      {/* BATCH TRANSITION / ALL OUT OVERLAY (Automatic Next Batch Entry) */}
+      {(matchStatus === 'BATCH_TRANSITION' || matchStatus === 'ALL_OUT') && (
         <div
           onClick={(e) => e.stopPropagation()}
-          className="absolute inset-0 z-40 flex flex-col items-center justify-center bg-navy-950/50 backdrop-blur-sm animate-fade-in pointer-events-auto"
+          className="absolute inset-0 z-40 flex flex-col items-center justify-center bg-navy-950/45 backdrop-blur-[3px] animate-fade-in pointer-events-auto"
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl text-center space-y-3.5 max-w-xs mx-4 pointer-events-auto relative z-50"
+            className="p-6 rounded-3xl bg-white dark:bg-slate-900 border-2 border-emerald-500/80 dark:border-emerald-500/60 shadow-2xl text-center space-y-3.5 max-w-sm mx-4 pointer-events-auto relative z-50 transform animate-scale-up"
           >
-            <div className="w-12 h-12 rounded-2xl bg-rose-100 dark:bg-rose-950/60 text-rose-600 flex items-center justify-center mx-auto">
-              <Award className="w-6 h-6" />
+            <div className="w-14 h-14 rounded-2xl bg-emerald-100 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto shadow-md">
+              <Award className="w-7 h-7 animate-bounce" />
             </div>
             <h3 className="font-editorial text-2xl font-black text-navy-900 dark:text-white">
-              ALL OUT!
+              BATCH {activeBatch} ALL OUT!
             </h3>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-300 dark:border-emerald-700 text-[10.5px] font-black text-emerald-800 dark:text-emerald-300 shadow-xs mx-auto">
-              <span>⏱️ Batch Survival: {matchTime.toFixed(1)}s (30s – 50s Regulation)</span>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-300 dark:border-emerald-700 text-xs font-black text-emerald-800 dark:text-emerald-300 shadow-xs mx-auto">
+              <span>⏱️ Batch Survival: {matchTime.toFixed(1)}s (Regulation 30s–50s)</span>
             </div>
             <p className="text-xs text-slate-600 dark:text-slate-300">
-              All 3 defenders from <strong>Batch {activeBatch}</strong> dismissed in{' '}
-              <strong className="text-navy-950 dark:text-white font-mono">{matchTime.toFixed(1)}s</strong>!
+              All 3 defenders from <strong>Batch {activeBatch}</strong> dismissed one-by-one!
             </p>
-            <div className="pt-2 flex flex-col gap-2">
+            <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-3 text-left">
+              <div>
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
+                  Next Batch Entering Court
+                </span>
+                <span className="text-sm font-black text-navy-900 dark:text-white">
+                  Batch {(activeBatch % 3) + 1}{' '}
+                  <span className="text-xs text-emerald-600 dark:text-emerald-400 font-bold">
+                    ({(activeBatch % 3) + 1 === 3 ? 'Chain & Round Pin' : '3-to-3 Format'})
+                  </span>
+                </span>
+              </div>
+              <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white font-editorial text-xl font-black flex items-center justify-center shrink-0 shadow-sm animate-pulse">
+                {transitionCountdown}s
+              </div>
+            </div>
+            <div className="pt-1 flex gap-2">
               <button
                 type="button"
                 onClick={handlePlayNextBatch}
                 className="w-full btn-primary py-2.5 px-4 text-xs font-black justify-center shadow-lg shadow-orange-600/30 cursor-pointer select-none active:scale-95 transition-transform"
               >
-                <span>Play Next Batch (Batch {(activeBatch % 3) + 1})</span>
-              </button>
-              <button
-                type="button"
-                onClick={handleRestartMatch}
-                className="w-full btn-secondary py-2 px-4 text-xs font-bold justify-center cursor-pointer select-none active:scale-95 transition-transform"
-              >
-                <span>Replay Batch {activeBatch}</span>
+                <span>Enter Next Batch Now (Batch {(activeBatch % 3) + 1}) ➔</span>
               </button>
             </div>
           </div>
@@ -1172,7 +1384,7 @@ export default function KhoKhoCanvas3D({ isGirls = false, activeBatch = 1, onBat
           ) : (
             <>
               <Play className="w-3.5 h-3.5 fill-white text-white" />
-              <span>{matchStatus === 'ALL_OUT' ? 'New Match' : 'Play Match'}</span>
+              <span>{matchStatus === 'ALL_OUT' || matchStatus === 'BATCH_TRANSITION' ? 'New Batch' : 'Play Match'}</span>
             </>
           )}
         </button>
@@ -1199,21 +1411,38 @@ export default function KhoKhoCanvas3D({ isGirls = false, activeBatch = 1, onBat
 
       {/* DEFENDERS TRIO MINI-STATUS (Bottom Right) */}
       <div className="absolute bottom-3 right-3 z-20 hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/80 dark:border-slate-800 text-xs font-bold text-slate-600 dark:text-slate-300 shadow-md">
-        <Shield className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-        <span>3-to-3 Chain:</span>
+        {activeBatch === 3 ? (
+          <>
+            <RotateCcw className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
+            <span className="text-navy-900 dark:text-white">Chain &amp; Round Pin:</span>
+          </>
+        ) : (
+          <>
+            <Shield className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+            <span className="text-navy-900 dark:text-white">3-to-3 Format:</span>
+          </>
+        )}
         <div className="flex items-center gap-1">
-          {defendersStatus.map((d) => (
-            <span
-              key={d.id}
-              className={`px-1.5 py-0.5 rounded-md text-[10px] font-black ${
-                d.active
-                  ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300'
-                  : 'bg-rose-100 text-rose-800 line-through opacity-60'
-              }`}
-            >
-              {d.name}
-            </span>
-          ))}
+          {defendersStatus.map((d) => {
+            const isTarget = currentTargetId === d.id && d.active && matchStatus === 'PLAYING';
+            return (
+              <span
+                key={d.id}
+                className={`px-1.5 py-0.5 rounded-md text-[10px] font-black transition-all ${
+                  d.active
+                    ? isTarget
+                      ? 'bg-amber-100 text-amber-900 ring-2 ring-amber-500 font-extrabold shadow-sm animate-pulse'
+                      : activeBatch === 3
+                      ? 'bg-blue-100 text-blue-800 dark:bg-blue-950/80 dark:text-blue-300'
+                      : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300'
+                    : 'bg-rose-100 text-rose-800 line-through opacity-60'
+                }`}
+                title={isTarget ? `Currently being chased one-by-one by the Chaser!` : d.active ? 'Actively running & evading' : 'Tagged OUT'}
+              >
+                {isTarget ? `🎯 ${d.name}` : d.name}
+              </span>
+            );
+          })}
         </div>
       </div>
     </div>

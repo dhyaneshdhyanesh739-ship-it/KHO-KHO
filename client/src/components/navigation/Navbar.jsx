@@ -8,13 +8,14 @@ export default function Navbar({ onOpenLogin, onOpenTeamLogin, onOpenAdminLogin,
 
   const navLinks = [
     { label: 'Home', href: '#home' },
+    { label: 'Learn Kho-Kho', href: '#learn-kho-kho' },
+    { label: 'Performance', href: '#player-performance' },
+    { label: 'Match Highlights', href: '#match-highlights' },
+    { label: 'Daily Practice', href: '#daily-practice' },
+    { label: 'Live Hub', href: '#interactive-hub' },
     { label: 'About Kho-Kho', href: '#about-kho-kho' },
-    { label: 'About Us', href: '#about-us' },
-    { label: 'Achievements', href: '#achievements' },
     { label: 'Teams', href: '#teams' },
-    { label: 'Gallery', href: '#gallery' },
     { label: 'Contact', href: '#contact' },
-    { label: 'Created By', href: '#created-by' },
   ];
 
   const handleNavClick = (href) => {
@@ -106,7 +107,7 @@ export default function Navbar({ onOpenLogin, onOpenTeamLogin, onOpenAdminLogin,
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                {/* 1. Team Portal Login (Athletes Only) */}
+                {/* Team Portal Login (Athletes Only) */}
                 <button
                   type="button"
                   onClick={onOpenTeamLogin || onOpenLogin}
@@ -116,17 +117,6 @@ export default function Navbar({ onOpenLogin, onOpenTeamLogin, onOpenAdminLogin,
                   <LogIn className="w-4 h-4 shrink-0" />
                   <span>Team Portal Login</span>
                 </button>
-
-                {/* 2. Admin Login (Coaches & Super Admin Only) */}
-                <button
-                  type="button"
-                  onClick={onOpenAdminLogin || onOpenLogin}
-                  className="bg-navy-950 hover:bg-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800 text-white font-bold text-xs sm:text-sm py-2 px-3 sm:px-4 rounded-xl border border-slate-700 shadow-md transition-all flex items-center gap-2 hover:border-slate-500 active:scale-95 cursor-pointer"
-                  title="Coaching & Super Administrator Console"
-                >
-                  <ShieldCheck className="w-4 h-4 text-amber-400 shrink-0" />
-                  <span>Admin Login</span>
-                </button>
               </div>
             )}
           </div>
@@ -134,24 +124,14 @@ export default function Navbar({ onOpenLogin, onOpenTeamLogin, onOpenAdminLogin,
           {/* Mobile Menu Actions */}
           <div className="flex lg:hidden items-center gap-1.5">
             {!isAuthenticated && (
-              <>
-                <button
-                  type="button"
-                  onClick={onOpenTeamLogin || onOpenLogin}
-                  className="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-saffron-600 text-white shadow-sm flex items-center gap-1"
-                >
-                  <LogIn className="w-3.5 h-3.5" />
-                  <span>Team</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={onOpenAdminLogin || onOpenLogin}
-                  className="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-navy-950 text-amber-400 border border-slate-700 shadow-sm flex items-center gap-1"
-                >
-                  <ShieldCheck className="w-3.5 h-3.5" />
-                  <span>Admin</span>
-                </button>
-              </>
+              <button
+                type="button"
+                onClick={onOpenTeamLogin || onOpenLogin}
+                className="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-saffron-600 text-white shadow-sm flex items-center gap-1"
+              >
+                <LogIn className="w-3.5 h-3.5" />
+                <span>Team Login</span>
+              </button>
             )}
             <button
               type="button"
@@ -223,18 +203,6 @@ export default function Navbar({ onOpenLogin, onOpenTeamLogin, onOpenAdminLogin,
                 >
                   <LogIn className="w-4 h-4" />
                   <span>Team Portal Login (Athletes Only)</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    if (onOpenAdminLogin) onOpenAdminLogin();
-                    else onOpenLogin();
-                  }}
-                  className="w-full bg-navy-950 text-white font-bold text-xs py-2.5 rounded-xl border border-slate-700 flex items-center justify-center gap-2"
-                >
-                  <ShieldCheck className="w-4 h-4 text-amber-400" />
-                  <span>Admin & Super Admin Login</span>
                 </button>
               </div>
             )}
